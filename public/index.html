@@ -618,8 +618,15 @@
   
   /* 手机模式下侧边栏 */
   .mobile-mode .room-sidebar {
+    display: none;
+    width: 0;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .mobile-mode .room-content {
     width: 100%;
-    margin-bottom: 10px;
+    flex: 1;
   }
   
   /* 折叠时内容区占满 */
@@ -695,6 +702,10 @@
   body.mobile-mode .tabs {
     gap: 5px;
     margin-bottom: 15px;
+  }
+  
+  .mobile-mode #memberToggleBtn {
+    display: block !important;
   }
 
   body.mobile-mode .tab-btn {
@@ -5681,7 +5692,7 @@
         
         // 电脑模式显示成员列表
         if (sidebar) {
-          sidebar.style.display = '';
+          sidebar.style.display = 'block';
           if (content) content.style.width = '';
           if (toggleBtn) {
             toggleBtn.textContent = '✕';
@@ -5754,7 +5765,7 @@
         
         if (sidebar && btn) {
           if (shouldShow) {
-            sidebar.style.display = '';
+            sidebar.style.display = 'block';
             content.style.width = '';
             btn.textContent = '✕';
             btn.title = '隐藏成员列表';
