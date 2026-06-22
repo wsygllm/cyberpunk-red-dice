@@ -3012,6 +3012,7 @@
       </div>
       <div class="room-header-right">
         <button class="delete-room-btn" onclick="deleteRoom()" id="deleteRoomBtn" style="display: none;">🗑️ 删除房间</button>
+        <button class="sound-toggle-btn" onclick="toggleSound()" id="soundToggleBtn">🔊 音效开</button>
         <button class="mobile-toggle-btn" onclick="toggleMobileMode()" id="mobileToggleBtn">📱 手机模式</button>
         <div class="member-count" id="memberCount">0 人在线</div>
         <div class="connection-status">
@@ -3391,6 +3392,85 @@
     event.target.classList.add('active');
   }
   
+  // ==================== 音效系统 ====================
+  let audioCtx = null;
+  let soundEnabled = true;
+
+  function initAudio() {
+    if (!audioCtx) {
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch (e) {
+        console.log('不支持音频');
+      }
+    }
+  }
+
+  // 播放骰子滚动音效
+  function playDiceSound() {
+    if (!soundEnabled || !audioCtx) return;
+    
+    const now = audioCtx.currentTime;
+    
+    // 生成多个短促的撞击声，模拟骰子滚动
+    const bounceCount = 6 + Math.floor(Math.random() * 4); // 6-9次撞击
+    
+    for (let i = 0; i < bounceCount; i++) {
+      const time = now + i * (0.08 + Math.random() * 0.05);
+      const freq = 1500 + Math.random() * 2000;
+      const volume = 0.1 + Math.random() * 0.15 - (i * 0.01);
+      
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, time);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.5, time + 0.05);
+      
+      gain.gain.setValueAtTime(0, time);
+      gain.gain.linearRampToValueAtTime(Math.max(0.05, volume), time + 0.005);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.start(time);
+      osc.stop(time + 0.1);
+    }
+    
+    // 最后一声落定的声音
+    const landTime = now + bounceCount * 0.1;
+    const osc2 = audioCtx.createOscillator();
+    const gain2 = audioCtx.createGain();
+    
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(800, landTime);
+    osc2.frequency.exponentialRampToValueAtTime(200, landTime + 0.15);
+    
+    gain2.gain.setValueAtTime(0, landTime);
+    gain2.gain.linearRampToValueAtTime(0.2, landTime + 0.01);
+    gain2.gain.exponentialRampToValueAtTime(0.001, landTime + 0.2);
+    
+    osc2.connect(gain2);
+    gain2.connect(audioCtx.destination);
+    
+    osc2.start(landTime);
+    osc2.stop(landTime + 0.25);
+  }
+
+  // 切换音效开关
+  function toggleSound() {
+    soundEnabled = !soundEnabled;
+    if (soundEnabled) {
+      initAudio();
+    }
+    // 更新按钮显示
+    const btn = document.getElementById('soundToggleBtn');
+    if (btn) {
+      btn.textContent = soundEnabled ? '🔊 音效开' : '🔇 音效关';
+    }
+  }
+
   // ==================== 初始化 ====================
   function init() {
     renderPlayers();
@@ -3707,6 +3787,9 @@
   }
   
   function rollAll() {
+    // 播放骰子音效
+    playDiceSound();
+    
     const activePlayers = players.filter(p => p.active);
     const diceElements = activePlayers.map(p => document.getElementById(`dice-${p.id}`));
     
@@ -3826,6 +3909,9 @@
   }
   
   function rollSingle(playerId) {
+    // 播放骰子音效
+    playDiceSound();
+    
     const player = players.find(p => p.id === playerId);
     const diceEl = document.getElementById(`dice-${playerId}`);
     
@@ -4070,27 +4156,20 @@
     }
     
     listEl.innerHTML = battleHistory.map(h => {
-      let winnersText = '';
-      if (!h.isSingle) {
-        if (h.isTie) {
-          winnersText = ` - 平局`;
-        } else if (h.winners.length > 0) {
-          winnersText = ` - ${h.winners.join('、')}胜`;
-        }
-      }
+      // 投掷人显示
+      const throwerText = h.playerName ? `（${h.playerName} 投掷）` : '';
       
       return `
         <div class="history-round">
           <div class="history-round-header">
             <span class="history-round-title">
               ${h.isSingle ? '🎯 单独投掷' : `第 ${h.round} 轮`}
-              ${winnersText}
+              <span class="history-thrower">${throwerText}</span>
             </span>
-            <span>${h.time}</span>
+            <span class="history-time">${h.time}</span>
           </div>
           <div class="history-entries">
             ${h.results.sort((a, b) => b.total - a.total).map((r, index) => {
-              const isWinner = h.winners.includes(r.name) && !h.isTie && !h.isSingle;
               const criticalClass = r.isCritical === 'success' ? 'critical-success-entry' : 
                                    r.isCritical === 'fail' ? 'critical-fail-entry' : '';
               const totalClass = r.isCritical === 'success' ? 'critical-success' : 
@@ -4117,7 +4196,7 @@
               const aimText = r.aimName && r.aimPenalty !== 0 ? `<div class="history-skill-name">瞄准：${r.aimName} (${r.aimPenalty})</div>` : '';
               
               return `
-                <div class="history-entry ${isWinner ? 'winner' : ''} ${criticalClass}">
+                <div class="history-entry ${criticalClass}">
                   <div>
                     <span class="history-rank">${index + 1}</span><span class="history-player-name">${r.name}</span>
                     ${criticalTag}
