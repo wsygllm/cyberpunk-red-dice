@@ -141,7 +141,15 @@ io.on('connection', (socket) => {
       creator: currentUser,
       members: [currentUser],
       rolls: [],
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      // 房间共享数据
+      data: {
+        players: [],
+        battleHistory: [],
+        weapons: [],
+        skills: [],
+        lastUpdate: Date.now()
+      }
     };
     
     rooms.set(roomId, room);
@@ -154,6 +162,76 @@ io.on('connection', (socket) => {
     
     // 广播房间列表更新
     broadcastRoomList();
+  });
+
+  // 更新房间共享数据
+  socket.on('update_shared_data', ({ type, data }) => {
+    if (!currentUser || !currentRoomId) {
+      socket.emit('error', '请先加入房间');
+      return;
+    }
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) {
+      socket.emit('error', '房间不存在');
+      return;
+    }
+    
+    // 更新对应的数据
+    if (type === 'players' && room.sharedData) {
+      room.sharedData.players = data;
+    } else if (type === 'history' && room.sharedData) {
+      room.sharedData.history = data;
+    } else if (type === 'weapons' && room.sharedData) {
+      room.sharedData.weapons = data;
+    } else if (type === 'skills' && room.sharedData) {
+      room.sharedData.skills = data;
+    }
+    
+    // 广播给房间里的所有人（包括发送者）
+    io.to(currentRoomId).emit('shared_data_updated', {
+      type: type,
+      data: data,
+      updatedBy: currentUser
+    });
+    
+    console.log(currentUser, '更新了房间共享数据:', type);
+  });
+
+  // 更新房间数据
+  socket.on('update_room_data', ({ type, data }) => {
+    if (!currentUser || !currentRoomId) {
+      socket.emit('error', '请先加入房间');
+      return;
+    }
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) {
+      socket.emit('error', '房间不存在');
+      return;
+    }
+    
+    // 更新对应的数据
+    if (type === 'players') {
+      room.data.players = data;
+    } else if (type === 'battleHistory') {
+      room.data.battleHistory = data;
+    } else if (type === 'weapons') {
+      room.data.weapons = data;
+    } else if (type === 'skills') {
+      room.data.skills = data;
+    } else if (type === 'all') {
+      room.data = { ...room.data, ...data };
+    }
+    
+    room.data.lastUpdate = Date.now();
+    
+    // 广播给房间里的其他人（不包括自己）
+    socket.to(currentRoomId).emit('room_data_updated', {
+      type: type,
+      data: data,
+      updatedBy: currentUser
+    });
   });
   
   // 加入房间
@@ -199,6 +277,76 @@ io.on('connection', (socket) => {
     // 广播房间列表更新
     broadcastRoomList();
   });
+
+  // 更新房间共享数据
+  socket.on('update_shared_data', ({ type, data }) => {
+    if (!currentUser || !currentRoomId) {
+      socket.emit('error', '请先加入房间');
+      return;
+    }
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) {
+      socket.emit('error', '房间不存在');
+      return;
+    }
+    
+    // 更新对应的数据
+    if (type === 'players' && room.sharedData) {
+      room.sharedData.players = data;
+    } else if (type === 'history' && room.sharedData) {
+      room.sharedData.history = data;
+    } else if (type === 'weapons' && room.sharedData) {
+      room.sharedData.weapons = data;
+    } else if (type === 'skills' && room.sharedData) {
+      room.sharedData.skills = data;
+    }
+    
+    // 广播给房间里的所有人（包括发送者）
+    io.to(currentRoomId).emit('shared_data_updated', {
+      type: type,
+      data: data,
+      updatedBy: currentUser
+    });
+    
+    console.log(currentUser, '更新了房间共享数据:', type);
+  });
+
+  // 更新房间数据
+  socket.on('update_room_data', ({ type, data }) => {
+    if (!currentUser || !currentRoomId) {
+      socket.emit('error', '请先加入房间');
+      return;
+    }
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) {
+      socket.emit('error', '房间不存在');
+      return;
+    }
+    
+    // 更新对应的数据
+    if (type === 'players') {
+      room.data.players = data;
+    } else if (type === 'battleHistory') {
+      room.data.battleHistory = data;
+    } else if (type === 'weapons') {
+      room.data.weapons = data;
+    } else if (type === 'skills') {
+      room.data.skills = data;
+    } else if (type === 'all') {
+      room.data = { ...room.data, ...data };
+    }
+    
+    room.data.lastUpdate = Date.now();
+    
+    // 广播给房间里的其他人（不包括自己）
+    socket.to(currentRoomId).emit('room_data_updated', {
+      type: type,
+      data: data,
+      updatedBy: currentUser
+    });
+  });
   
   // 离开房间
   socket.on('leave_room', () => {
@@ -233,6 +381,76 @@ io.on('connection', (socket) => {
     
     // 广播房间列表更新
     broadcastRoomList();
+  });
+
+  // 更新房间共享数据
+  socket.on('update_shared_data', ({ type, data }) => {
+    if (!currentUser || !currentRoomId) {
+      socket.emit('error', '请先加入房间');
+      return;
+    }
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) {
+      socket.emit('error', '房间不存在');
+      return;
+    }
+    
+    // 更新对应的数据
+    if (type === 'players' && room.sharedData) {
+      room.sharedData.players = data;
+    } else if (type === 'history' && room.sharedData) {
+      room.sharedData.history = data;
+    } else if (type === 'weapons' && room.sharedData) {
+      room.sharedData.weapons = data;
+    } else if (type === 'skills' && room.sharedData) {
+      room.sharedData.skills = data;
+    }
+    
+    // 广播给房间里的所有人（包括发送者）
+    io.to(currentRoomId).emit('shared_data_updated', {
+      type: type,
+      data: data,
+      updatedBy: currentUser
+    });
+    
+    console.log(currentUser, '更新了房间共享数据:', type);
+  });
+
+  // 更新房间数据
+  socket.on('update_room_data', ({ type, data }) => {
+    if (!currentUser || !currentRoomId) {
+      socket.emit('error', '请先加入房间');
+      return;
+    }
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) {
+      socket.emit('error', '房间不存在');
+      return;
+    }
+    
+    // 更新对应的数据
+    if (type === 'players') {
+      room.data.players = data;
+    } else if (type === 'battleHistory') {
+      room.data.battleHistory = data;
+    } else if (type === 'weapons') {
+      room.data.weapons = data;
+    } else if (type === 'skills') {
+      room.data.skills = data;
+    } else if (type === 'all') {
+      room.data = { ...room.data, ...data };
+    }
+    
+    room.data.lastUpdate = Date.now();
+    
+    // 广播给房间里的其他人（不包括自己）
+    socket.to(currentRoomId).emit('room_data_updated', {
+      type: type,
+      data: data,
+      updatedBy: currentUser
+    });
   });
   
   // 投掷骰子

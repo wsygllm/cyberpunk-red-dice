@@ -3484,27 +3484,41 @@
     }
   }
   
-  // 播放骰子音效
+  // 播放骰子滚动音效
   function playDiceSound() {
     if (!audioContext) initAudio();
     if (!audioContext) return;
     
     const now = audioContext.currentTime;
+    const rollDuration = 0.5; // 滚动总时长
     
-    // 模拟骰子滚动的声音：几声快速的敲击
-    const rollCount = 4;
-    for (let i = 0; i < rollCount; i++) {
-      const time = now + i * 0.08;
-      createClickSound(time, 800 + Math.random() * 400, 0.1);
+    // 密集的滚动碰撞声
+    const clickCount = 12;
+    for (let i = 0; i < clickCount; i++) {
+      const progress = i / clickCount;
+      const time = now + progress * rollDuration * 0.8;
+      
+      // 频率随机变化，模拟不同角度的碰撞
+      const freq = 600 + Math.random() * 800;
+      // 音量逐渐减小
+      const volume = 0.15 * (1 - progress * 0.7);
+      // 时长逐渐变长
+      const duration = 0.03 + progress * 0.02;
+      
+      createDiceClick(time, freq, volume, duration);
     }
     
-    // 最后一声落定的声音
-    const landTime = now + rollCount * 0.08 + 0.05;
-    createClickSound(landTime, 500, 0.2);
+    // 加一点滚动的摩擦噪音
+    createRollNoise(now, rollDuration * 0.8, 0.05);
+    
+    // 最后落定的声音（更响、更低沉）
+    const landTime = now + rollDuration;
+    createDiceClick(landTime, 400, 0.25, 0.1);
+    createDiceClick(landTime + 0.02, 550, 0.15, 0.08);
   }
   
-  // 创建单个敲击声
-  function createClickSound(time, freq, duration) {
+  // 创建骰子碰撞声
+  function createDiceClick(time, freq, volume, duration) {
     const osc = audioContext.createOscillator();
     const gain = audioContext.createGain();
     
@@ -3512,14 +3526,44 @@
     gain.connect(audioContext.destination);
     
     osc.frequency.value = freq;
-    osc.type = 'sine';
+    osc.type = 'triangle'; // 三角波更像硬物碰撞
     
     gain.gain.setValueAtTime(0, time);
-    gain.gain.linearRampToValueAtTime(0.3, time + 0.005);
+    gain.gain.linearRampToValueAtTime(volume, time + 0.002);
     gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
     
     osc.start(time);
     osc.stop(time + duration);
+  }
+  
+  // 创建滚动摩擦噪音
+  function createRollNoise(startTime, duration, volume) {
+    const bufferSize = audioContext.sampleRate * duration;
+    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * 0.3;
+    }
+    
+    const noise = audioContext.createBufferSource();
+    noise.buffer = buffer;
+    
+    const filter = audioContext.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.value = 2000;
+    
+    const gain = audioContext.createGain();
+    gain.gain.setValueAtTime(0, startTime);
+    gain.gain.linearRampToValueAtTime(volume, startTime + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+    
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioContext.destination);
+    
+    noise.start(startTime);
+    noise.stop(startTime + duration);
   }
   
   // ==================== 初始化 ====================
@@ -4196,6 +4240,11 @@
     
     if (battleHistory.length > 50) battleHistory.pop();
     renderHistory();
+    
+    // 同步到房间
+    if (typeof syncRoomData === 'function') {
+      syncRoomData('battleHistory', battleHistory);
+    }
   }
   
   function renderHistory() {
@@ -5008,18 +5057,31 @@
             }
           }
           
-          // 初始化玩家：把第一个玩家设为当前用户
+          // 加载房间数据
           setTimeout(function() {
-            if (typeof players !== 'undefined' && players.length > 0) {
-              players[0].name = currentUser;
-              if (typeof renderPlayers === 'function') {
-                renderPlayers();
-              }
-              if (typeof renderPlayerChips === 'function') {
-                renderPlayerChips();
+            if (room.data && typeof loadRoomData === 'function') {
+              loadRoomData(room.data);
+            } else {
+              // 没有数据，初始化第一个玩家为当前用户
+              if (typeof players !== 'undefined' && players.length > 0) {
+                players[0].name = currentUser;
+                if (typeof renderPlayers === 'function') {
+                  renderPlayers();
+                }
+                if (typeof renderPlayerChips === 'function') {
+                  renderPlayerChips();
+                }
               }
             }
           }, 300);
+        });
+
+        // 房间数据更新
+        socket.on('room_data_updated', function({ type, data, updatedBy }) {
+          if (updatedBy === currentUser) return; // 自己发的不用处理
+          if (typeof applyRoomDataUpdate === 'function') {
+            applyRoomDataUpdate(type, data);
+          }
         });
 
         // 房间被删除
@@ -5256,6 +5318,78 @@
 
     // ==================== 联机投掷同步 ====================
     
+    // ==================== 房间数据同步 ====================
+    
+    // 标记是否正在应用远程更新，避免循环发送
+    var isApplyingRemoteUpdate = false;
+    
+    // 加载房间数据（加入房间时）
+    function loadRoomData(roomData) {
+      isApplyingRemoteUpdate = true;
+      
+      try {
+        // 加载玩家列表
+        if (roomData.players && roomData.players.length > 0 && typeof players !== 'undefined') {
+          players = roomData.players;
+          if (typeof renderPlayers === 'function') renderPlayers();
+          if (typeof renderPlayerChips === 'function') renderPlayerChips();
+          if (typeof renderPlayerList === 'function') renderPlayerList();
+        } else {
+          // 没有玩家数据，初始化第一个为当前用户
+          if (typeof players !== 'undefined' && players.length > 0) {
+            players[0].name = currentUser;
+            if (typeof renderPlayers === 'function') renderPlayers();
+            if (typeof renderPlayerChips === 'function') renderPlayerChips();
+          }
+        }
+        
+        // 加载历史记录
+        if (roomData.battleHistory && typeof battleHistory !== 'undefined') {
+          battleHistory = roomData.battleHistory;
+          if (typeof renderHistory === 'function') renderHistory();
+        }
+        
+        console.log('已加载房间数据');
+      } catch (e) {
+        console.error('加载房间数据失败:', e);
+      }
+      
+      isApplyingRemoteUpdate = false;
+    }
+    
+    // 应用远程数据更新
+    function applyRoomDataUpdate(type, data) {
+      isApplyingRemoteUpdate = true;
+      
+      try {
+        if (type === 'players' && typeof players !== 'undefined') {
+          players = data;
+          if (typeof renderPlayers === 'function') renderPlayers();
+          if (typeof renderPlayerChips === 'function') renderPlayerChips();
+          if (typeof renderPlayerList === 'function') renderPlayerList();
+        } else if (type === 'battleHistory' && typeof battleHistory !== 'undefined') {
+          battleHistory = data;
+          if (typeof renderHistory === 'function') renderHistory();
+        }
+        
+        console.log('已应用房间数据更新:', type);
+      } catch (e) {
+        console.error('应用房间数据更新失败:', e);
+      }
+      
+      isApplyingRemoteUpdate = false;
+    }
+    
+    // 发送数据更新到房间
+    function syncRoomData(type, data) {
+      if (!isOnlineMode || !socket || !currentRoomId || isApplyingRemoteUpdate) return;
+      
+      socket.emit('update_room_data', {
+        type: type,
+        data: data
+      });
+    }
+
     // 发送投掷结果到房间
     function sendRollToRoom(playerData) {
       if (isOnlineMode && socket && currentRoomId) {
