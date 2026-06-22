@@ -3241,26 +3241,45 @@
       </div>
     </div>
 
-    <!-- 侧边栏折叠时的展开按钮 -->
-    <button class="sidebar-expand-btn" id="sidebarExpandBtn" onclick="
-  document.getElementById('roomSidebar').style.display='';
-  document.getElementById('sidebarExpandBtn').style.display='none';
-  document.querySelector('.room-content').style.width='';
-  localStorage.setItem('sidebarCollapsed', 'false');
-" style="display: none;">
+    <!-- 成员列表开关按钮 -->
+    <button id="memberToggleBtn" onclick="
+      const sidebar = document.getElementById('roomSidebar');
+      const btn = document.getElementById('memberToggleBtn');
+      const content = document.querySelector('.room-content');
+      if (sidebar.style.display === 'none') {
+        sidebar.style.display = '';
+        content.style.width = '';
+        btn.textContent = '✕';
+        btn.title = '隐藏成员列表';
+        localStorage.setItem('memberListVisible', 'true');
+      } else {
+        sidebar.style.display = 'none';
+        content.style.width = '100%';
+        btn.textContent = '👥';
+        btn.title = '显示成员列表';
+        localStorage.setItem('memberListVisible', 'false');
+      }
+    " style="
+      position: fixed;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: white;
+      border: none;
+      border-radius: 12px 0 0 12px;
+      padding: 15px 8px;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 99999;
+      box-shadow: -2px 0 20px rgba(124, 58, 237, 0.6);
+      font-weight: bold;
+    ">
       👥
     </button>
     <div class="room-body" id="roomBody">
       <div class="room-sidebar" id="roomSidebar">
-        <div class="sidebar-title">
-          <span>👥 成员列表</span>
-          <button class="sidebar-collapse-btn" onclick="
-  document.getElementById('roomSidebar').style.display='none';
-  document.getElementById('sidebarExpandBtn').style.display='block';
-  document.querySelector('.room-content').style.width='100%';
-  localStorage.setItem('sidebarCollapsed', 'true');
-" title="折叠" style="background: #7c3aed; color: white; font-weight: bold; width: 28px; height: 28px; font-size: 16px; border: none; border-radius: 4px; cursor: pointer;">—</button>
-        </div>
+        <div class="sidebar-title">👥 成员列表</div>
         <ul class="member-list" id="memberList">
         </ul>
       </div>
@@ -5694,20 +5713,33 @@
 
     // 检查登录状态
     window.addEventListener('load', function() {
-      // 侧边栏折叠状态初始化
+      
+      // 成员列表显示状态初始化
       setTimeout(function() {
         const sidebar = document.getElementById('roomSidebar');
-        const expandBtn = document.getElementById('sidebarExpandBtn');
+        const btn = document.getElementById('memberToggleBtn');
         const content = document.querySelector('.room-content');
         const isMobile = document.body.classList.contains('mobile-mode');
-        const saved = localStorage.getItem('sidebarCollapsed');
+        const saved = localStorage.getItem('memberListVisible');
         
-        if (sidebar && (saved === 'true' || (isMobile && saved === null))) {
-          sidebar.style.display = 'none';
-          if (expandBtn) expandBtn.style.display = 'block';
-          if (content) content.style.width = '100%';
+        // 手机模式默认隐藏，电脑模式默认显示
+        const shouldShow = saved === 'true' || (saved === null && !isMobile);
+        
+        if (sidebar && btn) {
+          if (shouldShow) {
+            sidebar.style.display = '';
+            content.style.width = '';
+            btn.textContent = '✕';
+            btn.title = '隐藏成员列表';
+          } else {
+            sidebar.style.display = 'none';
+            content.style.width = '100%';
+            btn.textContent = '👥';
+            btn.title = '显示成员列表';
+          }
         }
       }, 300);
+;
 
       const savedUser = localStorage.getItem('currentUser');
       if (savedUser) {
