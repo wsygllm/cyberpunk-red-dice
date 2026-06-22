@@ -556,6 +556,12 @@
     display: none;
   }
   
+  .room-body.sidebar-collapsed   .room-content {
+    flex: 1;
+    min-width: 0;
+    overflow: auto;
+  }
+  
   /* 手机模式下侧边栏 */
   .mobile-mode .room-sidebar {
     width: 100%;
@@ -570,30 +576,7 @@
   }
   
   /* 侧边栏切换按钮 */
-  .sidebar-toggle-btn {
-    display: none;
-    position: fixed;
-    top: 70px;
-    left: 10px;
-    z-index: 9999;
-    background: rgba(124, 58, 237, 0.9);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  }
-  
-  .mobile-mode .sidebar-toggle-btn {
-    display: block;
-  }
-  
-  .mobile-mode .sidebar-toggle-btn.hidden {
-    display: none;
-  }
+
 
   .member-list {
     list-style: none;
@@ -3202,7 +3185,6 @@
       </div>
     </div>
 
-    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()">👥</button>
     <div class="room-body" id="roomBody">
       <div class="room-sidebar" id="roomSidebar">
         <div class="sidebar-title">👥 成员列表</div>
@@ -5609,11 +5591,11 @@
     
 
     // 切换侧边栏折叠状态
+        // 切换侧边栏折叠状态
     function toggleSidebar() {
       const sidebar = document.getElementById('roomSidebar');
       const body = document.getElementById('roomBody');
-      const toggleBtn = document.getElementById('sidebarToggleBtn');
-      const headerBtn = document.getElementById('sidebarToggleHeaderBtn');
+      const toggleBtn = document.getElementById('sidebarToggleHeaderBtn');
       
       if (sidebar) {
         sidebar.classList.toggle('collapsed');
@@ -5626,19 +5608,9 @@
         const isCollapsed = sidebar.classList.contains('collapsed');
         localStorage.setItem('sidebarCollapsed', isCollapsed);
         
-        // 切换浮动按钮
+        // 切换按钮
         if (toggleBtn) {
-          if (isCollapsed) {
-            toggleBtn.textContent = '👥';
-            toggleBtn.classList.remove('hidden');
-          } else {
-            toggleBtn.textContent = '✕';
-          }
-        }
-        
-        // 切换顶部栏按钮
-        if (headerBtn) {
-          headerBtn.textContent = isCollapsed ? '👥 成员' : '✕ 收起';
+          toggleBtn.textContent = isCollapsed ? '👥' : '✕';
         }
       }
     }}
@@ -5663,7 +5635,6 @@
         setTimeout(function() {
           const sidebar = document.getElementById('roomSidebar');
           const body = document.getElementById('roomBody');
-          const toggleBtn = document.getElementById('sidebarToggleBtn');
           
           const shouldCollapse = savedSidebarCollapsed === 'true' || savedSidebarCollapsed === null;
           
