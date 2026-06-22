@@ -582,12 +582,13 @@
     background: linear-gradient(135deg, #7c3aed, #a855f7);
     color: white;
     border: none;
-    border-radius: 8px 0 0 8px;
-    padding: 10px 6px;
-    font-size: 14px;
+    border-radius: 12px 0 0 12px;
+    padding: 15px 8px;
+    font-size: 18px;
     cursor: pointer;
-    z-index: 999;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+    z-index: 9999;
+    box-shadow: -2px 0 15px rgba(124, 58, 237, 0.5);
+    font-weight: bold;
   }
   
   .room-body.sidebar-collapsed + .sidebar-expand-btn,
@@ -3248,7 +3249,7 @@
       <div class="room-sidebar" id="roomSidebar">
         <div class="sidebar-title">
           <span>👥 成员列表</span>
-          <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="折叠">✕</button>
+          <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="折叠" style="background: #7c3aed; color: white; font-weight: bold; width: 28px; height: 28px; font-size: 16px;">—</button>
         </div>
         <ul class="member-list" id="memberList">
         </ul>
@@ -5650,36 +5651,46 @@
         btn.classList.add('active');
         localStorage.setItem('mobileMode', 'true');
       }
+    }
     
-
     // 切换侧边栏折叠状态
-        // 切换侧边栏折叠状态
-    function toggleSidebar() {
+        function toggleSidebar() {
       const sidebar = document.getElementById('roomSidebar');
-      const body = document.getElementById('roomBody');
+      const content = document.querySelector('.room-content');
       const expandBtn = document.getElementById('sidebarExpandBtn');
       
-      if (sidebar) {
-        sidebar.classList.toggle('collapsed');
-        
-        if (body) {
-          body.classList.toggle('sidebar-collapsed');
+      if (!sidebar) return;
+      
+      const isHidden = sidebar.style.display === 'none';
+      
+      if (isHidden) {
+        // 展开
+        sidebar.style.display = '';
+        sidebar.style.width = '';
+        if (content) {
+          content.style.width = '';
+          content.style.flex = '';
         }
-        
-        // 保存状态
-        const isCollapsed = sidebar.classList.contains('collapsed');
-        localStorage.setItem('sidebarCollapsed', isCollapsed);
-        
-        // 切换展开按钮显示
         if (expandBtn) {
-          if (isCollapsed) {
-            expandBtn.style.display = 'block';
-          } else {
-            expandBtn.style.display = 'none';
-          }
+          expandBtn.style.display = 'none';
         }
+        localStorage.setItem('sidebarCollapsed', 'false');
+      } else {
+        // 折叠
+        sidebar.style.display = 'none';
+        sidebar.style.width = '0';
+        sidebar.style.padding = '0';
+        sidebar.style.margin = '0';
+        if (content) {
+          content.style.width = '100%';
+          content.style.flex = '1';
+        }
+        if (expandBtn) {
+          expandBtn.style.display = 'block';
+        }
+        localStorage.setItem('sidebarCollapsed', 'true');
       }
-    }}
+    }
 
     // 检查登录状态
     window.addEventListener('load', function() {
