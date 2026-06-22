@@ -529,6 +529,37 @@
     margin-bottom: 15px;
     letter-spacing: 1px;
   }
+  
+  .sidebar-title {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .sidebar-toggle-icon {
+    font-size: 10px;
+    transition: transform 0.3s;
+  }
+  
+  .room-sidebar.collapsed .sidebar-toggle-icon {
+    transform: rotate(-90deg);
+  }
+  
+  .room-sidebar.collapsed .member-list {
+    display: none;
+  }
+  
+  /* 手机模式下侧边栏更紧凑 */
+  .mobile-mode .room-sidebar {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .mobile-mode .room-sidebar.collapsed {
+    margin-bottom: 5px;
+  }
 
   .member-list {
     list-style: none;
@@ -1775,6 +1806,116 @@
     margin-top: 30px;
     padding-top: 25px;
     border-top: 2px solid rgba(155, 89, 182, 0.3);
+  }
+  
+  /* 伤害历史记录 */
+  .damage-history-section {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .damage-history-title {
+    font-size: 16px;
+    margin: 0 0 15px 0;
+    color: #fff;
+  }
+  
+  .damage-history-list {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .damage-history-item {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid #4ecca3;
+  }
+  
+  .damage-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+  
+  .damage-history-time {
+    color: #888;
+  }
+  
+  .damage-history-player {
+    color: #a78bfa;
+    font-weight: bold;
+  }
+  
+  .damage-history-formula {
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+  
+  .damage-history-total {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  .damage-history-total.is-crit {
+    color: #e94560;
+  }
+  
+  .crit-badge-small {
+    font-size: 12px;
+    background: rgba(233, 69, 96, 0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+  }
+  
+  .damage-history-detail {
+    color: #888;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  .damage-history-injury {
+    margin-top: 5px;
+  }
+  
+  .injury-type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .injury-type-head {
+    background: rgba(233, 69, 96, 0.2);
+    color: #e94560;
+  }
+  
+  .injury-type-torso {
+    background: rgba(243, 156, 18, 0.2);
+    color: #f39c12;
+  }
+  
+  .injury-name {
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 3px;
+  }
+  
+  .injury-victim {
+    font-size: 12px;
+    color: #888;
   }
   .injury-title {
     text-align: center;
@@ -3023,8 +3164,11 @@
     </div>
 
     <div class="room-body">
-      <div class="room-sidebar">
-        <div class="sidebar-title">👥 成员列表</div>
+      <div class="room-sidebar" id="roomSidebar">
+        <div class="sidebar-title" onclick="toggleSidebar()">
+          <span>👥 成员列表</span>
+          <span class="sidebar-toggle-icon" id="sidebarToggleIcon">▼</span>
+        </div>
         <ul class="member-list" id="memberList">
         </ul>
       </div>
@@ -3224,6 +3368,14 @@
           <div class="injury-effect" id="injuryEffect"></div>
         </div>
       </div>
+      
+      <!-- 伤害历史记录 -->
+      <div class="damage-history-section">
+        <h2 class="damage-history-title">📜 投掷记录</h2>
+        <div class="damage-history-list" id="damageHistory">
+          <div style="color: #666; text-align: center; padding: 20px;">暂无记录</div>
+        </div>
+      </div>
     </div>
     
     <!-- ========== 第三页：备忘录 ========== -->
@@ -3341,6 +3493,7 @@
   let nextPlayerId = 3;
   let selectedPlayerId = null;
   let battleHistory = [];
+  let damageHistory = []; // 伤害和伤势历史记录
   let roundCount = 0;
   
   // D12 重伤表数据
@@ -4245,7 +4398,81 @@
     if (typeof syncRoomData === 'function') {
       syncRoomData('battleHistory', battleHistory);
     }
+  
+
+  // 添加伤害/伤势历史记录
+  function addDamageHistory(type, data) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    
+    // 确定投掷人
+    let playerName = '玩家';
+    if (typeof currentUser !== 'undefined' && currentUser) {
+      playerName = currentUser;
+    }
+    
+    damageHistory.unshift({
+      time: timeStr,
+      type: type, // 'damage' 或 'injury'
+      playerName: playerName,
+      ...data
+    });
+    
+    if (damageHistory.length > 50) damageHistory.pop();
+    renderDamageHistory();
+    
+    // 同步到房间
+    if (typeof syncRoomData === 'function') {
+      syncRoomData('damageHistory', damageHistory);
+    }
   }
+  
+  // 渲染伤害历史记录
+  function renderDamageHistory() {
+    const container = document.getElementById('damageHistory');
+    if (!container) return;
+    
+    if (damageHistory.length === 0) {
+      container.innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">暂无记录</div>';
+      return;
+    }
+    
+    let html = '';
+    damageHistory.forEach((item, index) => {
+      html += `<div class="damage-history-item">`;
+      html += `<div class="damage-history-header">`;
+      html += `<span class="damage-history-time">${item.time}</span>`;
+      html += `<span class="damage-history-player">${item.playerName} 投掷</span>`;
+      html += `</div>`;
+      
+      if (item.type === 'damage') {
+        // 伤害记录
+        html += `<div class="damage-history-formula">${item.formula}</div>`;
+        html += `<div class="damage-history-total ${item.isCrit ? 'is-crit' : ''}">`;
+        html += `${item.total} 点伤害`;
+        if (item.isCrit) {
+          html += ' <span class="crit-badge-small">💥暴击</span>';
+        }
+        html += `</div>`;
+        if (item.detail) {
+          html += `<div class="damage-history-detail">${item.detail}</div>`;
+        }
+      } else if (item.type === 'injury') {
+        // 伤势记录
+        html += `<div class="damage-history-injury">`;
+        html += `<div class="injury-type-badge ${item.isHead ? 'injury-type-head' : 'injury-type-torso'}">${item.isHead ? '头部' : '躯干'}伤势</div>`;
+        html += `<div class="injury-name">${item.roll}点：${item.name}</div>`;
+        if (item.victim) {
+          html += `<div class="injury-victim">受害者：${item.victim}</div>`;
+        }
+        html += `</div>`;
+      }
+      
+      html += `</div>`;
+    });
+    
+    container.innerHTML = html;
+  }}
   
   function renderHistory() {
     const listEl = document.getElementById('historyList');
@@ -4466,6 +4693,15 @@
         resultEl.appendChild(critDetail);
       }
       
+      // 添加历史记录
+      addDamageHistory('damage', {
+        formula: formula,
+        total: total,
+        isCrit: isCrit,
+        detail: detail.textContent,
+        results: results
+      });
+      
     }, 600);
   }
   
@@ -4531,6 +4767,21 @@
         typeLabel.className = 'injury-type-label ' + (isHead ? 'injury-type-head' : 'injury-type-torso');
         
         resultEl.style.display = 'block';
+        
+        // 添加历史记录
+        let victimName = '';
+        if (playerId) {
+          const player = players.find(p => p.id == playerId);
+          if (player) victimName = player.name;
+        }
+        
+        addDamageHistory('injury', {
+          roll: result,
+          name: injury.name,
+          effect: injury.effect,
+          isHead: isHead,
+          victim: victimName
+        });
       }
     }, 500);
   }
@@ -5318,7 +5569,18 @@
         btn.classList.add('active');
         localStorage.setItem('mobileMode', 'true');
       }
-    }
+    
+
+    // 切换侧边栏折叠状态
+    function toggleSidebar() {
+      const sidebar = document.getElementById('roomSidebar');
+      if (sidebar) {
+        sidebar.classList.toggle('collapsed');
+        // 保存状态
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        localStorage.setItem('sidebarCollapsed', isCollapsed);
+      }
+    }}
 
     // 检查登录状态
     window.addEventListener('load', function() {
@@ -5336,6 +5598,15 @@
       // 恢复手机模式设置
       if (localStorage.getItem('mobileMode') === 'true') {
         document.body.classList.add('mobile-mode');
+        // 手机模式下默认折叠侧边栏
+        setTimeout(function() {
+          const sidebar = document.getElementById('roomSidebar');
+          if (sidebar && savedSidebarCollapsed === null) {
+            sidebar.classList.add('collapsed');
+          } else if (sidebar && savedSidebarCollapsed === 'true') {
+            sidebar.classList.add('collapsed');
+          }
+        }, 100);
         const btn = document.getElementById('mobileToggleBtn');
         if (btn) {
           btn.textContent = '🖥️ 电脑模式';
@@ -5377,6 +5648,12 @@
           if (typeof renderHistory === 'function') renderHistory();
         }
         
+        // 加载伤害历史记录
+        if (roomData.damageHistory && typeof damageHistory !== 'undefined') {
+          damageHistory = roomData.damageHistory;
+          if (typeof renderDamageHistory === 'function') renderDamageHistory();
+        }
+        
         console.log('已加载房间数据');
       } catch (e) {
         console.error('加载房间数据失败:', e);
@@ -5398,6 +5675,9 @@
         } else if (type === 'battleHistory' && typeof battleHistory !== 'undefined') {
           battleHistory = data;
           if (typeof renderHistory === 'function') renderHistory();
+        } else if (type === 'damageHistory' && typeof damageHistory !== 'undefined') {
+          damageHistory = data;
+          if (typeof renderDamageHistory === 'function') renderDamageHistory();
         }
         
         console.log('已应用房间数据更新:', type);

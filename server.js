@@ -147,6 +147,7 @@ io.on('connection', (socket) => {
       data: {
         players: [],
         battleHistory: [],
+        damageHistory: [],
         weapons: [],
         skills: [],
         lastUpdate: Date.now()
@@ -221,6 +222,8 @@ io.on('connection', (socket) => {
       room.data.weapons = data;
     } else if (type === 'skills') {
       room.data.skills = data;
+    } else if (type === 'damageHistory') {
+      room.data.damageHistory = data;
     } else if (type === 'all') {
       room.data = { ...room.data, ...data };
     }
@@ -335,6 +338,8 @@ io.on('connection', (socket) => {
       room.data.weapons = data;
     } else if (type === 'skills') {
       room.data.skills = data;
+    } else if (type === 'damageHistory') {
+      room.data.damageHistory = data;
     } else if (type === 'all') {
       room.data = { ...room.data, ...data };
     }
@@ -440,6 +445,8 @@ io.on('connection', (socket) => {
       room.data.weapons = data;
     } else if (type === 'skills') {
       room.data.skills = data;
+    } else if (type === 'damageHistory') {
+      room.data.damageHistory = data;
     } else if (type === 'all') {
       room.data = { ...room.data, ...data };
     }
