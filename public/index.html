@@ -192,6 +192,8 @@
     background: linear-gradient(135deg, #4ecca3, #45b393);
     color: #fff;
     box-shadow: 0 0 15px rgba(78, 204, 163, 0.3);
+    width: 100%;
+    margin-top: 10px;
   }
 
   .cyber-btn.offline-btn:hover {
@@ -220,6 +222,13 @@
     background: rgba(255, 68, 68, 0.1);
     border: 1px solid #ff4444;
     color: #ff4444;
+  }
+
+  .divider {
+    text-align: center;
+    margin: 20px 0 10px 0;
+    color: #666;
+    font-size: 12px;
   }
 
   /* ==================== 大厅页 ==================== */
@@ -456,55 +465,9 @@
     gap: 15px;
   }
 
-  .mobile-toggle-btn {
-    padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-    font-family: 'Courier New', monospace;
-    transition: all 0.3s;
-  }
-
-  .mobile-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-  }
-
-  .mobile-toggle-btn.active {
-    background: rgba(0, 255, 255, 0.2);
-    border-color: #00ffff;
-    color: #00ffff;
-  }
-
   .member-count {
     font-size: 14px;
     color: #00ffff;
-  }
-
-  .connection-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: #888;
-  }
-
-  .mobile-toggle-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s;
-  }
-
-  .mobile-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
   }
 
   .mobile-toggle-btn {
@@ -527,6 +490,14 @@
   .mobile-toggle-btn.active {
     background: rgba(0, 255, 255, 0.3);
     border-color: #00ffff;
+  }
+
+  .connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #888;
   }
 
   .status-dot {
@@ -565,76 +536,6 @@
     color: #888;
     margin-bottom: 15px;
     letter-spacing: 1px;
-  }
-
-  .sidebar-divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 15px 0;
-  }
-
-  .roll-history {
-    max-height: 300px;
-    overflow-y: auto;
-  }
-
-  .roll-history::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  .roll-history::-webkit-scrollbar-thumb {
-    background: rgba(255, 0, 255, 0.3);
-    border-radius: 2px;
-  }
-
-  .roll-entry {
-    padding: 8px;
-    margin-bottom: 6px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 6px;
-    border-left: 2px solid #ff00ff;
-    font-size: 12px;
-  }
-
-  .roll-entry.own-roll {
-    border-left-color: #00ffff;
-    background: rgba(0, 255, 255, 0.05);
-  }
-
-  .roll-player {
-    font-weight: bold;
-    color: #ff00ff;
-    margin-bottom: 4px;
-    font-size: 11px;
-  }
-
-  .roll-entry.own-roll .roll-player {
-    color: #00ffff;
-  }
-
-  .roll-formula {
-    color: #888;
-    font-size: 11px;
-    margin-bottom: 2px;
-  }
-
-  .roll-result {
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-  }
-
-  .roll-time {
-    color: #666;
-    font-size: 10px;
-    margin-top: 4px;
-  }
-
-  .empty-roll {
-    text-align: center;
-    color: #555;
-    padding: 20px 10px;
-    font-size: 12px;
   }
 
   .member-list {
@@ -693,539 +594,6 @@
   /* ==================== 手机模式 ==================== */
   body.mobile-mode .room-content {
     padding: 10px;
-  }
-
-  body.mobile-mode .tabs {
-    gap: 5px;
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .tab-btn {
-    padding: 8px 10px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .player-grid {
-    gap: 10px;
-  }
-
-  body.mobile-mode .player-card {
-    padding: 12px;
-  }
-
-  body.mobile-mode .player-name {
-    font-size: 14px;
-  }
-
-  body.mobile-mode .dice-area {
-    margin: 10px 0;
-  }
-
-  body.mobile-mode .main-dice {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-  }
-
-  body.mobile-mode .bonus-dice,
-  body.mobile-mode .penalty-dice {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-  }
-
-  body.mobile-mode .total-score {
-    font-size: 28px;
-    margin: 8px 0;
-  }
-
-  body.mobile-mode .bonus-input {
-    padding: 6px;
-    font-size: 13px;
-  }
-
-  body.mobile-mode .roll-btn {
-    padding: 8px;
-    font-size: 13px;
-  }
-
-  body.mobile-mode .skill-select,
-  body.mobile-mode .aim-select,
-  body.mobile-mode .weapon-select {
-    padding: 6px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .history-section {
-    margin-top: 20px;
-  }
-
-  body.mobile-mode .history-title {
-    font-size: 14px;
-  }
-
-  body.mobile-mode .history-entry {
-    padding: 10px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .player-selection {
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .player-chip {
-    padding: 5px 12px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .rules-hint {
-    font-size: 11px;
-    padding: 8px;
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .result-display {
-    padding: 12px;
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .result-text {
-    font-size: 16px;
-  }
-
-  body.mobile-mode .roll-all-btn {
-    padding: 12px;
-    font-size: 15px;
-    margin-bottom: 15px;
-  }
-
-  /* 伤害页手机模式 */
-  body.mobile-mode .damage-container {
-    gap: 15px;
-  }
-
-  body.mobile-mode .damage-section,
-  body.mobile-mode .crit-table-section {
-    padding: 15px;
-  }
-
-  body.mobile-mode .section-title {
-    font-size: 15px;
-    margin-bottom: 12px;
-  }
-
-  body.mobile-mode .dice-formula-input {
-    padding: 8px;
-    font-size: 14px;
-  }
-
-  body.mobile-mode .damage-result {
-    padding: 15px;
-    margin: 12px 0;
-  }
-
-  body.mobile-mode .damage-total {
-    font-size: 32px;
-  }
-
-  body.mobile-mode .dice-results {
-    gap: 6px;
-    margin: 10px 0;
-  }
-
-  body.mobile-mode .damage-dice {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-  }
-
-  body.mobile-mode .crit-table-grid {
-    gap: 8px;
-  }
-
-  body.mobile-mode .crit-table-item {
-    padding: 10px;
-  }
-
-  body.mobile-mode .crit-dice {
-    font-size: 16px;
-  }
-
-  body.mobile-mode .crit-desc {
-    font-size: 11px;
-  }
-
-  /* 备忘录手机模式 */
-  body.mobile-mode .memo-container {
-    gap: 15px;
-  }
-
-  body.mobile-mode .player-sidebar {
-    padding: 10px;
-  }
-
-  body.mobile-mode .player-list-item {
-    padding: 8px;
-    font-size: 13px;
-  }
-
-  body.mobile-mode .memo-main {
-    padding: 15px;
-  }
-
-  body.mobile-mode .add-item-form {
-    gap: 8px;
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .add-item-form input {
-    padding: 8px;
-    font-size: 13px;
-  }
-
-  body.mobile-mode .item-list {
-    gap: 8px;
-  }
-
-  body.mobile-mode .item-card {
-    padding: 10px;
-  }
-
-  body.mobile-mode .item-name {
-    font-size: 14px;
-  }
-
-  /* D12重伤表手机模式 */
-  body.mobile-mode .d12-section {
-    padding: 15px;
-    margin-top: 15px;
-  }
-
-  body.mobile-mode .d12-dice {
-    width: 60px;
-    height: 60px;
-    font-size: 28px;
-  }
-
-  body.mobile-mode .injury-result {
-    padding: 12px;
-    margin-top: 12px;
-  }
-
-  body.mobile-mode .injury-title {
-    font-size: 15px;
-  }
-
-  body.mobile-mode .injury-effect {
-    font-size: 12px;
-  }
-
-  /* 响应式 */
-  @media (max-width: 768px) {
-    .room-sidebar {
-      display: none;
-    }
-    
-    .create-room-form {
-      flex-direction: column;
-    }
-    
-    .create-room-form .form-group {
-      width: 100%;
-    }
-    
-    .login-box {
-      padding: 30px 20px;
-    }
-    
-    .login-title {
-      font-size: 22px;
-    }
-  }
-
-  /* ==================== 手机模式 ==================== */
-  body.mobile-mode .room-content {
-    padding: 10px;
-  }
-
-  body.mobile-mode .tabs {
-    gap: 5px;
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .tab-btn {
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .player-grid {
-    gap: 10px;
-  }
-
-  body.mobile-mode .player-card {
-    padding: 12px;
-  }
-
-  body.mobile-mode .player-name {
-    font-size: 14px;
-  }
-
-  body.mobile-mode .bonus-input {
-    width: 50px;
-    padding: 4px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .main-dice {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-  }
-
-  body.mobile-mode .bonus-dice,
-  body.mobile-mode .penalty-dice {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-  }
-
-  body.mobile-mode .total-score {
-    font-size: 28px;
-  }
-
-  body.mobile-mode .roll-btn {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .history-section {
-    margin-top: 15px;
-  }
-
-  body.mobile-mode .history-title {
-    font-size: 14px;
-  }
-
-  body.mobile-mode .history-entry {
-    padding: 8px;
-    font-size: 11px;
-  }
-
-  body.mobile-mode .player-selection {
-    margin-bottom: 10px;
-  }
-
-  body.mobile-mode .player-chip {
-    padding: 4px 10px;
-    font-size: 11px;
-  }
-
-  body.mobile-mode .damage-calculator,
-  body.mobile-mode .crit-table-section,
-  body.mobile-mode .injury-section {
-    padding: 15px;
-  }
-
-  body.mobile-mode .dice-formula-input {
-    padding: 8px;
-    font-size: 14px;
-  }
-
-  body.mobile-mode .damage-result {
-    padding: 15px;
-  }
-
-  body.mobile-mode .damage-total {
-    font-size: 36px;
-  }
-
-  body.mobile-mode .memo-container {
-    gap: 10px;
-  }
-
-  body.mobile-mode .player-sidebar {
-    padding: 10px;
-  }
-
-  body.mobile-mode .player-list-item {
-    padding: 6px 8px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .add-item-form {
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-
-  body.mobile-mode .add-item-form input {
-    padding: 6px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .item-list {
-    gap: 6px;
-  }
-
-  body.mobile-mode .item-card {
-    padding: 8px;
-  }
-
-  body.mobile-mode .item-name {
-    font-size: 13px;
-  }
-
-  body.mobile-mode .item-detail {
-    font-size: 11px;
-  }
-
-  body.mobile-mode .item-actions button {
-    padding: 4px 8px;
-    font-size: 11px;
-  }
-
-  body.mobile-mode .section-title {
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-
-  body.mobile-mode .rules-hint {
-    font-size: 11px;
-    padding: 8px;
-    margin-bottom: 10px;
-  }
-
-  body.mobile-mode .result-display {
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-
-  body.mobile-mode .winner-name {
-    font-size: 16px;
-  }
-
-  body.mobile-mode .big-roll-btn {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  body.mobile-mode .injury-dice {
-    width: 60px;
-    height: 60px;
-    font-size: 28px;
-  }
-
-  body.mobile-mode .injury-result {
-    padding: 12px;
-  }
-
-  body.mobile-mode .injury-title {
-    font-size: 14px;
-  }
-
-  body.mobile-mode .injury-effect {
-    font-size: 12px;
-  }
-
-  body.mobile-mode .crit-table-grid {
-    gap: 8px;
-  }
-
-  body.mobile-mode .crit-table-item {
-    padding: 8px;
-  }
-
-  body.mobile-mode .crit-dice {
-    font-size: 16px;
-  }
-
-  body.mobile-mode .crit-desc {
-    font-size: 10px;
-  }
-
-  body.mobile-mode .dice-results {
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-
-  body.mobile-mode .single-dice {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-  }
-
-  body.mobile-mode .damage-detail {
-    font-size: 12px;
-  }
-
-  body.mobile-mode .crit-badge {
-    font-size: 11px;
-    padding: 3px 8px;
-  }
-
-  body.mobile-mode .aim-select,
-  body.mobile-mode .skill-select,
-  body.mobile-mode .weapon-select {
-    padding: 4px;
-    font-size: 11px;
-  }
-
-  body.mobile-mode .player-stats {
-    font-size: 10px;
-  }
-
-  body.mobile-mode .memo-tabs {
-    margin-bottom: 10px;
-  }
-
-  body.mobile-mode .memo-tab-btn {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .add-type-buttons {
-    gap: 5px;
-  }
-
-  body.mobile-mode .add-type-buttons button {
-    padding: 6px;
-    font-size: 11px;
-  }
-
-  body.mobile-mode .character-section {
-    margin-bottom: 12px;
-  }
-
-  body.mobile-mode .section-title {
-    font-size: 12px;
-    margin-bottom: 6px;
-  }
-
-  /* 手机模式下房间头部更紧凑 */
-  body.mobile-mode .room-header {
-    padding: 8px 12px;
-  }
-
-  body.mobile-mode .room-title {
-    font-size: 16px;
-  }
-
-  body.mobile-mode .back-btn {
-    padding: 5px 10px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .member-count {
-    font-size: 12px;
-  }
-
-  body.mobile-mode .mobile-toggle-btn {
-    padding: 4px 8px;
-    font-size: 14px;
-  }
-
-  /* ==================== 手机模式（手动切换） ==================== */
-  body.mobile-mode .room-content {
-    padding: 10px;
     font-size: 12px;
   }
 
@@ -1246,6 +614,16 @@
 
   body.mobile-mode .player-card {
     padding: 10px 8px;
+  }
+
+  body.mobile-mode .player-card.current-user {
+    border-color: rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+  }
+
+  body.mobile-mode .current-user-badge {
+    font-size: 9px;
+    padding: 1px 6px;
   }
 
   body.mobile-mode .player-name {
@@ -1346,11 +724,6 @@
     padding: 12px;
   }
 
-  body.mobile-mode .section-title {
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-
   body.mobile-mode .dice-formula-input {
     font-size: 14px;
     padding: 8px;
@@ -1421,11 +794,32 @@
     font-size: 10px;
   }
 
-  /* 手机模式下隐藏侧边栏 */
   body.mobile-mode .room-sidebar {
     display: none;
   }
 
+  /* 响应式 */
+  @media (max-width: 768px) {
+    .room-sidebar {
+      display: none;
+    }
+    
+    .create-room-form {
+      flex-direction: column;
+    }
+    
+    .create-room-form .form-group {
+      width: 100%;
+    }
+    
+    .login-box {
+      padding: 30px 20px;
+    }
+    
+    .login-title {
+      font-size: 22px;
+    }
+  }
 
     /* ==================== 完整工具样式 ==================== */
 
@@ -3480,236 +2874,6 @@
     to { opacity: 1; }
   }
   
-  /* ==================== 手机模式 ==================== */
-  body.mobile-mode .room-content {
-    padding: 10px;
-  }
-
-  body.mobile-mode .tabs {
-    gap: 5px;
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .tab-btn {
-    padding: 8px 10px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .player-grid {
-    gap: 10px;
-  }
-
-  body.mobile-mode .player-card {
-    padding: 12px;
-  }
-
-  body.mobile-mode .player-name {
-    font-size: 14px;
-  }
-
-  body.mobile-mode .dice-area {
-    margin: 10px 0;
-  }
-
-  body.mobile-mode .main-dice {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-  }
-
-  body.mobile-mode .bonus-dice,
-  body.mobile-mode .penalty-dice {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-  }
-
-  body.mobile-mode .total-score {
-    font-size: 28px;
-    margin: 8px 0;
-  }
-
-  body.mobile-mode .bonus-input {
-    padding: 6px;
-    font-size: 13px;
-  }
-
-  body.mobile-mode .roll-btn {
-    padding: 8px;
-    font-size: 13px;
-  }
-
-  body.mobile-mode .skill-select,
-  body.mobile-mode .aim-select,
-  body.mobile-mode .weapon-select {
-    padding: 6px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .history-section {
-    margin-top: 20px;
-  }
-
-  body.mobile-mode .history-title {
-    font-size: 14px;
-  }
-
-  body.mobile-mode .history-entry {
-    padding: 10px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .player-selection {
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .player-chip {
-    padding: 5px 12px;
-    font-size: 12px;
-  }
-
-  body.mobile-mode .rules-hint {
-    font-size: 11px;
-    padding: 8px;
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .result-display {
-    padding: 12px;
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .result-text {
-    font-size: 16px;
-  }
-
-  body.mobile-mode .roll-all-btn {
-    padding: 12px;
-    font-size: 15px;
-    margin-bottom: 15px;
-  }
-
-  /* 伤害页手机模式 */
-  body.mobile-mode .damage-container {
-    gap: 15px;
-  }
-
-  body.mobile-mode .damage-section,
-  body.mobile-mode .crit-table-section {
-    padding: 15px;
-  }
-
-  body.mobile-mode .section-title {
-    font-size: 15px;
-    margin-bottom: 12px;
-  }
-
-  body.mobile-mode .dice-formula-input {
-    padding: 8px;
-    font-size: 14px;
-  }
-
-  body.mobile-mode .damage-result {
-    padding: 15px;
-    margin: 12px 0;
-  }
-
-  body.mobile-mode .damage-total {
-    font-size: 32px;
-  }
-
-  body.mobile-mode .dice-results {
-    gap: 6px;
-    margin: 10px 0;
-  }
-
-  body.mobile-mode .damage-dice {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-  }
-
-  body.mobile-mode .crit-table-grid {
-    gap: 8px;
-  }
-
-  body.mobile-mode .crit-table-item {
-    padding: 10px;
-  }
-
-  body.mobile-mode .crit-dice {
-    font-size: 16px;
-  }
-
-  body.mobile-mode .crit-desc {
-    font-size: 11px;
-  }
-
-  /* 备忘录手机模式 */
-  body.mobile-mode .memo-container {
-    gap: 15px;
-  }
-
-  body.mobile-mode .player-sidebar {
-    padding: 10px;
-  }
-
-  body.mobile-mode .player-list-item {
-    padding: 8px;
-    font-size: 13px;
-  }
-
-  body.mobile-mode .memo-main {
-    padding: 15px;
-  }
-
-  body.mobile-mode .add-item-form {
-    gap: 8px;
-    margin-bottom: 15px;
-  }
-
-  body.mobile-mode .add-item-form input {
-    padding: 8px;
-    font-size: 13px;
-  }
-
-  body.mobile-mode .item-list {
-    gap: 8px;
-  }
-
-  body.mobile-mode .item-card {
-    padding: 10px;
-  }
-
-  body.mobile-mode .item-name {
-    font-size: 14px;
-  }
-
-  /* D12重伤表手机模式 */
-  body.mobile-mode .d12-section {
-    padding: 15px;
-    margin-top: 15px;
-  }
-
-  body.mobile-mode .d12-dice {
-    width: 60px;
-    height: 60px;
-    font-size: 28px;
-  }
-
-  body.mobile-mode .injury-result {
-    padding: 12px;
-    margin-top: 12px;
-  }
-
-  body.mobile-mode .injury-title {
-    font-size: 15px;
-  }
-
-  body.mobile-mode .injury-effect {
-    font-size: 12px;
-  }
-
   /* 响应式 */
   @media (max-width: 768px) {
     .room-content {
@@ -3733,6 +2897,24 @@
     }
   }
 
+    /* 当前用户标识样式 */
+    .player-card.current-user {
+      border-color: rgba(0, 255, 255, 0.5);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    }
+
+    .current-user-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: linear-gradient(135deg, #00ffff, #00ccff);
+      color: #000;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: bold;
+      z-index: 10;
+    }
   </style>
 </head>
 <body>
@@ -3758,9 +2940,9 @@
           <button class="cyber-btn secondary" onclick="registerUser()">注册</button>
         </div>
         
-        <div style="text-align: center; margin: 20px 0 10px 0; color: #666; font-size: 12px;">—— 或者 ——</div>
+        <div class="divider">—— 或者 ——</div>
         
-        <button class="cyber-btn offline-btn" onclick="useOfflineMode()" style="width: 100%; margin-top: 10px;">
+        <button class="cyber-btn offline-btn" onclick="useOfflineMode()">
           🎲 离线使用（无需服务器）
         </button>
         
@@ -3828,13 +3010,6 @@
         <div class="sidebar-title">👥 成员列表</div>
         <ul class="member-list" id="memberList">
         </ul>
-        
-        <div class="sidebar-divider"></div>
-        
-        <div class="sidebar-title">🎲 投掷记录</div>
-        <div class="roll-history" id="rollHistory">
-          <div class="empty-roll">暂无投掷记录</div>
-        </div>
       </div>
 
       <div class="room-content">
@@ -4050,7 +3225,6 @@
     var currentRoomId = null;
     var socket = null;
     var currentRoomData = null;
-    var isOnlineMode = false;
 
     // ==================== 完整工具 JS ====================
 
@@ -4809,57 +3983,12 @@
     if (battleHistory.length === 0) {
       listEl.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">暂无对抗记录</div>';
       return;
-    
-    // 联机模式：发送结果到房间
-    if (typeof isOnlineMode !== 'undefined' && isOnlineMode && typeof sendRollToRoom === 'function') {
-        const activePlayers = players.filter(p => p.active);
-        activePlayers.forEach(p => {
-            sendRollToRoom({
-                id: p.id,
-                name: p.name,
-                dice: p.diceResult,
-                bonus: p.bonus,
-                bonusDice: p.bonusDice,
-                isCritical: p.isCritical,
-                total: p.total
-            });
-        });
     }
-
-}
-
-// 添加房间投掷记录（其他人的投掷）
-function addRoomRollHistory(playerName, result) {
-    const historyContainer = document.getElementById('historyContainer');
-    if (!historyContainer) return;
     
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    
-    const entry = document.createElement('div');
-    entry.className = 'history-entry room-roll';
-    entry.innerHTML = `
-        <div class="history-time">${timeStr} [房间]</div>
-        <div class="history-result">
-            <strong style="color: #ff00ff;">${playerName}</strong> 投掷结果：
-            <span class="history-total">${result.total}</span>
-            ${result.isCritical === 'success' ? '<span class="badge badge-success">大成功!</span>' : ''}
-            ${result.isCritical === 'fail' ? '<span class="badge badge-fail">大失败!</span>' : ''}
-        </div>
-        <div class="history-detail">
-            骰子: ${result.dice} + ${result.bonus}加值 = ${result.total}
-        </div>
-    `;
-    
-    historyContainer.insertBefore(entry, historyContainer.firstChild);
-    
-    // 限制历史记录数量
-    const entries = historyContainer.querySelectorAll('.history-entry');
-    if (entries.length > 50) {
-        entries[entries.length - 1].remove();
-    }
-}
-) {
+    listEl.innerHTML = battleHistory.map(h => {
+      let winnersText = '';
+      if (!h.isSingle) {
+        if (h.isTie) {
           winnersText = ` - 平局`;
         } else if (h.winners.length > 0) {
           winnersText = ` - ${h.winners.join('、')}胜`;
@@ -5074,15 +4203,6 @@ function addRoomRollHistory(playerName, result) {
         resultEl.appendChild(critDetail);
       }
       
-      // 发送到服务器（如果在线）
-      if (typeof sendRollToServer === 'function') {
-        sendRollToServer(
-          `伤害骰 ${formula}`,
-          total + (isCrit ? ' 💥暴击!' : ''),
-          `${parsed.count}个D${parsed.sides}`
-        );
-      }
-      
     }, 600);
   }
   
@@ -5148,17 +4268,6 @@ function addRoomRollHistory(playerName, result) {
         typeLabel.className = 'injury-type-label ' + (isHead ? 'injury-type-head' : 'injury-type-torso');
         
         resultEl.style.display = 'block';
-        
-        // 发送到服务器（如果在线）
-        if (typeof sendRollToServer === 'function') {
-          const injuryName = isHead ? headInjuries[roll - 1].name : bodyInjuries[roll - 1].name;
-          const playerName = document.getElementById('injuryPlayer')?.value || '未知';
-          sendRollToServer(
-            `${playerName} - ${isHead ? '头部' : '躯干'}重伤`,
-            `D12: ${roll} - ${injuryName}`,
-            ''
-          );
-        }
       }
     }, 500);
   }
@@ -5533,31 +4642,37 @@ function addRoomRollHistory(playerName, result) {
   
   // 初始化
   init();
-
     // ==================== 联机功能 JS ====================
     
     // 切换手机模式
     function toggleMobileMode() {
-      const body = document.body;
-      const btn = document.getElementById('mobileToggleBtn');
-      
-      if (body.classList.contains('mobile-mode')) {
-        body.classList.remove('mobile-mode');
+      document.body.classList.toggle('mobile-mode');
+      const btn = document.querySelector('.mobile-toggle-btn');
+      if (document.body.classList.contains('mobile-mode')) {
+        btn.textContent = '🖥️ 桌面模式';
+        btn.classList.add('active');
+        localStorage.setItem('mobileMode', 'true');
+      } else {
         btn.textContent = '📱 手机模式';
         btn.classList.remove('active');
         localStorage.setItem('mobileMode', 'false');
-      } else {
-        body.classList.add('mobile-mode');
-        btn.textContent = '🖥️ 电脑模式';
-        btn.classList.add('active');
-        localStorage.setItem('mobileMode', 'true');
+      }
+    }
+
+    // 设置当前用户
+    function setCurrentUserToPlayer() {
+      if (typeof players !== 'undefined' && players.length > 0 && currentUser) {
+        players[0].name = currentUser;
+        players[0].isCurrentUser = true;
+        if (typeof renderPlayers === 'function') {
+          renderPlayers();
+        }
       }
     }
 
     // 离线模式
     function useOfflineMode() {
       currentUser = '玩家';
-      isOnlineMode = false;
       showPage('roomPage');
       document.getElementById('currentRoomName').textContent = '🎲 赛博朋克红小工具';
       document.getElementById('memberCount').textContent = '离线模式';
@@ -5567,22 +4682,12 @@ function addRoomRollHistory(playerName, result) {
       document.querySelector('.room-sidebar').style.display = 'none';
       document.querySelector('.back-btn').style.display = 'none';
       
-      // 让内容区占满
-      document.querySelector('.room-content').style.padding = '20px';
-      
       // 初始化完整工具
       setTimeout(function() {
         if (typeof init === 'function') {
           init();
         }
-        // 设置第一个玩家为当前用户
-        if (typeof players !== 'undefined' && players.length > 0) {
-          players[0].name = currentUser;
-          players[0].isCurrentUser = true;
-          if (typeof renderPlayers === 'function') {
-            renderPlayers();
-          }
-        }
+        setCurrentUserToPlayer();
       }, 100);
     }
 
@@ -5701,13 +4806,7 @@ function addRoomRollHistory(playerName, result) {
           updateMemberList(room.members, room.creator);
           
           // 设置当前用户为第一个玩家
-          if (typeof players !== 'undefined' && players.length > 0 && currentUser) {
-            players[0].name = currentUser;
-            players[0].isCurrentUser = true;
-            if (typeof renderPlayers === 'function') {
-              renderPlayers();
-            }
-          }
+          setTimeout(setCurrentUserToPlayer, 200);
         });
 
         socket.on('member_joined', function(data) {
@@ -5724,42 +4823,12 @@ function addRoomRollHistory(playerName, result) {
           }
         });
 
-        socket.on('dice_rolled', function(roll) {
-          addRollHistory(roll);
-        });
-
         socket.on('error', function(msg) {
           alert('错误: ' + msg);
         });
 
-        socket.on('dice_rolled', function(data) {
-          // 收到其他人的投掷结果
-          if (data.player !== currentUser) {
-            console.log(data.player + ' 投掷了:', data);
-            // 添加到历史记录
-            if (typeof addRoomRollHistory === 'function' && data.playerData) {
-              addRoomRollHistory(data.player, data.playerData);
-            }
-          }
-        });
-
       } catch (error) {
         showLoginMessage('连接失败: ' + error.message, 'error');
-      }
-    }
-
-    // 切换手机模式
-    function toggleMobileMode() {
-      document.body.classList.toggle('mobile-mode');
-      const btn = document.querySelector('.mobile-toggle-btn');
-      if (document.body.classList.contains('mobile-mode')) {
-        btn.textContent = '🖥️ 桌面模式';
-        btn.classList.add('active');
-        localStorage.setItem('mobileMode', 'true');
-      } else {
-        btn.textContent = '📱 手机模式';
-        btn.classList.remove('active');
-        localStorage.setItem('mobileMode', 'false');
       }
     }
 
@@ -5774,24 +4843,6 @@ function addRoomRollHistory(playerName, result) {
       } else {
         dot.classList.remove('connected');
         text.textContent = '已断开';
-      }
-    }
-
-    // 切换手机模式
-    function toggleMobileMode() {
-      const body = document.body;
-      const btn = document.getElementById('mobileToggleBtn');
-      
-      if (body.classList.contains('mobile-mode')) {
-        body.classList.remove('mobile-mode');
-        btn.textContent = '📱';
-        btn.title = '切换手机模式';
-        localStorage.setItem('mobileMode', 'false');
-      } else {
-        body.classList.add('mobile-mode');
-        btn.textContent = '🖥️';
-        btn.title = '切换桌面模式';
-        localStorage.setItem('mobileMode', 'true');
       }
     }
 
@@ -5831,26 +4882,25 @@ function addRoomRollHistory(playerName, result) {
         return;
       }
 
-      grid.innerHTML = rooms.map(room => {
-        const hasPassword = room.hasPassword;
-        return `
-          <div class="room-card">
-            <div class="room-card-header">
-              <div class="room-name">${room.name}</div>
-              ${hasPassword ? '<div class="room-lock">🔒</div>' : ''}
-            </div>
-            <div class="room-info">房主: <span class="room-creator">${room.creator}</span></div>
-            <div class="room-info">人数: ${room.memberCount} 人</div>
-            <button class="room-join-btn" onclick="joinRoom('${room.id}', ${hasPassword})">加入房间</button>
-          </div>
-        `;
+      grid.innerHTML = rooms.map(function(room) {
+        var hasPassword = room.hasPassword;
+        return '' +
+          '<div class="room-card">' +
+            '<div class="room-card-header">' +
+              '<div class="room-name">' + room.name + '</div>' +
+              (hasPassword ? '<div class="room-lock">🔒</div>' : '') +
+            '</div>' +
+            '<div class="room-info">房主: <span class="room-creator">' + room.creator + '</span></div>' +
+            '<div class="room-info">人数: ' + room.memberCount + ' 人</div>' +
+            '<button class="room-join-btn" onclick="joinRoom('' + room.id + '', ' + hasPassword + ')">加入房间</button>' +
+          '</div>';
       }).join('');
     }
 
     // 创建房间
     function createRoom() {
-      const name = document.getElementById('roomNameInput').value.trim();
-      const password = document.getElementById('roomPasswordInput').value;
+      var name = document.getElementById('roomNameInput').value.trim();
+      var password = document.getElementById('roomPasswordInput').value;
 
       if (!name) {
         alert('请输入房间名称');
@@ -5864,7 +4914,7 @@ function addRoomRollHistory(playerName, result) {
 
     // 加入房间
     function joinRoom(roomId, hasPassword) {
-      let password = '';
+      var password = '';
       if (hasPassword) {
         password = prompt('请输入房间密码:');
         if (password === null) return;
@@ -5882,86 +4932,27 @@ function addRoomRollHistory(playerName, result) {
       }
       currentRoomId = null;
       currentRoomData = null;
-      isOnlineMode = false;
       showPage('lobbyPage');
       loadRoomList();
     }
 
-    // 发送投掷结果到房间
-    function sendRollToRoom(playerData) {
-      if (isOnlineMode && socket && currentRoomId) {
-        socket.emit('roll_dice', {
-          player: currentUser,
-          playerData: playerData
-        });
-      }
-    }
-
-    // 接收其他人的投掷结果
-    function receiveRollFromRoom(data) {
-      console.log('收到投掷:', data);
-      // 这里可以更新其他玩家的显示
-      // 暂时先在历史记录里显示
-    }
-
     // 更新成员列表
     function updateMemberList(members, creator) {
-      const list = document.getElementById('memberList');
-      const count = document.getElementById('memberCount');
+      var list = document.getElementById('memberList');
+      var count = document.getElementById('memberCount');
       
       count.textContent = members.length + ' 人在线';
       
-      list.innerHTML = members.map(member => {
-        const isCreator = member === creator;
-        return `
-          <li class="member-item ${isCreator ? 'creator' : ''}">
-            <div class="member-avatar">${member.charAt(0).toUpperCase()}</div>
-            <span class="member-name">${member}</span>
-            ${isCreator ? '<span class="creator-badge">房主</span>' : ''}
-          </li>
-        `;
+      list.innerHTML = members.map(function(member) {
+        var isCreator = member === creator;
+        var isCurrentUser = member === currentUser;
+        return '' +
+          '<li class="member-item ' + (isCreator ? 'creator' : '') + '">' +
+            '<div class="member-avatar">' + member.charAt(0).toUpperCase() + '</div>' +
+            '<span class="member-name">' + member + (isCurrentUser ? ' (我)' : '') + '</span>' +
+            (isCreator ? '<span class="creator-badge">房主</span>' : '') +
+          '</li>';
       }).join('');
-    }
-
-    // 添加投掷记录
-    function addRollHistory(roll) {
-      const history = document.getElementById('rollHistory');
-      if (!history) return;
-      
-      // 移除空记录提示
-      const empty = history.querySelector('.empty-roll');
-      if (empty) empty.remove();
-      
-      const isOwn = roll.player === currentUser;
-      const time = new Date(roll.time).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      
-      const entry = document.createElement('div');
-      entry.className = 'roll-entry' + (isOwn ? ' own-roll' : '');
-      entry.innerHTML = `
-        <div class="roll-player">${roll.player}${isOwn ? ' (我)' : ''}</div>
-        <div class="roll-formula">${roll.formula || '投掷'}</div>
-        <div class="roll-result">${roll.result}</div>
-        <div class="roll-time">${time}</div>
-      `;
-      
-      history.insertBefore(entry, history.firstChild);
-      
-      // 只保留最近20条
-      const entries = history.querySelectorAll('.roll-entry');
-      if (entries.length > 20) {
-        entries[entries.length - 1].remove();
-      }
-    }
-
-    // 发送投掷结果到服务器
-    function sendRollToServer(formula, result, detail) {
-      if (socket && currentRoomId) {
-        socket.emit('roll_dice', {
-          formula: formula,
-          result: result,
-          detail: detail || ''
-        });
-      }
     }
 
     // 回车键登录
@@ -5980,7 +4971,7 @@ function addRoomRollHistory(playerName, result) {
 
     // 检查登录状态
     window.addEventListener('load', function() {
-      const savedUser = localStorage.getItem('currentUser');
+      var savedUser = localStorage.getItem('currentUser');
       if (savedUser) {
         currentUser = savedUser;
         document.getElementById('usernameInput').value = savedUser;
@@ -5994,17 +4985,7 @@ function addRoomRollHistory(playerName, result) {
       // 恢复手机模式设置
       if (localStorage.getItem('mobileMode') === 'true') {
         document.body.classList.add('mobile-mode');
-        const btn = document.getElementById('mobileToggleBtn');
-        if (btn) {
-          btn.textContent = '🖥️ 电脑模式';
-          btn.classList.add('active');
-        }
-      }
-      
-      // 恢复手机模式设置
-      if (localStorage.getItem('mobileMode') === 'true') {
-        document.body.classList.add('mobile-mode');
-        const btn = document.querySelector('.mobile-toggle-btn');
+        var btn = document.querySelector('.mobile-toggle-btn');
         if (btn) {
           btn.textContent = '🖥️ 桌面模式';
           btn.classList.add('active');
