@@ -545,10 +545,54 @@
   }
 
   .sidebar-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 14px;
     color: #888;
     margin-bottom: 15px;
     letter-spacing: 1px;
+  }
+  
+  .sidebar-collapse-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #aaa;
+    border: none;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+  
+  .sidebar-collapse-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+  
+  .sidebar-expand-btn {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white;
+    border: none;
+    border-radius: 8px 0 0 8px;
+    padding: 10px 6px;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+  }
+  
+  .room-body.sidebar-collapsed + .sidebar-expand-btn,
+  .sidebar-expand-btn.show {
+    display: block !important;
   }
   
   /* 侧边栏折叠 */
@@ -3179,10 +3223,11 @@
     <div class="room-header">
       <div class="room-header-left">
         <button class="back-btn" onclick="leaveRoom()">← 返回</button>
-        <button class="sidebar-toggle-header-btn" onclick="toggleSidebar()" id="sidebarToggleHeaderBtn">👥 成员</button>
+        
         <div class="room-title" id="currentRoomName">房间</div>
       </div>
       <div class="room-header-right">
+        
         <button class="delete-room-btn" onclick="deleteRoom()" id="deleteRoomBtn" style="display: none;">🗑️ 删除房间</button>
         <button class="sound-toggle-btn" onclick="toggleSound()" id="soundToggleBtn">🔊 音效开</button>
         <button class="mobile-toggle-btn" onclick="toggleMobileMode()" id="mobileToggleBtn">📱 手机模式</button>
@@ -3194,9 +3239,16 @@
       </div>
     </div>
 
+    <!-- 侧边栏折叠时的展开按钮 -->
+    <button class="sidebar-expand-btn" id="sidebarExpandBtn" onclick="toggleSidebar()" style="display: none;">
+      👥
+    </button>
     <div class="room-body" id="roomBody">
       <div class="room-sidebar" id="roomSidebar">
-        <div class="sidebar-title">👥 成员列表</div>
+        <div class="sidebar-title">
+          <span>👥 成员列表</span>
+          <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="折叠">✕</button>
+        </div>
         <ul class="member-list" id="memberList">
         </ul>
       </div>
@@ -5604,7 +5656,7 @@
     function toggleSidebar() {
       const sidebar = document.getElementById('roomSidebar');
       const body = document.getElementById('roomBody');
-      const toggleBtn = document.getElementById('sidebarToggleHeaderBtn');
+      const expandBtn = document.getElementById('sidebarExpandBtn');
       
       if (sidebar) {
         sidebar.classList.toggle('collapsed');
@@ -5617,9 +5669,13 @@
         const isCollapsed = sidebar.classList.contains('collapsed');
         localStorage.setItem('sidebarCollapsed', isCollapsed);
         
-        // 切换按钮
-        if (toggleBtn) {
-          toggleBtn.textContent = isCollapsed ? '👥' : '✕';
+        // 切换展开按钮显示
+        if (expandBtn) {
+          if (isCollapsed) {
+            expandBtn.style.display = 'block';
+          } else {
+            expandBtn.style.display = 'none';
+          }
         }
       }
     }}
@@ -5641,21 +5697,21 @@
       if (localStorage.getItem('mobileMode') === 'true') {
         document.body.classList.add('mobile-mode');
         // 手机模式下默认折叠侧边栏
-        setTimeout(function() {
+                setTimeout(function() {
           const sidebar = document.getElementById('roomSidebar');
           const body = document.getElementById('roomBody');
+          const expandBtn = document.getElementById('sidebarExpandBtn');
           
           const shouldCollapse = savedSidebarCollapsed === 'true' || savedSidebarCollapsed === null;
           
           if (sidebar && shouldCollapse) {
             sidebar.classList.add('collapsed');
             if (body) body.classList.add('sidebar-collapsed');
-            if (toggleBtn) {
-              toggleBtn.textContent = '👥';
-              toggleBtn.classList.remove('hidden');
+            if (expandBtn) {
+              expandBtn.style.display = 'block';
             }
           }
-        }, 100);
+        }, 100);;
         const btn = document.getElementById('mobileToggleBtn');
         if (btn) {
           btn.textContent = '🖥️ 电脑模式';
