@@ -1689,7 +1689,7 @@
   /* ========== 第二页：伤害骰 & 暴击 ========== */
   .damage-page {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 30px;
   }
   
@@ -4496,6 +4496,24 @@
     padding: 8px 16px !important;
     font-size: 13px !important;
   }
+
+  /* 修复双重滚动条 */
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .room-container, .lobby-container, .login-container {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .room-body {
+    height: calc(100vh - 60px);
+    overflow: hidden;
+  }
 </style>
 </head>
 <body>
@@ -4776,45 +4794,6 @@
         </div>
         
         <!-- 暴击表 -->
-        <div class="crit-table-section">
-          <h2>💥 暴击规则表</h2>
-          
-          <div class="crit-rule-hint">
-            <strong>规则说明：</strong>所有骰子都达到暴击阈值才算暴击。<br>
-            对于 D10，只要有任何一个骰子出 10 也触发暴击。
-          </div>
-          
-          <div class="crit-table-grid">
-            <div class="crit-table-item">
-              <div class="dice-type">4D4</div>
-              <div class="crit-condition">全部出 <strong>4</strong><br>（4个4）</div>
-            </div>
-            <div class="crit-table-item">
-              <div class="dice-type">2D6</div>
-              <div class="crit-condition">全部出 <strong>6</strong><br>（双6）</div>
-            </div>
-            <div class="crit-table-item">
-              <div class="dice-type">2D8</div>
-              <div class="crit-condition">全部出 <strong>7+</strong><br>（双7+）</div>
-            </div>
-            <div class="crit-table-item">
-              <div class="dice-type">2D10</div>
-              <div class="crit-condition">全部出 <strong>9+</strong><br>或单出 <strong>10</strong></div>
-            </div>
-            <div class="crit-table-item">
-              <div class="dice-type">1D12</div>
-              <div class="crit-condition">出 <strong>11</strong> 或 <strong>12</strong></div>
-            </div>
-            <div class="crit-table-item">
-              <div class="dice-type">1D20</div>
-              <div class="crit-condition">出 <strong>16-20</strong><br>（共5个值）</div>
-            </div>
-          </div>
-          
-          <div class="crit-rule-hint" style="margin-top: 15px; background: rgba(243, 156, 18, 0.1); border-color: rgba(243, 156, 18, 0.3); color: #f0c080;">
-            <strong>通用规则：</strong>其他数量骰子 → 全部达到对应面数的暴击阈值即算暴击
-          </div>
-        </div>
       </div>
       
       <!-- D12 重伤表 -->
@@ -5121,37 +5100,6 @@
   }
   
   // 播放骰子滚动音效
-  function playDiceSound() {
-    if (!audioContext) initAudio();
-    if (!audioContext) return;
-    
-    const now = audioContext.currentTime;
-    const rollDuration = 0.5; // 滚动总时长
-    
-    // 密集的滚动碰撞声
-    const clickCount = 12;
-    for (let i = 0; i < clickCount; i++) {
-      const progress = i / clickCount;
-      const time = now + progress * rollDuration * 0.8;
-      
-      // 频率随机变化，模拟不同角度的碰撞
-      const freq = 600 + Math.random() * 800;
-      // 音量逐渐减小
-      const volume = 0.15 * (1 - progress * 0.7);
-      // 时长逐渐变长
-      const duration = 0.03 + progress * 0.02;
-      
-      createDiceClick(time, freq, volume, duration);
-    }
-    
-    // 加一点滚动的摩擦噪音
-    createRollNoise(now, rollDuration * 0.8, 0.05);
-    
-    // 最后落定的声音（更响、更低沉）
-    const landTime = now + rollDuration;
-    createDiceClick(landTime, 400, 0.25, 0.1);
-    createDiceClick(landTime + 0.02, 550, 0.15, 0.08);
-  }
   
   // 创建骰子碰撞声
   function createDiceClick(time, freq, volume, duration) {
@@ -5219,6 +5167,26 @@
         sidebar.classList.add('sidebar-open');
       } else if (memberVisible === 'false' && !isMobile) {
         sidebar.classList.remove('sidebar-open');
+      }
+    }
+      // 初始化侧边栏状态
+    var sidebar = document.getElementById('roomSidebar');
+    var toggleBtn = document.getElementById('memberToggleBtn');
+    if (sidebar) {
+      var memberVisible = localStorage.getItem('memberListVisible');
+      var isMobile = document.body.classList.contains('mobile-mode');
+      if (memberVisible === 'true') {
+        sidebar.classList.add('sidebar-open');
+        if (toggleBtn) {
+          toggleBtn.textContent = '✕';
+          toggleBtn.title = '隐藏成员列表';
+        }
+      } else {
+        sidebar.classList.remove('sidebar-open');
+        if (toggleBtn) {
+          toggleBtn.textContent = isMobile ? '👥' : '✕';
+          toggleBtn.title = isMobile ? '显示成员列表' : '隐藏成员列表';
+        }
       }
     }
   }
@@ -6111,20 +6079,59 @@
   function checkCrit(results, sides) {
     if (results.length === 0) return false;
     
-    const threshold = getCritThreshold(sides);
+    /*
+    暴击规则：
+    - D4：同时出现至少 4 个 4 → 暴击
+    - D6：同时出现至少 2 个 6 → 暴击
+    - D8：同时出现至少 2 个 7+ → 暴击
+    - D10：同时出现至少 2 个 9+ 或者 出现至少 1 个 10 → 暴击
+    - D12：出现至少 1 个 11~12 → 暴击
+    - D20：出现至少 1 个 16~20 → 暴击
+    */
     
-    // D10 特殊规则：只要有一个出10就算暴击
-    if (sides === 10) {
-      const hasMax = results.some(r => r === 10);
-      if (hasMax) return true;
+    switch (sides) {
+      case 4:
+        // D4：至少 4 个 4
+        const count4 = results.filter(r => r === 4).length;
+        return count4 >= 4;
+      
+      case 6:
+        // D6：至少 2 个 6
+        const count6 = results.filter(r => r === 6).length;
+        return count6 >= 2;
+      
+      case 8:
+        // D8：至少 2 个 7+
+        const count7plus = results.filter(r => r >= 7).length;
+        return count7plus >= 2;
+      
+      case 10:
+        // D10：至少 2 个 9+ 或者 至少 1 个 10
+        const count9plus = results.filter(r => r >= 9).length;
+        const count10 = results.filter(r => r === 10).length;
+        return count9plus >= 2 || count10 >= 1;
+      
+      case 12:
+        // D12：至少 1 个 11~12
+        const count11plus = results.filter(r => r >= 11).length;
+        return count11plus >= 1;
+      
+      case 20:
+        // D20：至少 1 个 16~20
+        const count16plus = results.filter(r => r >= 16).length;
+        return count16plus >= 1;
+      
+      default:
+        // 其他骰子：默认所有骰子都是最大值才算暴击
+        const allMax = results.every(r => r === sides);
+        return allMax;
     }
-    
-    // 通用规则：所有骰子都达到阈值才算暴击
-    const allCrit = results.every(r => r >= threshold);
-    return allCrit;
   }
   
   function rollDamage() {
+    // 播放骰子音效
+    if (typeof playDiceSound === 'function') playDiceSound();
+    
     const formulaInput = document.getElementById('damageFormula');
     const resultEl = document.getElementById('damageResult');
     const formula = formulaInput.value.trim();
