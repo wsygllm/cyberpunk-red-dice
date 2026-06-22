@@ -3011,6 +3011,7 @@
         <div class="room-title" id="currentRoomName">房间</div>
       </div>
       <div class="room-header-right">
+        <button class="delete-room-btn" onclick="deleteRoom()" id="deleteRoomBtn" style="display: none;">🗑️ 删除房间</button>
         <button class="mobile-toggle-btn" onclick="toggleMobileMode()" id="mobileToggleBtn">📱 手机模式</button>
         <div class="member-count" id="memberCount">0 人在线</div>
         <div class="connection-status">
@@ -4867,6 +4868,16 @@
           document.getElementById('currentRoomName').textContent = room.name;
           updateMemberList(room.members, room.creator);
           
+          // 如果是房主，显示删除按钮
+          const deleteBtn = document.getElementById('deleteRoomBtn');
+          if (deleteBtn) {
+            if (room.creator === currentUser) {
+              deleteBtn.style.display = 'block';
+            } else {
+              deleteBtn.style.display = 'none';
+            }
+          }
+          
           // 初始化玩家：把第一个玩家设为当前用户
           setTimeout(function() {
             if (typeof players !== 'undefined' && players.length > 0) {
@@ -4879,6 +4890,16 @@
               }
             }
           }, 300);
+        });
+
+        // 房间被删除
+        socket.on('room_deleted', function(data) {
+          alert('房间已被房主删除');
+          currentRoomId = null;
+          currentRoomData = null;
+          isOnlineMode = false;
+          showPage('lobbyPage');
+          loadRoomList();
         });
 
         socket.on('member_joined', function(data) {
@@ -5004,6 +5025,15 @@
 
       if (socket) {
         socket.emit('join_room', { roomId: roomId, password: password });
+      }
+    }
+
+    // 删除房间（仅房主）
+    function deleteRoom() {
+      if (!confirm('确定要删除这个房间吗？删除后无法恢复。')) return;
+      
+      if (socket && currentRoomId) {
+        socket.emit('delete_room');
       }
     }
 

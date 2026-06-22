@@ -204,6 +204,36 @@ io.on('connection', (socket) => {
   socket.on('leave_room', () => {
     leaveCurrentRoom();
   });
+
+  // 删除房间（只有房主可以删）
+  socket.on('delete_room', () => {
+    if (!currentUser || !currentRoomId) {
+      socket.emit('error', '请先加入房间');
+      return;
+    }
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) {
+      socket.emit('error', '房间不存在');
+      return;
+    }
+    
+    if (room.creator !== currentUser) {
+      socket.emit('error', '只有房主可以删除房间');
+      return;
+    }
+    
+    // 通知房间内所有人
+    io.to(currentRoomId).emit('room_deleted', { message: '房间已被房主删除' });
+    
+    rooms.delete(currentRoomId);
+    console.log('房间被删除:', room.name, 'by', currentUser);
+    
+    currentRoomId = null;
+    
+    // 广播房间列表更新
+    broadcastRoomList();
+  });
   
   // 投掷骰子
   socket.on('roll_dice', ({ formula, result, detail }) => {
@@ -266,11 +296,11 @@ io.on('connection', (socket) => {
         members: room.members
       });
       
-      // 如果房间没人了，删除房间
-      if (room.members.length === 0) {
-        rooms.delete(currentRoomId);
-        console.log('房间解散:', room.name);
-      }
+      // 房间没人了也不删除，持久存在，只有房主可以手动删除
+      // if (room.members.length === 0) {
+      //   rooms.delete(currentRoomId);
+      //   console.log('房间解散:', room.name);
+      // }
     }
     
     socket.leave(currentRoomId);
