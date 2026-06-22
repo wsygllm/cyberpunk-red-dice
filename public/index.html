@@ -530,35 +530,46 @@
     letter-spacing: 1px;
   }
   
-  .sidebar-title {
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .sidebar-toggle-icon {
-    font-size: 10px;
-    transition: transform 0.3s;
-  }
-  
-  .room-sidebar.collapsed .sidebar-toggle-icon {
-    transform: rotate(-90deg);
-  }
-  
-  .room-sidebar.collapsed .member-list {
+  /* 侧边栏折叠 */
+  .room-sidebar.collapsed {
     display: none;
   }
   
-  /* 手机模式下侧边栏更紧凑 */
+  /* 手机模式下侧边栏 */
   .mobile-mode .room-sidebar {
     width: 100%;
     margin-bottom: 10px;
   }
   
-  .mobile-mode .room-sidebar.collapsed {
-    margin-bottom: 5px;
+  /* 折叠时内容区占满 */
+  .room-body.sidebar-collapsed .room-content {
+    width: 100%;
+  }
+  
+  /* 侧边栏切换按钮 */
+  .sidebar-toggle-btn {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 10px;
+    z-index: 100;
+    background: rgba(124, 58, 237, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  
+  .mobile-mode .sidebar-toggle-btn {
+    display: block;
+  }
+  
+  .mobile-mode .sidebar-toggle-btn.hidden {
+    display: none;
   }
 
   .member-list {
@@ -3163,11 +3174,12 @@
       </div>
     </div>
 
-    <div class="room-body">
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" >👥</button>
+    <div class="room-body" id="roomBody">
       <div class="room-sidebar" id="roomSidebar">
-        <div class="sidebar-title" onclick="toggleSidebar()">
+        <div class="sidebar-title" >
           <span>👥 成员列表</span>
-          <span class="sidebar-toggle-icon" id="sidebarToggleIcon">▼</span>
+          
         </div>
         <ul class="member-list" id="memberList">
         </ul>
@@ -5574,11 +5586,29 @@
     // 切换侧边栏折叠状态
     function toggleSidebar() {
       const sidebar = document.getElementById('roomSidebar');
+      const body = document.getElementById('roomBody');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      
       if (sidebar) {
         sidebar.classList.toggle('collapsed');
+        
+        if (body) {
+          body.classList.toggle('sidebar-collapsed');
+        }
+        
         // 保存状态
         const isCollapsed = sidebar.classList.contains('collapsed');
         localStorage.setItem('sidebarCollapsed', isCollapsed);
+        
+        // 切换按钮显示
+        if (toggleBtn) {
+          if (isCollapsed) {
+            toggleBtn.textContent = '👥';
+            toggleBtn.classList.remove('hidden');
+          } else {
+            toggleBtn.textContent = '✕';
+          }
+        }
       }
     }}
 
@@ -5601,10 +5631,18 @@
         // 手机模式下默认折叠侧边栏
         setTimeout(function() {
           const sidebar = document.getElementById('roomSidebar');
-          if (sidebar && savedSidebarCollapsed === null) {
+          const body = document.getElementById('roomBody');
+          const toggleBtn = document.getElementById('sidebarToggleBtn');
+          
+          const shouldCollapse = savedSidebarCollapsed === 'true' || savedSidebarCollapsed === null;
+          
+          if (sidebar && shouldCollapse) {
             sidebar.classList.add('collapsed');
-          } else if (sidebar && savedSidebarCollapsed === 'true') {
-            sidebar.classList.add('collapsed');
+            if (body) body.classList.add('sidebar-collapsed');
+            if (toggleBtn) {
+              toggleBtn.textContent = '👥';
+              toggleBtn.classList.remove('hidden');
+            }
           }
         }, 100);
         const btn = document.getElementById('mobileToggleBtn');
