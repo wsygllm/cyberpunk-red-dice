@@ -693,6 +693,13 @@
   }
 
   /* ==================== 手机模式 ==================== */
+  /* 手机版UI整体缩小45%（原来的55%大小） */
+  body.mobile-mode {
+    zoom: 0.55;
+    -moz-transform: scale(0.55);
+    -moz-transform-origin: top left;
+  }
+  
   body.mobile-mode .room-content {
     flex: 1;
     padding: 10px;
@@ -3178,6 +3185,164 @@
     flex: 1 !important;
     margin-left: 0 !important;
   }
+
+  /* 历史记录通用样式 */
+  .history-section {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .history-title {
+    font-size: 15px;
+    margin: 0 0 12px 0;
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  .history-list {
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  
+  .history-item {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-left: 3px solid #7c3aed;
+    font-size: 13px;
+  }
+  
+  .history-item.damage-item {
+    border-left-color: #e94560;
+  }
+  
+  .history-item.injury-item {
+    border-left-color: #9b59b6;
+  }
+  
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 12px;
+  }
+  
+  .history-time {
+    color: #888;
+  }
+  
+  .history-player {
+    color: #a855f7;
+    font-weight: 500;
+  }
+  
+  .damage-history .history-formula {
+    color: #e94560;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .damage-history .history-total {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    margin: 4px 0;
+  }
+  
+  .damage-history .history-total.is-crit {
+    color: #ff6b6b;
+    text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+  }
+  
+  .damage-history .history-detail {
+    color: #888;
+    font-size: 12px;
+  }
+  
+  .crit-badge-small {
+    display: inline-block;
+    background: linear-gradient(135deg, #e94560, #ff6b6b);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 8px;
+  }
+  
+  .injury-history .injury-type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 8px;
+  }
+  
+  .injury-history .injury-type-head {
+    background: linear-gradient(135deg, #e94560, #ff6b6b);
+    color: white;
+  }
+  
+  .injury-history .injury-type-torso {
+    background: linear-gradient(135deg, #9b59b6, #a855f7);
+    color: white;
+  }
+  
+  .injury-history .injury-name {
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    margin: 4px 0;
+  }
+  
+  .injury-history .injury-victim {
+    color: #888;
+    font-size: 12px;
+  }
+  
+  /* 手机模式下历史记录更小 */
+  .mobile-mode .history-section {
+    padding: 10px;
+    margin-top: 15px;
+  }
+  
+  .mobile-mode .history-title {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  
+  .mobile-mode .history-list {
+    max-height: 180px;
+  }
+  
+  .mobile-mode .history-item {
+    padding: 8px;
+    font-size: 12px;
+  }
+  
+  .mobile-mode .damage-history .history-total {
+    font-size: 16px;
+  }
+
+  /* 手机模式缩放后调整布局 */
+  .mobile-mode .room-body {
+    min-height: 100vh;
+  }
+  
+  .mobile-mode .room-content {
+    min-width: 100%;
+  }
+  
+  /* 手机模式下的标签页也适配 */
+  .mobile-mode .tabs {
+    width: 100%;
+  }
 </style>
 </head>
 <body>
@@ -3440,6 +3605,14 @@
           <div class="damage-formula-hint" style="margin-top: 10px;">
             💡 提示：按 <span>空格键</span> 快速投掷
           </div>
+          
+          <!-- 伤害投掷记录 -->
+          <div class="history-section damage-history">
+            <h3 class="history-title">📜 伤害投掷记录</h3>
+            <div class="history-list" id="damageRollHistory">
+              <div style="color: #666; text-align: center; padding: 15px; font-size: 13px;">暂无记录</div>
+            </div>
+          </div>
         </div>
         
         <!-- 暴击表 -->
@@ -3509,9 +3682,17 @@
           <div class="injury-name" id="injuryName"></div>
           <div class="injury-effect" id="injuryEffect"></div>
         </div>
+        
+        <!-- 重伤投掷记录 -->
+        <div class="history-section injury-history">
+          <h3 class="history-title">💀 重伤投掷记录</h3>
+          <div class="history-list" id="injuryRollHistory">
+            <div style="color: #666; text-align: center; padding: 15px; font-size: 13px;">暂无记录</div>
+          </div>
+        </div>
       </div>
       
-      <!-- 伤害历史记录 -->
+      <!-- 旧的伤害历史记录 - 已移到上面分开的区域 -->
       <div class="damage-history-section">
         <h2 class="damage-history-title">📜 投掷记录</h2>
         <div class="damage-history-list" id="damageHistory">
@@ -4571,50 +4752,63 @@
   
   // 渲染伤害历史记录
   function renderDamageHistory() {
-    const container = document.getElementById('damageHistory');
-    if (!container) return;
-    
-    if (damageHistory.length === 0) {
-      container.innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">暂无记录</div>';
-      return;
-    }
-    
-    let html = '';
-    damageHistory.forEach((item, index) => {
-      html += `<div class="damage-history-item">`;
-      html += `<div class="damage-history-header">`;
-      html += `<span class="damage-history-time">${item.time}</span>`;
-      html += `<span class="damage-history-player">${item.playerName} 投掷</span>`;
-      html += `</div>`;
-      
-      if (item.type === 'damage') {
-        // 伤害记录
-        html += `<div class="damage-history-formula">${item.formula}</div>`;
-        html += `<div class="damage-history-total ${item.isCrit ? 'is-crit' : ''}">`;
-        html += `${item.total} 点伤害`;
-        if (item.isCrit) {
-          html += ' <span class="crit-badge-small">💥暴击</span>';
+      // 渲染伤害投掷记录
+      const damageContainer = document.getElementById('damageRollHistory');
+      if (damageContainer) {
+        const damageRecords = damageHistory.filter(r => r.type === 'damage');
+        if (damageRecords.length === 0) {
+          damageContainer.innerHTML = '<div style="color: #666; text-align: center; padding: 15px; font-size: 13px;">暂无记录</div>';
+        } else {
+          let html = '';
+          damageRecords.slice(0, 20).forEach(record => {
+            html += `
+              <div class="history-item damage-item">
+                <div class="history-header">
+                  <span class="history-time">${record.time}</span>
+                  <span class="history-player">${record.playerName}</span>
+                </div>
+                <div>
+                  <span class="history-formula">${record.formula}</span>
+                  ${record.isCrit ? '<span class="crit-badge-small">💥 暴击！</span>' : ''}
+                </div>
+                <div class="history-total ${record.isCrit ? 'is-crit' : ''}">${record.total}</div>
+                <div class="history-detail">${record.detail}</div>
+              </div>
+            `;
+          });
+          damageContainer.innerHTML = html;
         }
-        html += `</div>`;
-        if (item.detail) {
-          html += `<div class="damage-history-detail">${item.detail}</div>`;
-        }
-      } else if (item.type === 'injury') {
-        // 伤势记录
-        html += `<div class="damage-history-injury">`;
-        html += `<div class="injury-type-badge ${item.isHead ? 'injury-type-head' : 'injury-type-torso'}">${item.isHead ? '头部' : '躯干'}伤势</div>`;
-        html += `<div class="injury-name">${item.roll}点：${item.name}</div>`;
-        if (item.victim) {
-          html += `<div class="injury-victim">受害者：${item.victim}</div>`;
-        }
-        html += `</div>`;
       }
       
-      html += `</div>`;
-    });
-    
-    container.innerHTML = html;
-  }}
+      // 渲染重伤投掷记录
+      const injuryContainer = document.getElementById('injuryRollHistory');
+      if (injuryContainer) {
+        const injuryRecords = damageHistory.filter(r => r.type === 'injury');
+        if (injuryRecords.length === 0) {
+          injuryContainer.innerHTML = '<div style="color: #666; text-align: center; padding: 15px; font-size: 13px;">暂无记录</div>';
+        } else {
+          let html = '';
+          injuryRecords.slice(0, 20).forEach(record => {
+            const typeClass = record.isHead ? 'injury-type-head' : 'injury-type-torso';
+            const typeText = record.isHead ? '头部' : '躯干';
+            html += `
+              <div class="history-item injury-item">
+                <div class="history-header">
+                  <span class="history-time">${record.time}</span>
+                  <span class="history-player">${record.playerName}</span>
+                </div>
+                <div>
+                  <span class="injury-type-badge ${typeClass}">${typeText}</span>
+                  <span class="injury-name">${record.name}</span>
+                </div>
+                <div class="injury-victim">受害者：${record.victim || '未知'} · D12: ${record.roll}</div>
+              </div>
+            `;
+          });
+          injuryContainer.innerHTML = html;
+        }
+      }
+    }}
   
   function renderHistory() {
     const listEl = document.getElementById('historyList');
