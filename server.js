@@ -44,7 +44,8 @@ function getRoomDetail(room) {
     name: room.name,
     creator: room.creator,
     members: room.members,
-    rolls: room.rolls.slice(-50) // 只返回最近50条
+    rolls: room.rolls.slice(-50), // 只返回最近50条
+    sharedData: room.sharedData
   };
 }
 

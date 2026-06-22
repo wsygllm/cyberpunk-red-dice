@@ -4242,8 +4242,8 @@
     renderHistory();
     
     // 同步到房间
-    if (typeof syncRoomData === 'function') {
-      syncRoomData('battleHistory', battleHistory);
+    if (typeof sendSharedDataUpdate === 'function') {
+      sendSharedDataUpdate('history', battleHistory);
     }
   }
   
@@ -4637,6 +4637,11 @@
     renderPlayers();
     renderPlayerChips();
     updateInjuryPlayerSelect();
+    
+    // 同步到房间
+    if (typeof sendSharedDataUpdate === 'function') {
+      sendSharedDataUpdate('players', players);
+    }
   }
   
   function removePlayerMemo(id) {
@@ -4709,6 +4714,11 @@
     renderWeapons();
     renderPlayerList();
     renderPlayers(); // 更新技能对抗页的武器选择
+    
+    // 同步到房间
+    if (typeof sendSharedDataUpdate === 'function') {
+      sendSharedDataUpdate('players', players);
+    }
   }
   
   function deleteWeapon(weaponId) {
@@ -4719,6 +4729,11 @@
     renderWeapons();
     renderPlayerList();
     renderPlayers(); // 更新技能对抗页的武器选择
+    
+    // 同步到房间
+    if (typeof sendSharedDataUpdate === 'function') {
+      sendSharedDataUpdate('players', players);
+    }
   }
   
   function renderWeapons() {
@@ -4799,6 +4814,11 @@
     renderSkills();
     renderPlayerList();
     renderPlayers(); // 更新技能对抗页的技能选项
+    
+    // 同步到房间
+    if (typeof sendSharedDataUpdate === 'function') {
+      sendSharedDataUpdate('players', players);
+    }
   }
   
   function deleteSkill(skillId) {
@@ -4815,6 +4835,11 @@
     renderSkills();
     renderPlayerList();
     renderPlayers(); // 更新技能对抗页的技能选项
+    
+    // 同步到房间
+    if (typeof sendSharedDataUpdate === 'function') {
+      sendSharedDataUpdate('players', players);
+    }
   }
   
   function renderSkills() {
@@ -5218,6 +5243,17 @@
       if (socket) {
         socket.emit('join_room', { roomId: roomId, password: password });
       }
+    }
+
+    // 发送共享数据更新到服务器
+    function sendSharedDataUpdate(type, data) {
+      if (!isOnlineMode || !socket || !currentRoomId) return;
+      if (isReceivingServerUpdate) return; // 防止循环
+      
+      socket.emit('update_shared_data', {
+        type: type,
+        data: data
+      });
     }
 
     // 删除房间（仅房主）
