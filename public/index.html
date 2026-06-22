@@ -579,15 +579,15 @@
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    background: #7c3aed;
     color: white;
     border: none;
     border-radius: 12px 0 0 12px;
-    padding: 15px 8px;
-    font-size: 18px;
+    padding: 20px 10px;
+    font-size: 20px;
     cursor: pointer;
-    z-index: 9999;
-    box-shadow: -2px 0 15px rgba(124, 58, 237, 0.5);
+    z-index: 99999;
+    box-shadow: -2px 0 20px rgba(124, 58, 237, 0.6);
     font-weight: bold;
   }
   
@@ -3242,14 +3242,24 @@
     </div>
 
     <!-- 侧边栏折叠时的展开按钮 -->
-    <button class="sidebar-expand-btn" id="sidebarExpandBtn" onclick="toggleSidebar()" style="display: none;">
+    <button class="sidebar-expand-btn" id="sidebarExpandBtn" onclick="
+  document.getElementById('roomSidebar').style.display='';
+  document.getElementById('sidebarExpandBtn').style.display='none';
+  document.querySelector('.room-content').style.width='';
+  localStorage.setItem('sidebarCollapsed', 'false');
+" style="display: none;">
       👥
     </button>
     <div class="room-body" id="roomBody">
       <div class="room-sidebar" id="roomSidebar">
         <div class="sidebar-title">
           <span>👥 成员列表</span>
-          <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="折叠" style="background: #7c3aed; color: white; font-weight: bold; width: 28px; height: 28px; font-size: 16px;">—</button>
+          <button class="sidebar-collapse-btn" onclick="
+  document.getElementById('roomSidebar').style.display='none';
+  document.getElementById('sidebarExpandBtn').style.display='block';
+  document.querySelector('.room-content').style.width='100%';
+  localStorage.setItem('sidebarCollapsed', 'true');
+" title="折叠" style="background: #7c3aed; color: white; font-weight: bold; width: 28px; height: 28px; font-size: 16px; border: none; border-radius: 4px; cursor: pointer;">—</button>
         </div>
         <ul class="member-list" id="memberList">
         </ul>
@@ -5655,45 +5665,50 @@
     
     // 切换侧边栏折叠状态
         function toggleSidebar() {
-      const sidebar = document.getElementById('roomSidebar');
-      const content = document.querySelector('.room-content');
-      const expandBtn = document.getElementById('sidebarExpandBtn');
+      var sidebar = document.getElementById('roomSidebar');
+      var body = document.getElementById('roomBody');
+      var expandBtn = document.getElementById('sidebarExpandBtn');
       
-      if (!sidebar) return;
+      if (!sidebar) {
+        alert('找不到侧边栏');
+        return;
+      }
       
-      const isHidden = sidebar.style.display === 'none';
-      
-      if (isHidden) {
+      if (sidebar.style.display === 'none') {
         // 展开
         sidebar.style.display = '';
         sidebar.style.width = '';
-        if (content) {
-          content.style.width = '';
-          content.style.flex = '';
-        }
-        if (expandBtn) {
-          expandBtn.style.display = 'none';
-        }
+        if (expandBtn) expandBtn.style.display = 'none';
         localStorage.setItem('sidebarCollapsed', 'false');
       } else {
-        // 折叠
+        // 折叠 - 直接隐藏
         sidebar.style.display = 'none';
-        sidebar.style.width = '0';
-        sidebar.style.padding = '0';
-        sidebar.style.margin = '0';
-        if (content) {
-          content.style.width = '100%';
-          content.style.flex = '1';
-        }
-        if (expandBtn) {
-          expandBtn.style.display = 'block';
-        }
+        sidebar.style.width = '0px';
+        sidebar.style.padding = '0px';
+        sidebar.style.margin = '0px';
+        sidebar.style.overflow = 'hidden';
+        if (expandBtn) expandBtn.style.display = 'block';
         localStorage.setItem('sidebarCollapsed', 'true');
       }
     }
 
     // 检查登录状态
     window.addEventListener('load', function() {
+      // 侧边栏折叠状态初始化
+      setTimeout(function() {
+        const sidebar = document.getElementById('roomSidebar');
+        const expandBtn = document.getElementById('sidebarExpandBtn');
+        const content = document.querySelector('.room-content');
+        const isMobile = document.body.classList.contains('mobile-mode');
+        const saved = localStorage.getItem('sidebarCollapsed');
+        
+        if (sidebar && (saved === 'true' || (isMobile && saved === null))) {
+          sidebar.style.display = 'none';
+          if (expandBtn) expandBtn.style.display = 'block';
+          if (content) content.style.width = '100%';
+        }
+      }, 300);
+
       const savedUser = localStorage.getItem('currentUser');
       if (savedUser) {
         currentUser = savedUser;
