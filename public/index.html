@@ -5,858 +5,2721 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>赛博朋克红小工具</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Courier New', monospace;
-      background: #0a0a0f;
-      color: #e0e0e0;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* 赛博朋克背景效果 */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        linear-gradient(transparent 50%, rgba(0, 255, 255, 0.02) 50%),
-        linear-gradient(90deg, rgba(255, 0, 255, 0.02), transparent);
-      background-size: 100% 4px, 4px 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.5) 100%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .page {
-      display: none;
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    /* ==================== 登录页面 ==================== */
-    #loginPage {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .login-container {
-      background: rgba(15, 15, 25, 0.9);
-      border: 1px solid #ff00ff;
-      border-radius: 8px;
-      padding: 40px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 
-        0 0 20px rgba(255, 0, 255, 0.3),
-        inset 0 0 20px rgba(255, 0, 255, 0.05);
-      position: relative;
-    }
-
-    .login-container::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
-      border-radius: 8px;
-      z-index: -1;
-      opacity: 0.5;
-      animation: borderGlow 3s linear infinite;
-    }
-
-    @keyframes borderGlow {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.7; }
-    }
-
-    .app-title {
-      text-align: center;
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, #ff00ff, #00ffff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
-      letter-spacing: 2px;
-    }
-
-    .app-subtitle {
-      text-align: center;
-      color: #888;
-      font-size: 12px;
-      margin-bottom: 30px;
-      letter-spacing: 4px;
-    }
-
-    .input-group {
-      margin-bottom: 20px;
-    }
-
-    .input-group label {
-      display: block;
-      color: #00ffff;
-      font-size: 12px;
-      margin-bottom: 8px;
-      letter-spacing: 1px;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 12px 16px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid #333;
-      border-radius: 4px;
-      color: #fff;
-      font-size: 14px;
-      font-family: 'Courier New', monospace;
-      transition: all 0.3s;
-    }
-
-    .input-group input:focus {
-      outline: none;
-      border-color: #ff00ff;
-      box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 10px;
-      margin-top: 25px;
-    }
-
-    .cyber-btn {
-      flex: 1;
-      padding: 12px 20px;
-      background: transparent;
-      border: 1px solid;
-      border-radius: 4px;
-      font-size: 14px;
-      font-family: 'Courier New', monospace;
-      cursor: pointer;
-      transition: all 0.3s;
-      letter-spacing: 1px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cyber-btn.primary {
-      border-color: #ff00ff;
-      color: #ff00ff;
-    }
-
-    .cyber-btn.primary:hover {
-      background: rgba(255, 0, 255, 0.2);
-      box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
-    }
-
-    .cyber-btn.secondary {
-      border-color: #00ffff;
-      color: #00ffff;
-    }
-
-    .cyber-btn.secondary:hover {
-      background: rgba(0, 255, 255, 0.2);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-    }
-
-    .login-message {
-      margin-top: 15px;
-      padding: 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      text-align: center;
-      display: none;
-    }
-
-    .login-message.error {
-      display: block;
-      background: rgba(255, 0, 0, 0.1);
-      border: 1px solid #ff4444;
-      color: #ff6666;
-    }
-
-    .login-message.success {
-      display: block;
-      background: rgba(0, 255, 0, 0.1);
-      border: 1px solid #44ff44;
-      color: #66ff66;
-    }
-
-    /* ==================== 大厅页面 ==================== */
-    #lobbyPage {
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .lobby-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 0;
-      border-bottom: 1px solid #333;
-      margin-bottom: 30px;
-    }
-
-    .lobby-title {
-      font-size: 24px;
-      background: linear-gradient(90deg, #ff00ff, #00ffff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ff00ff, #00ffff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-
-    .username-display {
-      color: #00ffff;
-    }
-
-    .logout-btn {
-      padding: 8px 16px;
-      background: transparent;
-      border: 1px solid #ff4444;
-      color: #ff6666;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      font-family: 'Courier New', monospace;
-      transition: all 0.3s;
-    }
-
-    .logout-btn:hover {
-      background: rgba(255, 68, 68, 0.2);
-    }
-
-    .create-room-section {
-      background: rgba(15, 15, 25, 0.8);
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 25px;
-      margin-bottom: 30px;
-    }
-
-    .section-title {
-      color: #ff00ff;
-      font-size: 16px;
-      margin-bottom: 15px;
-      letter-spacing: 1px;
-    }
-
-    .create-room-form {
-      display: flex;
-      gap: 15px;
-      align-items: flex-end;
-      flex-wrap: wrap;
-    }
-
-    .form-field {
-      flex: 1;
-      min-width: 200px;
-    }
-
-    .form-field label {
-      display: block;
-      color: #888;
-      font-size: 12px;
-      margin-bottom: 8px;
-    }
-
-    .form-field input {
-      width: 100%;
-      padding: 10px 12px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid #333;
-      border-radius: 4px;
-      color: #fff;
-      font-family: 'Courier New', monospace;
-    }
-
-    .form-field input:focus {
-      outline: none;
-      border-color: #00ffff;
-    }
-
-    .room-list-section {
-      background: rgba(15, 15, 25, 0.8);
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 25px;
-    }
-
-    .room-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 15px;
-    }
-
-    .room-card {
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid #444;
-      border-radius: 6px;
-      padding: 20px;
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-
-    .room-card:hover {
-      border-color: #ff00ff;
-      box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .room-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .room-name {
-      font-size: 16px;
-      color: #fff;
-      font-weight: bold;
-    }
-
-    .room-lock {
-      font-size: 14px;
-    }
-
-    .room-info {
-      color: #888;
-      font-size: 12px;
-      margin-bottom: 15px;
-    }
-
-    .room-creator {
-      color: #00ffff;
-    }
-
-    .room-members {
-      color: #ff00ff;
-    }
-
-    .join-room-btn {
-      width: 100%;
-      padding: 8px;
-      background: transparent;
-      border: 1px solid #00ffff;
-      color: #00ffff;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      transition: all 0.3s;
-    }
-
-    .join-room-btn:hover {
-      background: rgba(0, 255, 255, 0.2);
-    }
-
-    .empty-rooms {
-      text-align: center;
-      color: #666;
-      padding: 40px;
-      font-size: 14px;
-    }
-
-    /* ==================== 房间页面 ==================== */
-    #roomPage {
-      padding: 0;
-    }
-
-    .room-header {
-      background: rgba(15, 15, 25, 0.95);
-      border-bottom: 1px solid #333;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .room-header-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .back-btn {
-      padding: 8px 12px;
-      background: transparent;
-      border: 1px solid #666;
-      color: #888;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-    }
-
-    .back-btn:hover {
-      border-color: #ff4444;
-      color: #ff6666;
-    }
-
-    .room-title-display {
-      font-size: 18px;
-      color: #fff;
-    }
-
-    .room-member-count {
-      color: #00ffff;
-      font-size: 12px;
-    }
-
-    .room-header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .online-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #00ff00;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .room-main {
-      display: flex;
-      height: calc(100vh - 60px);
-    }
 
+  /* ==================== 全局样式 ==================== */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Courier New', monospace;
+    background: #0a0a0f;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* 扫描线效果 */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ==================== 页面切换 ==================== */
+  .page {
+    display: none;
+    min-height: 100vh;
+  }
+
+  .page.active {
+    display: block;
+  }
+
+  /* ==================== 登录页 ==================== */
+  #loginPage {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+  }
+
+  #loginPage.active {
+    display: flex;
+  }
+
+  .login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+  }
+
+  .login-box {
+    background: rgba(20, 20, 35, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 0, 255, 0.3);
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow: 
+      0 0 30px rgba(255, 0, 255, 0.1),
+      0 0 60px rgba(0, 255, 255, 0.05),
+      inset 0 0 30px rgba(255, 0, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff00ff, #00ffff, transparent);
+    animation: scanline 3s linear infinite;
+  }
+
+  @keyframes scanline {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  .login-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, #ff00ff, #00ffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .login-subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 3px;
+    margin-bottom: 35px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    color: #00ffff;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 0, 255, 0.3);
+    border-radius: 6px;
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: #ff00ff;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+  }
+
+  .cyber-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+  }
+
+  .cyber-btn.primary {
+    background: linear-gradient(135deg, #ff00ff, #9b59b6);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+  }
+
+  .cyber-btn.primary:hover {
+    box-shadow: 0 0 25px rgba(255, 0, 255, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .cyber-btn.secondary {
+    background: transparent;
+    color: #00ffff;
+    border: 1px solid #00ffff;
+  }
+
+  .cyber-btn.secondary:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+  }
+
+  .cyber-btn.offline-btn {
+    background: linear-gradient(135deg, #4ecca3, #45b393);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(78, 204, 163, 0.3);
+  }
+
+  .cyber-btn.offline-btn:hover {
+    box-shadow: 0 0 25px rgba(78, 204, 163, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .message-box {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    text-align: center;
+    display: none;
+  }
+
+  .message-box.success {
+    display: block;
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid #00ff88;
+    color: #00ff88;
+  }
+
+  .message-box.error {
+    display: block;
+    background: rgba(255, 68, 68, 0.1);
+    border: 1px solid #ff4444;
+    color: #ff4444;
+  }
+
+  /* ==================== 大厅页 ==================== */
+  #lobbyPage {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .lobby-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255, 0, 255, 0.2);
+    margin-bottom: 30px;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff00ff, #00ffff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .user-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .logout-btn {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid #ff4444;
+    color: #ff4444;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s;
+  }
+
+  .logout-btn:hover {
+    background: rgba(255, 68, 68, 0.1);
+  }
+
+  .create-room-section {
+    background: rgba(20, 20, 35, 0.6);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    color: #00ffff;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+
+  .create-room-form {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .create-room-form .form-group {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 0;
+  }
+
+  .create-room-btn {
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #00ffff, #00ccff);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s;
+  }
+
+  .create-room-btn:hover {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .room-list-section {
+    margin-top: 30px;
+  }
+
+  .room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .room-card {
+    background: rgba(20, 20, 35, 0.6);
+    border: 1px solid rgba(255, 0, 255, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+  }
+
+  .room-card:hover {
+    border-color: rgba(255, 0, 255, 0.5);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+    transform: translateY(-3px);
+  }
+
+  .room-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .room-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .room-lock {
+    color: #ffaa00;
+    font-size: 16px;
+  }
+
+  .room-info {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .room-creator {
+    color: #00ffff;
+  }
+
+  .room-join-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background: transparent;
+    border: 1px solid #ff00ff;
+    color: #ff00ff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s;
+  }
+
+  .room-join-btn:hover {
+    background: rgba(255, 0, 255, 0.1);
+  }
+
+  .empty-rooms {
+    text-align: center;
+    color: #666;
+    padding: 40px;
+    font-size: 14px;
+  }
+
+  /* ==================== 房间页 ==================== */
+  #roomPage {
+    display: none;
+    height: 100vh;
+    flex-direction: column;
+  }
+
+  #roomPage.active {
+    display: flex;
+  }
+
+  .room-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(20, 20, 35, 0.9);
+    border-bottom: 1px solid rgba(255, 0, 255, 0.2);
+  }
+
+  .room-header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .back-btn {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid #888;
+    color: #888;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s;
+  }
+
+  .back-btn:hover {
+    border-color: #fff;
+    color: #fff;
+  }
+
+  .room-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .room-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .member-count {
+    font-size: 14px;
+    color: #00ffff;
+  }
+
+  .connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #888;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff4444;
+    animation: pulse 2s infinite;
+  }
+
+  .status-dot.connected {
+    background: #00ff88;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .room-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .room-sidebar {
+    width: 200px;
+    background: rgba(15, 15, 25, 0.8);
+    border-right: 1px solid rgba(255, 0, 255, 0.1);
+    padding: 20px 15px;
+    overflow-y: auto;
+  }
+
+  .sidebar-title {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+  }
+
+  .member-list {
+    list-style: none;
+  }
+
+  .member-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 8px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+
+  .member-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .member-item.creator {
+    color: #ff00ff;
+  }
+
+  .member-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff00ff, #00ffff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .member-name {
+    flex: 1;
+  }
+
+  .creator-badge {
+    font-size: 10px;
+    color: #ff00ff;
+    border: 1px solid #ff00ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .room-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+  }
+
+  /* 响应式 */
+  @media (max-width: 768px) {
     .room-sidebar {
-      width: 200px;
-      background: rgba(10, 10, 20, 0.9);
-      border-right: 1px solid #333;
-      padding: 20px 15px;
-      overflow-y: auto;
-    }
-
-    .sidebar-title {
-      color: #ff00ff;
-      font-size: 12px;
-      margin-bottom: 15px;
-      letter-spacing: 1px;
-    }
-
-    .member-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .member-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 4px;
-      font-size: 13px;
-    }
-
-    .member-item.creator {
-      border: 1px solid #ff00ff;
-    }
-
-    .member-avatar-small {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ff00ff, #00ffff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: bold;
-    }
-
-    .member-name {
-      flex: 1;
-      color: #ddd;
-    }
-
-    .member-tag {
-      font-size: 10px;
-      color: #ff00ff;
-    }
-
-    .room-content {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    /* 骰子工具区域 */
-    .dice-tool {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .tool-tabs {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #333;
-    }
-
-    .tool-tab {
-      padding: 10px 20px;
-      background: transparent;
-      border: none;
-      color: #888;
-      cursor: pointer;
-      font-family: 'Courier New', monospace;
-      font-size: 13px;
-      border-bottom: 2px solid transparent;
-      transition: all 0.3s;
-    }
-
-    .tool-tab:hover {
-      color: #fff;
-    }
-
-    .tool-tab.active {
-      color: #ff00ff;
-      border-bottom-color: #ff00ff;
-    }
-
-    .tool-content {
       display: none;
     }
-
-    .tool-content.active {
-      display: block;
-    }
-
-    /* 在线骰子投掷区 */
-    .online-dice-section {
-      background: rgba(15, 15, 25, 0.8);
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 25px;
-      margin-bottom: 20px;
-    }
-
-    .dice-input-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .dice-formula-input {
-      flex: 1;
-      padding: 12px 16px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid #444;
-      border-radius: 4px;
-      color: #fff;
-      font-size: 16px;
-      font-family: 'Courier New', monospace;
-    }
-
-    .dice-formula-input:focus {
-      outline: none;
-      border-color: #ff00ff;
-    }
-
-    .roll-btn {
-      padding: 12px 30px;
-      background: linear-gradient(135deg, #ff00ff, #00ffff);
-      border: none;
-      border-radius: 4px;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      transition: all 0.3s;
-    }
-
-    .roll-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
-    }
-
-    .quick-dice {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .quick-dice-btn {
-      padding: 6px 12px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid #444;
-      border-radius: 4px;
-      color: #aaa;
-      cursor: pointer;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      transition: all 0.3s;
-    }
-
-    .quick-dice-btn:hover {
-      border-color: #00ffff;
-      color: #00ffff;
-    }
-
-    /* 投掷历史 */
-    .roll-history-section {
-      background: rgba(15, 15, 25, 0.8);
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 20px;
-    }
-
-    .history-title {
-      color: #ff00ff;
-      font-size: 14px;
-      margin-bottom: 15px;
-    }
-
-    .roll-history-list {
-      max-height: 400px;
-      overflow-y: auto;
-      display: flex;
+    
+    .create-room-form {
       flex-direction: column;
-      gap: 10px;
     }
-
-    .roll-entry {
-      background: rgba(0, 0, 0, 0.3);
-      border-left: 3px solid #00ffff;
-      padding: 12px 15px;
-      border-radius: 0 4px 4px 0;
+    
+    .create-room-form .form-group {
+      width: 100%;
     }
-
-    .roll-entry.own {
-      border-left-color: #ff00ff;
+    
+    .login-box {
+      padding: 30px 20px;
     }
-
-    .roll-entry-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 5px;
+    
+    .login-title {
+      font-size: 22px;
     }
+  }
 
-    .roll-player {
-      color: #00ffff;
-      font-weight: bold;
+
+    /* ==================== 完整工具样式 ==================== */
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  h1 {
+    text-align: center;
+    color: #e94560;
+    margin-bottom: 20px;
+    font-size: 28px;
+    text-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+  }
+  h2 {
+    color: #e94560;
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
+  }
+  h3 {
+    color: #f39c12;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  /* 主标签页 */
+  .tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: #aaa;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 10px 10px 0 0;
+    transition: all 0.3s;
+    font-weight: bold;
+  }
+  .tab-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+  .tab-btn.active {
+    background: rgba(233, 69, 96, 0.2);
+    color: #e94560;
+    border-bottom: 2px solid #e94560;
+  }
+  .tab-content {
+    display: none;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  
+  /* ========== 通用：玩家管理 ========== */
+  .player-management {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .player-management input {
+    padding: 10px 15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+    width: 150px;
+  }
+  .player-management input:focus {
+    border-color: #e94560;
+  }
+  .add-player-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #4ecca3, #45b393);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+  }
+  .add-player-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 204, 163, 0.5);
+  }
+  
+  /* ========== 第一页：技能对抗 ========== */
+  
+  /* ========== 玩家选择区域 ========== */
+  .player-selection {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .player-selection-title {
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .player-chips {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .player-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #888;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .player-chip:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+  }
+  .player-chip.active {
+    background: rgba(78, 204, 163, 0.2);
+    border-color: #4ecca3;
+    color: #4ecca3;
+    font-weight: bold;
+  }
+  .player-chip.chip-player.active {
+    background: rgba(52, 152, 219, 0.2);
+    border-color: #3498db;
+    color: #3498db;
+  }
+  .player-chip.chip-npc {
+    border-color: rgba(231, 76, 60, 0.3);
+    color: #999;
+  }
+  .player-chip.chip-npc.active {
+    background: rgba(231, 76, 60, 0.2);
+    border-color: #e74c3c;
+    color: #e74c3c;
+    font-weight: bold;
+  }
+  .player-selection-hint {
+    color: #666;
+    font-size: 12px;
+  }
+  .rules-hint {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+  }
+  .rules-hint .success { color: #4ecca3; font-weight: bold; }
+  .rules-hint .fail { color: #e94560; font-weight: bold; }
+  
+  .players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+  }
+  .player-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .player-card.rank-1 {
+    border-color: #ffd700;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    transform: scale(1.03);
+  }
+  .player-card.rank-2 {
+    border-color: #c0c0c0;
+    box-shadow: 0 0 20px rgba(192, 192, 192, 0.3);
+  }
+  .player-card.rank-3 {
+    border-color: #cd7f32;
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.3);
+  }
+  .player-card.tied {
+    border-color: #f9ed69;
+  }
+  .player-card.critical-success {
+    border-color: #4ecca3;
+    box-shadow: 0 0 25px rgba(78, 204, 163, 0.5);
+  }
+  .player-card.critical-fail {
+    border-color: #e94560;
+    box-shadow: 0 0 25px rgba(233, 69, 96, 0.5);
+  }
+  .remove-player {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(233, 69, 96, 0.8);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 10;
+  }
+  .player-card:hover .remove-player {
+    opacity: 1;
+  }
+  .rank-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: #1a1a2e;
+    display: none;
+    z-index: 5;
+  }
+  .player-card.rank-1 .rank-badge {
+    display: flex;
+    background: #ffd700;
+  }
+  .player-card.rank-2 .rank-badge {
+    display: flex;
+    background: #c0c0c0;
+  }
+  .player-card.rank-3 .rank-badge {
+    display: flex;
+    background: #cd7f32;
+  }
+  .critical-badge {
+    position: absolute;
+    top: -8px;
+    right: 10px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    display: none;
+    z-index: 5;
+  }
+  .player-card.critical-success .critical-badge {
+    display: block;
+    background: linear-gradient(135deg, #4ecca3, #45b393);
+    color: white;
+    animation: pulse-glow 1.5s ease-in-out infinite;
+  }
+  .player-card.critical-fail .critical-badge {
+    display: block;
+    background: linear-gradient(135deg, #e94560, #c73e54);
+    color: white;
+    animation: pulse-glow 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 5px currentColor; }
+    50% { box-shadow: 0 0 15px currentColor; }
+  }
+  
+  .player-name-input {
+    width: 100%;
+    padding: 8px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  .player-name-input:focus {
+    border-color: #e94560;
+  }
+  
+  /* 技能选择 */
+  .skill-select-section {
+    margin-bottom: 12px;
+  }
+  .skill-select-label {
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 6px;
+    text-align: left;
+  }
+  .skill-select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+  .skill-select:focus {
+    border-color: #9b59b6;
+  }
+  .skill-select option {
+    background: #1a1a2e;
+    color: #fff;
+  }
+  
+  /* 瞄准部位 */
+  .aim-select-section {
+    margin-bottom: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  }
+  .aim-select-label {
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 6px;
+    text-align: left;
+  }
+  .aim-select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+  .aim-select:focus {
+    border-color: #9b59b6;
+  }
+  .aim-select option {
+    background: #1a1a2e;
+    color: #fff;
+  }
+  .aim-penalty-info {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #e94560;
+    text-align: right;
+    display: none;
+  }
+  .aim-penalty-info.show {
+    display: block;
+  }
+  
+  /* 武器选择 */
+  .weapon-select-section {
+    margin-bottom: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  }
+  .weapon-select-label {
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 6px;
+    text-align: left;
+  }
+  .weapon-select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
+  .weapon-select:focus {
+    border-color: #f39c12;
+  }
+  .weapon-select option {
+    background: #1a1a2e;
+    color: #fff;
+  }
+  .roll-weapon-btn {
+    width: 100%;
+    padding: 8px 12px;
+    background: rgba(243, 156, 18, 0.2);
+    color: #f39c12;
+    border: 1px solid rgba(243, 156, 18, 0.4);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  .roll-weapon-btn:hover {
+    background: rgba(243, 156, 18, 0.4);
+  }
+  .roll-weapon-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* 卡片内伤害结果 */
+  .card-damage-result {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    display: none;
+  }
+  .card-damage-result.show {
+    display: block;
+  }
+  .card-damage-dice {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .card-damage-dice .mini-dice {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(145deg, #f39c12, #e67e22);
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 2px 6px rgba(243, 156, 18, 0.4);
+  }
+  .card-damage-dice .mini-dice.crit {
+    background: linear-gradient(145deg, #e94560, #c73e54);
+    box-shadow: 0 0 10px rgba(233, 69, 96, 0.7);
+    animation: mini-crit-pulse 1s ease-in-out infinite;
+  }
+  @keyframes mini-crit-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  .card-damage-dice .mini-dice.rolling {
+    animation: mini-shake 0.4s ease-in-out;
+  }
+  @keyframes mini-shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-12deg); }
+    50% { transform: rotate(12deg); }
+    75% { transform: rotate(-6deg); }
+  }
+  .card-damage-total {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #f39c12;
+    text-shadow: 0 0 8px rgba(243, 156, 18, 0.5);
+  }
+  .card-damage-total.is-crit {
+    color: #e94560;
+    text-shadow: 0 0 12px rgba(233, 69, 96, 0.7);
+    font-size: 26px;
+  }
+  .card-crit-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: linear-gradient(135deg, #e94560, #c73e54);
+    color: white;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-left: 5px;
+    animation: mini-crit-glow 1s ease-in-out infinite;
+  }
+  @keyframes mini-crit-glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(233, 69, 96, 0.5); }
+    50% { box-shadow: 0 0 15px rgba(233, 69, 96, 0.8); }
+  }
+  
+  .dice-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    min-height: 70px;
+    flex-wrap: wrap;
+  }
+  .dice-display {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(145deg, #e94560, #c73e54);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 4px 15px rgba(233, 69, 96, 0.5);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .dice-display.main-dice {
+    width: 70px;
+    height: 70px;
+    font-size: 36px;
+  }
+  .dice-display.bonus-dice {
+    width: 45px;
+    height: 45px;
+    font-size: 24px;
+    background: linear-gradient(145deg, #4ecca3, #45b393);
+    box-shadow: 0 3px 12px rgba(78, 204, 163, 0.5);
+  }
+  .dice-display.penalty-dice {
+    width: 45px;
+    height: 45px;
+    font-size: 24px;
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    box-shadow: 0 3px 12px rgba(52, 152, 219, 0.5);
+  }
+  .dice-display.rolling {
+    animation: shake 0.5s ease-in-out;
+  }
+  .dice-operator {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+  }
+  .dice-operator.plus {
+    color: #4ecca3;
+  }
+  .dice-operator.minus {
+    color: #e94560;
+  }
+  @keyframes shake {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(-15deg) scale(1.1); }
+    50% { transform: rotate(15deg) scale(0.95); }
+    75% { transform: rotate(-10deg) scale(1.05); }
+  }
+  
+  .bonus-section {
+    margin-bottom: 10px;
+  }
+  .bonus-label {
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .bonus-input {
+    width: 70px;
+    padding: 8px;
+    font-size: 18px;
+    text-align: center;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-weight: bold;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .bonus-input:focus {
+    border-color: #e94560;
+  }
+  .total-section {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .total-label {
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  .total-value {
+    color: #4ecca3;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .total-value.critical-success {
+    color: #4ecca3;
+    text-shadow: 0 0 10px rgba(78, 204, 163, 0.8);
+  }
+  .total-value.critical-fail {
+    color: #e94560;
+    text-shadow: 0 0 10px rgba(233, 69, 96, 0.8);
+  }
+  .roll-single-btn {
+    margin-top: 10px;
+    padding: 8px 16px;
+    font-size: 13px;
+    background: rgba(233, 69, 96, 0.3);
+    color: #fff;
+    border: 1px solid rgba(233, 69, 96, 0.5);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .roll-single-btn:hover {
+    background: rgba(233, 69, 96, 0.5);
+  }
+  
+  .roll-all-section {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .roll-all-btn {
+    padding: 18px 50px;
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #e94560, #c73e54);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 25px rgba(233, 69, 96, 0.5);
+  }
+  .roll-all-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 35px rgba(233, 69, 96, 0.7);
+  }
+  
+  .result-text {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 20px;
+    font-weight: bold;
+    min-height: 30px;
+    color: #f9ed69;
+    text-shadow: 0 0 15px rgba(249, 237, 105, 0.5);
+  }
+  
+  /* 历史记录 */
+  .history-section {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 2px solid rgba(233, 69, 96, 0.3);
+  }
+  .history-title {
+    color: #e94560;
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
+  }
+  .history-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  .clear-history-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    background: rgba(233, 69, 96, 0.2);
+    color: #e94560;
+    border: 1px solid rgba(233, 69, 96, 0.4);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .clear-history-btn:hover {
+    background: rgba(233, 69, 96, 0.4);
+  }
+  .history-list {
+    max-height: 350px;
+    overflow-y: auto;
+    font-size: 14px;
+    color: #ccc;
+  }
+  .history-round {
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .history-round-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #aaa;
+    font-size: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .history-round-title {
+    color: #f9ed69;
+    font-weight: bold;
+  }
+  .history-entries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .history-entry {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 130px;
+  }
+  .history-entry.winner {
+    background: rgba(78, 204, 163, 0.15);
+    border: 1px solid rgba(78, 204, 163, 0.4);
+  }
+  .history-entry.critical-success-entry {
+    border-left: 3px solid #4ecca3;
+  }
+  .history-entry.critical-fail-entry {
+    border-left: 3px solid #e94560;
+  }
+  .history-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    color: #888;
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  .history-entry:nth-child(1) .history-rank {
+    background: linear-gradient(135deg, #ffd700, #ffaa00);
+    color: #fff;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  }
+  .history-entry:nth-child(2) .history-rank {
+    background: linear-gradient(135deg, #c0c0c0, #a0a0a0);
+    color: #fff;
+    box-shadow: 0 0 8px rgba(192, 192, 192, 0.5);
+  }
+  .history-entry:nth-child(3) .history-rank {
+    background: linear-gradient(135deg, #cd7f32, #b87333);
+    color: #fff;
+    box-shadow: 0 0 8px rgba(205, 127, 50, 0.5);
+  }
+  .history-player-name {
+    color: #fff;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  .history-skill-name {
+    color: #9b59b6;
+    font-size: 11px;
+  }
+  .history-dice-detail {
+    color: #888;
+    font-size: 12px;
+  }
+  .history-dice-detail .bonus-dice-num {
+    color: #4ecca3;
+    font-weight: bold;
+  }
+  .history-dice-detail .penalty-dice-num {
+    color: #e94560;
+    font-weight: bold;
+  }
+  .history-result {
+    color: #4ecca3;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  .history-result.critical-success {
+    color: #4ecca3;
+  }
+  .history-result.critical-fail {
+    color: #e94560;
+  }
+  .critical-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-left: 5px;
+  }
+  .critical-tag.success {
+    background: rgba(78, 204, 163, 0.3);
+    color: #4ecca3;
+  }
+  .critical-tag.fail {
+    background: rgba(233, 69, 96, 0.3);
+    color: #e94560;
+  }
+  .history-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  .history-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+  .history-list::-webkit-scrollbar-thumb {
+    background: rgba(233, 69, 96, 0.5);
+    border-radius: 3px;
+  }
+  
+  /* ========== 第二页：伤害骰 & 暴击 ========== */
+  .damage-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  
+  .damage-roller {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .damage-roller h2 {
+    color: #f39c12;
+    text-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .dice-formula-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .dice-formula-input input {
+    flex: 1;
+    min-width: 120px;
+    padding: 14px 15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    outline: none;
+    transition: border-color 0.3s;
+    text-align: center;
+  }
+  .dice-formula-input input:focus {
+    border-color: #f39c12;
+  }
+  .roll-damage-btn {
+    padding: 14px 30px;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+  }
+  .roll-damage-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.5);
+  }
+  
+  .damage-result {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    text-align: center;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .damage-dice-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+  .damage-dice {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(145deg, #f39c12, #e67e22);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.4);
+  }
+  .damage-dice.crit {
+    background: linear-gradient(145deg, #e94560, #c73e54);
+    box-shadow: 0 0 20px rgba(233, 69, 96, 0.7);
+    animation: crit-pulse 1s ease-in-out infinite;
+  }
+  @keyframes crit-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(233, 69, 96, 0.5); }
+    50% { transform: scale(1.15); box-shadow: 0 0 30px rgba(233, 69, 96, 0.9); }
+  }
+  .damage-dice.rolling {
+    animation: damage-shake 0.5s ease-in-out;
+  }
+  @keyframes damage-shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-15deg); }
+    50% { transform: rotate(15deg); }
+    75% { transform: rotate(-8deg); }
+  }
+  .damage-total {
+    font-size: 48px;
+    font-weight: bold;
+    color: #f39c12;
+    text-shadow: 0 0 20px rgba(243, 156, 18, 0.5);
+    margin: 10px 0;
+  }
+  .damage-total.is-crit {
+    color: #e94560;
+    text-shadow: 0 0 30px rgba(233, 69, 96, 0.7);
+    font-size: 56px;
+    animation: total-pulse 1s ease-in-out infinite;
+  }
+  @keyframes total-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  .crit-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #e94560, #c73e54);
+    color: white;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 5px;
+    animation: crit-glow 1s ease-in-out infinite;
+  }
+  @keyframes crit-glow {
+    0%, 100% { box-shadow: 0 0 15px rgba(233, 69, 96, 0.5); }
+    50% { box-shadow: 0 0 35px rgba(233, 69, 96, 0.9); }
+  }
+  .damage-formula-hint {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  .damage-formula-hint span {
+    color: #f39c12;
+    font-weight: bold;
+  }
+  .damage-detail {
+    color: #aaa;
+    font-size: 13px;
+    margin-top: 10px;
+  }
+  
+  /* 暴击表 */
+  .crit-table-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .crit-table-section h2 {
+    color: #e94560;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .crit-rule-hint {
+    background: rgba(233, 69, 96, 0.1);
+    border: 1px solid rgba(233, 69, 96, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 15px;
+    color: #f0a0a0;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .crit-rule-hint strong {
+    color: #e94560;
+  }
+  .crit-table-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .crit-table-item {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    border-left: 3px solid #f39c12;
+  }
+  .crit-table-item .dice-type {
+    color: #f39c12;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  .crit-table-item .crit-condition {
+    color: #eee;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .crit-table-item .crit-condition strong {
+    color: #e94560;
+  }
+  
+  /* D12 重伤表 */
+  .injury-section {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 2px solid rgba(155, 89, 182, 0.3);
+  }
+  .injury-title {
+    text-align: center;
+    color: #9b59b6;
+    font-size: 22px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(155, 89, 182, 0.4);
+  }
+  .injury-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .injury-player-select {
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+  }
+  .injury-player-select:focus {
+    border-color: #9b59b6;
+  }
+  .d12-dice {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(145deg, #9b59b6, #8e44ad);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 5px 20px rgba(155, 89, 182, 0.5);
+    transition: transform 0.1s ease;
+  }
+  .d12-dice.rolling {
+    animation: d12-shake 0.5s ease-in-out;
+  }
+  @keyframes d12-shake {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(-20deg) scale(1.1); }
+    50% { transform: rotate(20deg) scale(0.95); }
+    75% { transform: rotate(-15deg) scale(1.05); }
+  }
+  .checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #eee;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .checkbox-wrapper input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #9b59b6;
+  }
+  .roll-d12-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+  }
+  .roll-d12-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(155, 89, 182, 0.6);
+  }
+  .injury-result {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    padding: 20px;
+    border-left: 4px solid #9b59b6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .injury-victim {
+    color: #e94560;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  .injury-name {
+    color: #f9ed69;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(249, 237, 105, 0.3);
+  }
+  .injury-effect {
+    color: #ddd;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .injury-type-label {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .injury-type-torso {
+    background: rgba(78, 204, 163, 0.2);
+    color: #4ecca3;
+    border: 1px solid rgba(78, 204, 163, 0.4);
+  }
+  .injury-type-head {
+    background: rgba(233, 69, 96, 0.2);
+    color: #e94560;
+    border: 1px solid rgba(233, 69, 96, 0.4);
+  }
+  
+  /* ========== 第三页：备忘录 ========== */
+  .memo-page {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 25px;
+  }
+  
+  .player-sidebar {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .player-sidebar h3 {
+    color: #3498db;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  .add-player-box {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .add-player-box input {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+  }
+  .add-player-box input:focus {
+    border-color: #3498db;
+  }
+  .add-type-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  .add-type-buttons button {
+    flex: 1;
+    padding: 8px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+  .add-type-buttons button:first-child {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+  }
+  .add-type-buttons button:first-child:hover {
+    background: linear-gradient(135deg, #2980b9, #1f6391);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+  }
+  .add-type-buttons button:last-child {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+  }
+  .add-type-buttons button:last-child:hover {
+    background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+  }
+  
+  .character-section {
+    margin-top: 15px;
+  }
+  .character-section:first-of-type {
+    margin-top: 0;
+  }
+  .section-title {
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+  }
+  .player-section-title {
+    color: #3498db;
+  }
+  .npc-section-title {
+    color: #e74c3c;
+  }
+  
+  .player-list {
+    max-height: 450px;
+    overflow-y: auto;
+  }
+  .player-list-item {
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 3px solid transparent;
+  }
+  .player-list-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .player-list-item.selected {
+    background: rgba(52, 152, 219, 0.2);
+    border-left-color: #3498db;
+  }
+  .player-list-item.active-player {
+    border-left: 3px solid #4ecca3;
+    background: rgba(78, 204, 163, 0.08);
+  }
+  .player-list-item.active-player.selected {
+    background: rgba(78, 204, 163, 0.15);
+    border-left-color: #4ecca3;
+  }
+  .player-active-checkbox {
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: #4ecca3;
+  }
+  .player-list-item .player-name {
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .player-list-item .player-stats {
+    color: #888;
+    font-size: 11px;
+  }
+  .delete-player-btn {
+    padding: 2px 6px;
+    background: rgba(233, 69, 96, 0.3);
+    color: #e94560;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .player-list-item:hover .delete-player-btn {
+    opacity: 1;
+  }
+  .player-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  .player-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+  .player-list::-webkit-scrollbar-thumb {
+    background: rgba(52, 152, 219, 0.5);
+    border-radius: 3px;
+  }
+  
+  .memo-main {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .memo-player-title {
+    color: #3498db;
+    font-size: 22px;
+    margin-bottom: 20px;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+  }
+  
+  .memo-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .memo-tab-btn {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s;
+    font-weight: bold;
+  }
+  .memo-tab-btn:hover {
+    color: #fff;
+  }
+  .memo-tab-btn.active {
+    color: #f39c12;
+    background: rgba(243, 156, 18, 0.1);
+  }
+  .memo-tab-btn.active.skill-tab {
+    color: #9b59b6;
+    background: rgba(155, 89, 182, 0.1);
+  }
+  .memo-tab-content {
+    display: none;
+  }
+  .memo-tab-content.active {
+    display: block;
+  }
+  
+  /* 添加表单 */
+  .add-item-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+  }
+  .add-item-form.skill-form {
+    grid-template-columns: 1fr 1fr auto;
+  }
+  .add-item-form input {
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+  }
+  .add-item-form input:focus {
+    border-color: #f39c12;
+  }
+  .add-item-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+  .add-item-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4);
+  }
+  .add-item-btn.skill-btn {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  }
+  .add-item-btn.skill-btn:hover {
+    box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4);
+  }
+  
+  /* 武器/技能列表 */
+  .item-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .item-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  .item-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+  .item-list::-webkit-scrollbar-thumb {
+    background: rgba(243, 156, 18, 0.5);
+    border-radius: 3px;
+  }
+  .item-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 15px;
+    position: relative;
+    border-left: 4px solid #f39c12;
+    transition: all 0.3s;
+  }
+  .item-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+  }
+  .item-card.skill {
+    border-left-color: #9b59b6;
+  }
+  .item-name {
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .item-detail {
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .item-detail .formula {
+    color: #f39c12;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  .item-detail .bonus {
+    color: #4ecca3;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  .item-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .quick-roll-btn {
+    flex: 1;
+    padding: 8px 12px;
+    background: rgba(243, 156, 18, 0.2);
+    color: #f39c12;
+    border: 1px solid rgba(243, 156, 18, 0.4);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  .quick-roll-btn:hover {
+    background: rgba(243, 156, 18, 0.4);
+  }
+  .quick-roll-btn.skill-btn {
+    background: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+    border-color: rgba(155, 89, 182, 0.4);
+  }
+  .quick-roll-btn.skill-btn:hover {
+    background: rgba(155, 89, 182, 0.4);
+  }
+  .delete-item-btn {
+    padding: 8px 12px;
+    background: rgba(233, 69, 96, 0.2);
+    color: #e94560;
+    border: 1px solid rgba(233, 69, 96, 0.4);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s;
+  }
+  .delete-item-btn:hover {
+    background: rgba(233, 69, 96, 0.4);
+  }
+  
+  .empty-memo {
+    text-align: center;
+    color: #666;
+    padding: 40px;
+    font-size: 14px;
+  }
+  
+  /* 响应式 */
+  @media (max-width: 900px) {
+    .damage-page {
+      grid-template-columns: 1fr;
+    }
+    .memo-page {
+      grid-template-columns: 1fr;
+    }
+    .player-sidebar {
+      order: 2;
+    }
+    .memo-main {
+      order: 1;
+    }
+  }
+  @media (max-width: 600px) {
+    .players-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .dice-display.main-dice {
+      width: 55px;
+      height: 55px;
+      font-size: 28px;
+    }
+    .total-value {
+      font-size: 22px;
+    }
+    .add-item-form {
+      grid-template-columns: 1fr;
+    }
+    .add-item-form.skill-form {
+      grid-template-columns: 1fr;
+    }
+    .crit-table-grid {
+      grid-template-columns: 1fr;
+    }
+    .item-list {
+      grid-template-columns: 1fr;
+    }
+    .quick-roll-btn, .delete-item-btn {
+      padding: 12px 10px;
       font-size: 13px;
     }
-
-    .roll-entry.own .roll-player {
-      color: #ff00ff;
+    .item-name {
+      font-size: 15px;
     }
+  }
 
-    .roll-time {
-      color: #666;
-      font-size: 11px;
+  /* ==================== 联机房间样式 ==================== */
+  .online-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .online-section {
+    animation: fadeIn 0.3s ease;
+  }
+  
+  /* 登录框 */
+  .login-box {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+  }
+  
+  .form-group input:focus {
+    border-color: #9b59b6;
+  }
+  
+  .login-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .login-message {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 13px;
+    min-height: 20px;
+  }
+  
+  .login-message.success {
+    color: #4ecca3;
+  }
+  
+  .login-message.error {
+    color: #e94560;
+  }
+  
+  /* 通用按钮 */
+  .online-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s;
+    flex: 1;
+  }
+  
+  .online-btn.primary {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    color: white;
+  }
+  
+  .online-btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4);
+  }
+  
+  .online-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .online-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  
+  .online-btn.small {
+    padding: 8px 15px;
+    font-size: 12px;
+    flex: none;
+  }
+  
+  .online-btn.danger {
+    background: rgba(233, 69, 96, 0.2);
+    color: #e94560;
+    border: 1px solid rgba(233, 69, 96, 0.4);
+  }
+  
+  .online-btn.danger:hover {
+    background: rgba(233, 69, 96, 0.3);
+  }
+  
+  /* 顶部栏 */
+  .online-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .user-info, .room-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .user-avatar, .room-icon {
+    font-size: 24px;
+  }
+  
+  .username, .room-name {
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .room-members-count {
+    color: #888;
+    font-size: 14px;
+  }
+  
+  /* 创建房间 */
+  .create-room-box {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .create-room-box h3 {
+    color: #fff;
+    margin: 0 0 15px 0;
+    font-size: 16px;
+  }
+  
+  .create-room-form {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .create-room-form input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+  }
+  
+  .create-room-form input:focus {
+    border-color: #9b59b6;
+  }
+  
+  /* 房间列表 */
+  .room-list-section h3 {
+    color: #fff;
+    margin: 0 0 15px 0;
+    font-size: 16px;
+  }
+  
+  .room-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+  }
+  
+  .room-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s;
+  }
+  
+  .room-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+  }
+  
+  .room-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .room-card-name {
+    color: #fff;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  
+  .room-card-lock {
+    font-size: 14px;
+  }
+  
+  .room-card-info {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .room-card-join {
+    width: 100%;
+    padding: 8px;
+    background: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+    border: 1px solid rgba(155, 89, 182, 0.4);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  
+  .room-card-join:hover {
+    background: rgba(155, 89, 182, 0.4);
+  }
+  
+  .empty-room, .empty-roll {
+    text-align: center;
+    color: #666;
+    padding: 30px;
+    font-size: 13px;
+  }
+  
+  /* 房间内布局 */
+  .room-content {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+  }
+  
+  .room-sidebar {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+  }
+  
+  .room-sidebar h4 {
+    color: #fff;
+    margin: 0 0 15px 0;
+    font-size: 14px;
+  }
+  
+  .member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .member-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+  }
+  
+  .member-item.creator {
+    border-left: 3px solid #f39c12;
+  }
+  
+  .member-avatar {
+    font-size: 16px;
+  }
+  
+  .member-name {
+    color: #fff;
+    font-size: 13px;
+  }
+  
+  .member-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(243, 156, 18, 0.2);
+    color: #f39c12;
+    margin-left: auto;
+  }
+  
+  /* 房间主区域 */
+  .room-main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .dice-roller, .roll-history {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  
+  .dice-roller h4, .roll-history h4 {
+    color: #fff;
+    margin: 0 0 15px 0;
+    font-size: 14px;
+  }
+  
+  .dice-formula-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .dice-formula-section input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .dice-formula-section input:focus {
+    border-color: #9b59b6;
+  }
+  
+  .roll-btn {
+    flex: none;
+    padding: 12px 25px;
+  }
+  
+  .quick-dice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .quick-dice span {
+    color: #888;
+    font-size: 12px;
+  }
+  
+  .quick-dice-btn {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #aaa;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s;
+  }
+  
+  .quick-dice-btn:hover {
+    background: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+    border-color: rgba(155, 89, 182, 0.4);
+  }
+  
+  /* 投掷历史 */
+  .roll-history-list {
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .roll-entry {
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border-left: 3px solid #9b59b6;
+    animation: slideIn 0.3s ease;
+  }
+  
+  .roll-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  
+  .roll-player {
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .roll-time {
+    color: #666;
+    font-size: 11px;
+  }
+  
+  .roll-formula {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  
+  .roll-result {
+    color: #9b59b6;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .roll-detail {
+    color: #666;
+    font-size: 11px;
+    margin-top: 4px;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
     }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* 响应式 */
+  @media (max-width: 768px) {
+    .room-content {
+      grid-template-columns: 1fr;
+    }
+    
+    .room-sidebar {
+      order: 2;
+    }
+    
+    .create-room-form {
+      flex-direction: column;
+    }
+    
+    .dice-formula-section {
+      flex-direction: column;
+    }
+    
+    .roll-btn {
+      width: 100%;
+    }
+  }
 
-    .roll-formula {
-      color: #888;
-      font-size: 12px;
-      margin-bottom: 5px;
-    }
-
-    .roll-result {
-      font-size: 24px;
-      font-weight: bold;
-      color: #fff;
-    }
-
-    .roll-detail {
-      color: #666;
-      font-size: 11px;
-      margin-top: 5px;
-    }
-
-    .empty-history {
-      text-align: center;
-      color: #666;
-      padding: 30px;
-      font-size: 13px;
-    }
-
-    /* 响应式 */
-    @media (max-width: 768px) {
-      .room-main {
-        flex-direction: column;
-      }
-      
-      .room-sidebar {
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid #333;
-      }
-      
-      .member-list {
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-      
-      .create-room-form {
-        flex-direction: column;
-      }
-      
-      .btn-group {
-        flex-direction: column;
-      }
-    }
-
-    /* 加载动画 */
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2px solid #333;
-      border-radius: 50%;
-      border-top-color: #ff00ff;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* 通知提示 */
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 15px 20px;
-      background: rgba(15, 15, 25, 0.95);
-      border: 1px solid #00ffff;
-      border-radius: 4px;
-      color: #fff;
-      font-size: 13px;
-      z-index: 1000;
-      animation: slideIn 0.3s ease;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
   </style>
 </head>
 <body>
-
-  <!-- ==================== 登录页面 ==================== -->
+  <!-- ==================== 登录页 ==================== -->
   <div id="loginPage" class="page active">
     <div class="login-container">
-      <h1 class="app-title">赛博朋克红小工具</h1>
-      <p class="app-subtitle">CYBERPUNK RED TOOLKIT</p>
-      
-      <div class="input-group">
-        <label>用户名 / USERNAME</label>
-        <input type="text" id="usernameInput" placeholder="输入用户名">
+      <div class="login-box">
+        <h1 class="login-title">赛博朋克红小工具</h1>
+        <p class="login-subtitle">CYBERPUNK RED TOOLKIT</p>
+        
+        <div class="form-group">
+          <label>用户名 / USERNAME</label>
+          <input type="text" id="usernameInput" placeholder="输入用户名">
+        </div>
+        
+        <div class="form-group">
+          <label>密码 / PASSWORD</label>
+          <input type="password" id="passwordInput" placeholder="输入密码">
+        </div>
+        
+        <div class="btn-group">
+          <button class="cyber-btn primary" onclick="loginUser()">登录</button>
+          <button class="cyber-btn secondary" onclick="registerUser()">注册</button>
+        </div>
+        
+        <div style="text-align: center; margin: 20px 0 10px 0; color: #666; font-size: 12px;">—— 或者 ——</div>
+        
+        <button class="cyber-btn offline-btn" onclick="useOfflineMode()" style="width: 100%; margin-top: 10px;">
+          🎲 离线使用（无需服务器）
+        </button>
+        
+        <div id="loginMessage" class="message-box"></div>
       </div>
-      
-      <div class="input-group">
-        <label>密码 / PASSWORD</label>
-        <input type="password" id="passwordInput" placeholder="输入密码">
-      </div>
-      
-      <div class="btn-group">
-        <button class="cyber-btn primary" onclick="loginUser()">登录</button>
-        <button class="cyber-btn secondary" onclick="registerUser()">注册</button>
-      </div>
-      
-      <div id="loginMessage" class="login-message"></div>
     </div>
   </div>
 
-  <!-- ==================== 大厅页面 ==================== -->
+  <!-- ==================== 大厅页 ==================== -->
   <div id="lobbyPage" class="page">
     <div class="lobby-header">
-      <h2 class="lobby-title">🎮 联机大厅</h2>
       <div class="user-info">
         <div class="user-avatar" id="userAvatar">U</div>
-        <span class="username-display" id="usernameDisplay">用户</span>
-        <button class="logout-btn" onclick="logoutUser()">退出</button>
+        <div>
+          <div class="user-name" id="displayUsername">用户</div>
+        </div>
       </div>
+      <button class="logout-btn" onclick="logoutUser()">退出登录</button>
     </div>
 
     <div class="create-room-section">
-      <h3 class="section-title">⚡ 创建房间</h3>
+      <h3 class="section-title">➕ 创建房间</h3>
       <div class="create-room-form">
-        <div class="form-field">
+        <div class="form-group">
           <label>房间名称</label>
           <input type="text" id="roomNameInput" placeholder="输入房间名称">
         </div>
-        <div class="form-field">
+        <div class="form-group">
           <label>房间密码（可选）</label>
-          <input type="text" id="roomPasswordInput" placeholder="留空表示无密码">
+          <input type="text" id="roomPasswordInput" placeholder="不填则无密码">
         </div>
-        <div class="form-field" style="flex: 0 0 auto;">
-          <button class="cyber-btn primary" onclick="createRoom()" style="padding: 10px 25px;">创建房间</button>
-        </div>
+        <button class="create-room-btn" onclick="createRoom()">创建房间</button>
       </div>
     </div>
 
@@ -868,83 +2731,1686 @@
     </div>
   </div>
 
-  <!-- ==================== 房间页面 ==================== -->
+  <!-- ==================== 房间页 ==================== -->
   <div id="roomPage" class="page">
     <div class="room-header">
       <div class="room-header-left">
         <button class="back-btn" onclick="leaveRoom()">← 返回大厅</button>
-        <span class="room-title-display" id="currentRoomName">房间名称</span>
-        <span class="room-member-count" id="roomMemberCount">(0人)</span>
+        <div class="room-title" id="currentRoomName">房间</div>
       </div>
       <div class="room-header-right">
-        <div class="online-dot"></div>
-        <span style="font-size: 12px; color: #888;">在线</span>
+        <div class="member-count" id="memberCount">0 人在线</div>
+        <div class="connection-status">
+          <div class="status-dot" id="statusDot"></div>
+          <span id="statusText">连接中...</span>
+        </div>
       </div>
     </div>
 
-    <div class="room-main">
+    <div class="room-body">
       <div class="room-sidebar">
-        <h4 class="sidebar-title">👥 房间成员</h4>
-        <div class="member-list" id="memberList">
-        </div>
+        <div class="sidebar-title">👥 成员列表</div>
+        <ul class="member-list" id="memberList">
+        </ul>
       </div>
 
       <div class="room-content">
-        <div class="dice-tool">
-          <div class="tool-tabs">
-            <button class="tool-tab active" onclick="switchToolTab('dice')">🎲 骰子投掷</button>
-            <button class="tool-tab" onclick="switchToolTab('history')">📜 投掷历史</button>
+        <!-- 完整工具内容 -->
+
+  <div class="container">
+    <h1>🎲 技能对抗工具</h1>
+    
+    <!-- 主标签页 -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchMainTab('battle')">⚔️ 技能对抗</button>
+      <button class="tab-btn" onclick="switchMainTab('damage')">💥 伤害 & 暴击</button>
+      <button class="tab-btn" onclick="switchMainTab('memo')">📝 备忘录</button>
+      <button class="tab-btn" onclick="switchMainTab('online')">🎮 联机房间</button>
+    </div>
+    
+    <!-- ========== 第一页：技能对抗 ========== -->
+    <div id="tab-battle" class="tab-content active">
+      <div class="rules-hint">
+        <span class="success">大成功（出10）</span>：追加1个D10加到结果中 | 
+        <span class="fail">大失败（出1）</span>：追加1个D10从结果中减去
+      </div>
+      
+      <div class="player-selection">
+        <div class="player-selection-title">选择参与对抗的玩家（点击切换）</div>
+        <div class="player-chips" id="playerChips"></div>
+        <div class="player-selection-hint">在「备忘录」页面添加新玩家</div>
+      </div>
+      
+      <div class="players-grid" id="playersGrid"></div>
+      
+      <div class="roll-all-section">
+        <button class="roll-all-btn" onclick="rollAll()">🎲 全员对抗</button>
+      </div>
+      
+      <div class="result-text" id="resultText"></div>
+      
+      <div class="history-section">
+        <h2 class="history-title">📜 对抗记录</h2>
+        <div class="history-controls">
+          <button class="clear-history-btn" onclick="clearHistory()">清空记录</button>
+        </div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+    </div>
+    
+    <!-- ========== 第二页：伤害 & 暴击 ========== -->
+    <div id="tab-damage" class="tab-content">
+      <div class="damage-page">
+        <!-- 伤害骰投掷器 -->
+        <div class="damage-roller">
+          <h2>⚔️ 伤害骰投掷</h2>
+          
+          <div class="damage-formula-hint">
+            格式：<span>XdY+Z</span>（如 2d6+3、4d4、3d8+2）
           </div>
-
-          <div id="diceTab" class="tool-content active">
-            <div class="online-dice-section">
-              <div class="dice-input-row">
-                <input type="text" class="dice-formula-input" id="diceFormulaInput" placeholder="输入骰子公式，如：1d10+5 或 2d6+3">
-                <button class="roll-btn" onclick="rollOnlineDice()">投掷！</button>
-              </div>
-              <div class="quick-dice">
-                <button class="quick-dice-btn" onclick="setDiceFormula('1d4')">D4</button>
-                <button class="quick-dice-btn" onclick="setDiceFormula('1d6')">D6</button>
-                <button class="quick-dice-btn" onclick="setDiceFormula('1d8')">D8</button>
-                <button class="quick-dice-btn" onclick="setDiceFormula('1d10')">D10</button>
-                <button class="quick-dice-btn" onclick="setDiceFormula('1d12')">D12</button>
-                <button class="quick-dice-btn" onclick="setDiceFormula('1d20')">D20</button>
-                <button class="quick-dice-btn" onclick="setDiceFormula('1d100')">D100</button>
-                <button class="quick-dice-btn" onclick="setDiceFormula('2d6+3')">2D6+3</button>
-                <button class="quick-dice-btn" onclick="setDiceFormula('3d6+2')">3D6+2</button>
-              </div>
+          
+          <div class="dice-formula-input">
+            <input type="text" id="damageFormula" placeholder="例如：2d6+3" value="2d6">
+            <button class="roll-damage-btn" onclick="rollDamage()">🎲 投掷</button>
+          </div>
+          
+          <div class="damage-result" id="damageResult">
+            <div style="color: #888; padding: 20px;">输入骰子公式后点击投掷</div>
+          </div>
+          
+          <div class="damage-formula-hint" style="margin-top: 10px;">
+            💡 提示：按 <span>空格键</span> 快速投掷
+          </div>
+        </div>
+        
+        <!-- 暴击表 -->
+        <div class="crit-table-section">
+          <h2>💥 暴击规则表</h2>
+          
+          <div class="crit-rule-hint">
+            <strong>规则说明：</strong>所有骰子都达到暴击阈值才算暴击。<br>
+            对于 D10，只要有任何一个骰子出 10 也触发暴击。
+          </div>
+          
+          <div class="crit-table-grid">
+            <div class="crit-table-item">
+              <div class="dice-type">4D4</div>
+              <div class="crit-condition">全部出 <strong>4</strong><br>（4个4）</div>
             </div>
-
-            <div class="roll-history-section">
-              <h4 class="history-title">最近投掷</h4>
-              <div class="roll-history-list" id="rollHistoryList">
-                <div class="empty-history">还没有人投掷骰子</div>
-              </div>
+            <div class="crit-table-item">
+              <div class="dice-type">2D6</div>
+              <div class="crit-condition">全部出 <strong>6</strong><br>（双6）</div>
+            </div>
+            <div class="crit-table-item">
+              <div class="dice-type">2D8</div>
+              <div class="crit-condition">全部出 <strong>7+</strong><br>（双7+）</div>
+            </div>
+            <div class="crit-table-item">
+              <div class="dice-type">2D10</div>
+              <div class="crit-condition">全部出 <strong>9+</strong><br>或单出 <strong>10</strong></div>
+            </div>
+            <div class="crit-table-item">
+              <div class="dice-type">1D12</div>
+              <div class="crit-condition">出 <strong>11</strong> 或 <strong>12</strong></div>
+            </div>
+            <div class="crit-table-item">
+              <div class="dice-type">1D20</div>
+              <div class="crit-condition">出 <strong>16-20</strong><br>（共5个值）</div>
             </div>
           </div>
-
-          <div id="historyTab" class="tool-content">
-            <div class="roll-history-section">
-              <h4 class="history-title">全部投掷历史</h4>
-              <div class="roll-history-list" id="fullHistoryList">
-                <div class="empty-history">还没有投掷记录</div>
-              </div>
+          
+          <div class="crit-rule-hint" style="margin-top: 15px; background: rgba(243, 156, 18, 0.1); border-color: rgba(243, 156, 18, 0.3); color: #f0c080;">
+            <strong>通用规则：</strong>其他数量骰子 → 全部达到对应面数的暴击阈值即算暴击
+          </div>
+        </div>
+      </div>
+      
+      <!-- D12 重伤表 -->
+      <div class="injury-section">
+        <h2 class="injury-title">💀 D12 严重伤势表</h2>
+        
+        <div class="injury-controls">
+          <select class="injury-player-select" id="injuryPlayerSelect">
+            <option value="">选择受伤玩家</option>
+          </select>
+          
+          <div class="d12-dice" id="d12dice">-</div>
+          
+          <label class="checkbox-wrapper">
+            <input type="checkbox" id="headInjury">
+            <span>头部伤势</span>
+          </label>
+          
+          <button class="roll-d12-btn" onclick="rollD12()">🎲 投掷 D12</button>
+        </div>
+        
+        <div class="injury-result" id="injuryResult" style="display: none;">
+          <div class="injury-victim" id="injuryVictim"></div>
+          <span class="injury-type-label" id="injuryTypeLabel"></span>
+          <div class="injury-name" id="injuryName"></div>
+          <div class="injury-effect" id="injuryEffect"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ========== 第三页：备忘录 ========== -->
+    <div id="tab-memo" class="tab-content">
+      <div class="memo-page">
+        <!-- 左侧玩家列表 -->
+        <div class="player-sidebar">
+          <div class="add-player-box">
+            <input type="text" id="newPlayerNameMemo" placeholder="输入角色名字" maxlength="10">
+            <div class="add-type-buttons">
+              <button onclick="addPlayerFromMemo('player')">➕ 玩家</button>
+              <button onclick="addPlayerFromMemo('npc')">➕ NPC</button>
+            </div>
+          </div>
+          
+          <div class="character-section">
+            <h4 class="section-title player-section-title">👤 玩家</h4>
+            <div class="player-list" id="playerListPlayers"></div>
+          </div>
+          
+          <div class="character-section">
+            <h4 class="section-title npc-section-title">👤 NPC</h4>
+            <div class="player-list" id="playerListMonsters"></div>
+          </div>
+        </div>
+        
+        <!-- 右侧备忘录主区域 -->
+        <div class="memo-main">
+          <div class="memo-player-title" id="memoPlayerTitle">请选择一个玩家</div>
+          
+          <div class="memo-tabs">
+            <button class="memo-tab-btn active" onclick="switchMemoTab('weapons')">⚔️ 武器</button>
+            <button class="memo-tab-btn skill-tab" onclick="switchMemoTab('skills')">✨ 技能</button>
+          </div>
+          
+          <!-- 武器标签 -->
+          <div id="memo-weapons" class="memo-tab-content active">
+            <div class="add-item-form">
+              <input type="text" id="weaponName" placeholder="武器名称（如：重型手枪）">
+              <input type="text" id="weaponDamage" placeholder="伤害公式（如：3d6+2）">
+              <button class="add-item-btn" onclick="addWeapon()">➕ 添加武器</button>
+            </div>
+            <div class="item-list" id="weaponList">
+              <div class="empty-memo">请先选择玩家</div>
+            </div>
+          </div>
+          
+          <!-- 技能标签 -->
+          <div id="memo-skills" class="memo-tab-content">
+            <div class="add-item-form skill-form">
+              <input type="text" id="skillName" placeholder="技能名称（如：射击）">
+              <input type="number" id="skillBonus" placeholder="技能加值（如：+12）">
+              <button class="add-item-btn skill-btn" onclick="addSkill()">➕ 添加技能</button>
+            </div>
+            <div class="item-list" id="skillList">
+              <div class="empty-memo">请先选择玩家</div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    
+  </div>
+
+
       </div>
     </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    // ==================== 全局状态 ====================
-    let currentUser = null;
-    let currentRoomId = null;
-    let socket = null;
-    let currentRoomData = null;
+    // ==================== 全局变量声明（放在最前面，避免暂时性死区） ====================
+    var currentUser = null;
+    var currentRoomId = null;
+    var socket = null;
+    var currentRoomData = null;
 
-    // ==================== 页面切换 ====================
+    // ==================== 完整工具 JS ====================
+
+  // ==================== 通用数据 ====================
+  let players = [
+    { 
+      id: 1, 
+      name: '玩家1',
+      type: 'player', 
+      bonus: 0, 
+      selectedSkillId: null,
+      aimPenalty: 0,
+      active: true,
+      diceResult: null, 
+      bonusDice: null, 
+      isCritical: null, 
+      total: null, 
+      weapons: [], 
+      skills: [] 
+    },
+    { 
+      id: 2, 
+      name: '玩家2',
+      type: 'player', 
+      bonus: 0, 
+      selectedSkillId: null,
+      aimPenalty: 0,
+      active: true,
+      diceResult: null, 
+      bonusDice: null, 
+      isCritical: null, 
+      total: null, 
+      weapons: [], 
+      skills: [] 
+    }
+  ];
+  let currentMemoTab = 'weapons';
+  let nextPlayerId = 3;
+  let selectedPlayerId = null;
+  let battleHistory = [];
+  let roundCount = 0;
+  
+  // D12 重伤表数据
+  const torsoInjuries = {
+    1: { name: '断臂', effect: '失去断掉的那只手臂，那只手里拿着的任何东西立刻掉落。基础死亡豁免惩罚+1。' },
+    2: { name: '肠胃撕裂', effect: '每回合损失1体格，影响生命上限和相关豁免，下限为2。基础死亡豁免惩罚+1。30分钟后未得到有效处理即死亡。' },
+    3: { name: '气胸', effect: '每回合损失1敏捷，下限为2。基础死亡豁免惩罚+1。30分钟后未得到有效处理即死亡。' },
+    4: { name: '断手', effect: '失去断掉的那只手，那只手里拿着的任何东西立刻掉落。基础死亡豁免惩罚+1。' },
+    5: { name: '手臂骨折', effect: '骨折的手臂无法再来用于干别的事了，那只手里拿着的任何东西立刻掉落。' },
+    6: { name: '体内异物', effect: '在每个你徒步行进了超过4m/yd的回合，你都要重新受到这个严重伤势的额外伤害，直接从生命值里扣除。' },
+    7: { name: '腿骨折', effect: '-4移动，-4闪避（最小为1）。' },
+    8: { name: '动脉破损', effect: '每回合损失相当于体格的生命值。' },
+    9: { name: '脊柱受伤', effect: '跌倒在地，在之后的两回合内被迫进入趴下状态无法起身，且一切动作-2。基础死亡豁免惩罚+1。' },
+    10: { name: '肾/肝爆碎', effect: '因为剧痛而跳过一回合，下一回合开始你的所有动作-2，直到被移除。30分钟后未得到有效处理即死亡。' },
+    11: { name: '断腿', effect: '失去断掉的那条腿。-6移动（最小为1），你无法闪避攻击。基础死亡豁免惩罚+1。' },
+    12: { name: '致命创伤', effect: '受到极其严重的创伤，立即陷入濒死状态，基础死亡豁免惩罚+2。每回合必须进行死亡豁免判定。' }
+  };
+  
+  const headInjuries = {
+    1: { name: '目盲', effect: '双眼暂时失明，-10战斗技能、闪避和所有需要视觉的感知鉴定。' },
+    2: { name: '脑损伤', effect: '-2所有行动。基础死亡豁免惩罚+1。' },
+    3: { name: '脑震荡', effect: '跳过一回合。' },
+    4: { name: '下颌粉碎', effect: '剧痛导致专注和闪避减半，无法说话，COOL-4。' },
+    5: { name: '额叶损伤', effect: '在被移除之前，获得一个赛博精神病的"应激症状"，每次大失败就会触发。' },
+    6: { name: '头部异物', effect: '在每个你徒步行进了超过4m/yds的回合，你都要重新受到这个严重伤势的额外伤害，直接从生命值里扣除。' },
+    7: { name: '失去眼睛', effect: '失去一只眼睛，-4攻击、闪避和所有需要视觉的感知鉴定。' },
+    8: { name: '颅骨骨裂', effect: '瞄准你头部的精确射击造成的伤害在减去护甲之后倍数变为3。基础死亡豁免惩罚+1。' },
+    9: { name: '耳聋', effect: '所有需要听力的感知鉴定和闪避-4，每次承受超过5的伤害就会跌倒在地。基础死亡豁免惩罚+1。' },
+    10: { name: '动脉破损', effect: '每回合损失相当于体格的生命值。' },
+    11: { name: '颅内出血', effect: '颅内压力持续升高，每回合智力和意志各-1（最低1）。基础死亡豁免惩罚+1。30分钟内未得到有效处理即死亡。' },
+    12: { name: '开放性脑损伤', effect: '在被移除之前，获得一个赛博精神病的"长期症状"，智力和意志-2（最低1）。30分钟之内得不到有效处理即死亡。' }
+  };
+  
+  // 暴击阈值表
+  const critThresholds = {
+    4: 4,
+    6: 6,
+    8: 7,
+    10: 9,
+    12: 11,
+    20: 16
+  };
+  
+  // ==================== 主标签页切换 ====================
+  function switchMainTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    event.target.classList.add('active');
+  }
+  
+  // ==================== 初始化 ====================
+  function init() {
+    renderPlayers();
+    renderPlayerList();
+    updateInjuryPlayerSelect();
+    renderPlayerChips();
+    renderHistory();
+  }
+  
+  // ==================== 第一页：技能对抗 ====================
+  
+  function renderPlayerChips() {
+    const chipsContainer = document.getElementById("playerChips");
+    if (!chipsContainer) return;
+    
+    const activeCount = players.filter(p => p.active).length;
+    
+    chipsContainer.innerHTML = players.map(player => `
+      <div class="player-chip chip-${player.type || 'player'} ${player.active ? "active" : ""}" onclick="togglePlayerActive(${player.id})">
+        ${player.name}
+      </div>
+    `).join("");
+  }
+  function renderPlayers() {
+    const grid = document.getElementById('playersGrid');
+    grid.innerHTML = players.filter(p => p.active).map((player) => {
+      // 技能选项
+      const skillOptions = player.skills.length > 0 
+        ? '<option value="">选择技能...</option>' + 
+          player.skills.map(s => `<option value="${s.id}" ${player.selectedSkillId === s.id ? 'selected' : ''}>${s.name} (+${s.bonus})</option>`).join('')
+        : '<option value="">暂无技能</option>';
+      
+      // 武器选项
+      const weaponOptions = player.weapons.length > 0
+        ? '<option value="">选择武器...</option>' + 
+          player.weapons.map(w => `<option value="${w.id}">${w.name} (${w.damage})</option>`).join('')
+        : '<option value="">暂无武器</option>';
+      
+      let diceHtml = '';
+      if (player.diceResult !== null) {
+        diceHtml = `<div class="dice-display main-dice" id="dice-${player.id}">${player.diceResult}</div>`;
+        
+        if (player.isCritical === 'success') {
+          diceHtml += `
+            <span class="dice-operator plus">+</span>
+            <div class="dice-display bonus-dice" id="bonus-dice-${player.id}">${player.bonusDice}</div>
+          `;
+        } else if (player.isCritical === 'fail') {
+          diceHtml += `
+            <span class="dice-operator minus">−</span>
+            <div class="dice-display penalty-dice" id="penalty-dice-${player.id}">${player.bonusDice}</div>
+          `;
+        }
+      } else {
+        diceHtml = `<div class="dice-display main-dice" id="dice-${player.id}">-</div>`;
+      }
+      
+      const criticalClass = player.isCritical === 'success' ? 'critical-success' : 
+                           player.isCritical === 'fail' ? 'critical-fail' : '';
+      const criticalText = player.isCritical === 'success' ? '大成功！' : 
+                          player.isCritical === 'fail' ? '大失败' : '';
+      
+      const totalClass = player.isCritical === 'success' ? 'critical-success' : 
+                        player.isCritical === 'fail' ? 'critical-fail' : '';
+      
+      return `
+        <div class="player-card ${criticalClass}" id="player-${player.id}">
+          <div class="rank-badge">1</div>
+          <div class="critical-badge">${criticalText}</div>
+          
+          <input type="text" class="player-name-input" value="${player.name}" 
+                 onchange="updatePlayerName(${player.id}, this.value)" maxlength="10">
+          
+          <div class="skill-select-section">
+            <div class="skill-select-label">选择技能</div>
+            <select class="skill-select" id="skill-select-${player.id}" onchange="selectPlayerSkill(${player.id}, this.value)">
+              ${skillOptions}
+            </select>
+          </div>
+          
+          <div class="aim-select-section">
+            <div class="aim-select-label">瞄准部位</div>
+            <select class="aim-select" id="aim-select-${player.id}" onchange="selectPlayerAim(${player.id}, this.value)">
+              <option value="0">躯干（标准）</option>
+              <option value="-4">腿部 (-4)</option>
+              <option value="-6">手臂 (-6)</option>
+              <option value="-8">头部 (-8)</option>
+              <option value="-10">裆部 (-10)</option>
+            </select>
+            <div class="aim-penalty-info" id="aim-penalty-${player.id}"></div>
+          </div>
+          
+          <div class="weapon-select-section">
+            <div class="weapon-select-label">选择武器</div>
+            <select class="weapon-select" id="weapon-select-${player.id}">
+              ${weaponOptions}
+            </select>
+            <button class="roll-weapon-btn" onclick="rollPlayerWeapon(${player.id})" ${player.weapons.length === 0 ? 'disabled' : ''}>
+              ⚔️ 投掷伤害
+            </button>
+            <div class="card-damage-result" id="card-damage-${player.id}">
+              <div class="card-damage-dice" id="card-damage-dice-${player.id}"></div>
+              <div class="card-damage-total" id="card-damage-total-${player.id}"></div>
+            </div>
+          </div>
+          
+          <div class="dice-area">
+            ${diceHtml}
+          </div>
+          
+          <div class="bonus-section">
+            <div class="bonus-label">技能加值</div>
+            <input type="number" class="bonus-input" value="${player.bonus}" 
+                   onchange="updatePlayerBonus(${player.id}, parseInt(this.value) || 0)">
+          </div>
+          
+          <div class="total-section">
+            <div class="total-label">总计</div>
+            <div class="total-value ${totalClass}" id="total-${player.id}">${player.total !== null ? player.total : '-'}</div>
+          </div>
+          
+          <button class="roll-single-btn" onclick="rollSingle(${player.id})">单独投掷</button>
+        </div>
+      `;
+    }).join('');
+    
+    // 设置瞄准部位选中状态
+    players.forEach(player => {
+      const aimSelect = document.getElementById(`aim-select-${player.id}`);
+      if (aimSelect) {
+        aimSelect.value = player.aimPenalty;
+      }
+      
+      // 更新减值提示
+      const penaltyInfo = document.getElementById(`aim-penalty-${player.id}`);
+      if (penaltyInfo) {
+        if (player.aimPenalty < 0) {
+          penaltyInfo.textContent = `瞄准减值 ${player.aimPenalty}`;
+          penaltyInfo.classList.add('show');
+        } else {
+          penaltyInfo.classList.remove('show');
+        }
+      }
+    });
+  }
+  
+  function selectPlayerSkill(playerId, skillId) {
+    const player = players.find(p => p.id === playerId);
+    if (!player) return;
+    
+    if (skillId) {
+      const skill = player.skills.find(s => s.id === parseInt(skillId));
+      if (skill) {
+        player.selectedSkillId = skill.id;
+        player.bonus = skill.bonus;
+      }
+    } else {
+      player.selectedSkillId = null;
+    }
+    
+    // 更新显示
+    const bonusInput = document.querySelector(`#player-${playerId} .bonus-input`);
+    if (bonusInput) {
+      bonusInput.value = player.bonus;
+    }
+    
+    // 如果已经有骰子结果，重新计算
+    if (player.diceResult !== null) {
+      recalculateTotal(player);
+      const totalEl = document.getElementById(`total-${playerId}`);
+      if (totalEl) totalEl.textContent = player.total;
+      updateRanks();
+    }
+  }
+  
+  function addPlayer() {
+    const input = document.getElementById('newPlayerName');
+    const name = input.value.trim() || `玩家${nextPlayerId}`;
+    
+    if (players.length >= 20) {
+      alert('最多支持20个玩家');
+      return;
+    }
+    
+    players.push({
+      id: nextPlayerId,
+      name: name,
+      type: 'player',
+      bonus: 0,
+      selectedSkillId: null,
+      aimPenalty: 0,
+      active: true,
+      diceResult: null,
+      bonusDice: null,
+      isCritical: null,
+      total: null,
+      weapons: [],
+      skills: []
+    });
+    nextPlayerId++;
+    
+    input.value = '';
+    renderPlayers();
+    renderPlayerChips();
+    renderPlayerList();
+    updateInjuryPlayerSelect();
+  }
+  
+  function removePlayer(id) {
+    if (players.length <= 2) {
+      alert('至少保留2个玩家');
+      return;
+    }
+    players = players.filter(p => p.id !== id);
+    if (selectedPlayerId === id) {
+      selectedPlayerId = null;
+    }
+    renderPlayers();
+    renderPlayerChips();
+    renderPlayerList();
+    updateInjuryPlayerSelect();
+    clearRanks();
+  }
+  
+  function updatePlayerName(id, name) {
+    const player = players.find(p => p.id === id);
+    if (player) {
+      player.name = name || `玩家${id}`;
+      updateInjuryPlayerSelect();
+      renderPlayerList();
+      renderPlayerChips();
+    }
+  }
+  
+  function updatePlayerBonus(id, bonus) {
+    const player = players.find(p => p.id === id);
+    if (player) {
+      player.bonus = bonus;
+      player.selectedSkillId = null; // 手动修改加值后取消技能选择
+      
+      // 更新技能选择框
+      const skillSelect = document.getElementById(`skill-select-${id}`);
+      if (skillSelect) skillSelect.value = '';
+      
+      if (player.diceResult !== null) {
+        recalculateTotal(player);
+        document.getElementById(`total-${id}`).textContent = player.total;
+        updateRanks();
+      }
+    }
+  }
+  
+  function rollD10() {
+    // 加权随机：稍微调低1和10的概率，增加3-7的概率
+    const weights = [
+      { value: 1, weight: 3 },
+      { value: 2, weight: 6 },
+      { value: 3, weight: 12 },
+      { value: 4, weight: 14 },
+      { value: 5, weight: 16 },
+      { value: 6, weight: 16 },
+      { value: 7, weight: 14 },
+      { value: 8, weight: 10 },
+      { value: 9, weight: 6 },
+      { value: 10, weight: 3 }
+    ];
+    const totalWeight = weights.reduce((sum, w) => sum + w.weight, 0);
+    let random = Math.random() * totalWeight;
+    
+    for (const item of weights) {
+      random -= item.weight;
+      if (random <= 0) {
+        return item.value;
+      }
+    }
+    
+    return 5; // 兜底
+  }
+  
+  function recalculateTotal(player) {
+    let base = player.diceResult;
+    if (player.isCritical === 'success') {
+      base += player.bonusDice;
+    } else if (player.isCritical === 'fail') {
+      base -= player.bonusDice;
+    }
+    player.total = base + player.bonus + player.aimPenalty;
+  }
+  
+  function selectPlayerAim(playerId, penaltyValue) {
+    const player = players.find(p => p.id === playerId);
+    if (!player) return;
+    
+    player.aimPenalty = parseInt(penaltyValue) || 0;
+    
+    // 更新减值提示
+    const penaltyInfo = document.getElementById(`aim-penalty-${playerId}`);
+    if (penaltyInfo) {
+      if (player.aimPenalty < 0) {
+        penaltyInfo.textContent = `瞄准减值 ${player.aimPenalty}`;
+        penaltyInfo.classList.add('show');
+      } else {
+        penaltyInfo.classList.remove('show');
+      }
+    }
+    
+    // 如果已经有骰子结果，重新计算
+    if (player.diceResult !== null) {
+      recalculateTotal(player);
+      const totalEl = document.getElementById(`total-${playerId}`);
+      if (totalEl) totalEl.textContent = player.total;
+      updateRanks();
+    }
+  }
+  
+  function rollAll() {
+    const activePlayers = players.filter(p => p.active);
+    const diceElements = activePlayers.map(p => document.getElementById(`dice-${p.id}`));
+    
+    diceElements.forEach(el => {
+      if (el) el.classList.add('rolling');
+    });
+    
+    let rollCount = 0;
+    const rollInterval = setInterval(() => {
+      diceElements.forEach(el => {
+        if (el) el.textContent = rollD10();
+      });
+      rollCount++;
+      if (rollCount >= 12) {
+        clearInterval(rollInterval);
+      }
+    }, 50);
+    
+    setTimeout(() => {
+      diceElements.forEach(el => {
+        if (el) el.classList.remove('rolling');
+      });
+      
+      const results = [];
+      
+      activePlayers.forEach(player => {
+        player.diceResult = rollD10();
+        player.isCritical = null;
+        player.bonusDice = null;
+      });
+      
+      renderPlayers();
+      
+      setTimeout(() => {
+        // 第一步：判定大成功/大失败，计算结果
+        activePlayers.forEach(player => {
+          if (player.diceResult === 10) {
+            player.isCritical = 'success';
+            player.bonusDice = rollD10();
+          } else if (player.diceResult === 1) {
+            player.isCritical = 'fail';
+            player.bonusDice = rollD10();
+          }
+          
+          recalculateTotal(player);
+          
+          const skill = player.selectedSkillId 
+            ? player.skills.find(s => s.id === player.selectedSkillId) 
+            : null;
+          
+          const aimNames = {
+            0: '躯干',
+            '-4': '腿部',
+            '-6': '手臂',
+            '-8': '头部',
+            '-10': '裆部'
+          };
+          
+          results.push({
+            name: player.name,
+            skillName: skill ? skill.name : null,
+            aimPenalty: player.aimPenalty,
+            aimName: aimNames[player.aimPenalty] || '躯干',
+            dice: player.diceResult,
+            bonusDice: player.bonusDice,
+            isCritical: player.isCritical,
+            bonus: player.bonus,
+            total: player.total
+          });
+        });
+        
+        // 第二步：重新渲染，生成bonus-dice/penalty-dice元素
+        renderPlayers();
+        
+        // 第三步：启动追加骰子的滚动动画
+        activePlayers.forEach(player => {
+          if (player.isCritical === 'success') {
+            const bonusDiceEl = document.getElementById(`bonus-dice-${player.id}`);
+            if (bonusDiceEl) {
+              bonusDiceEl.classList.add('rolling');
+              let count = 0;
+              const interval = setInterval(() => {
+                bonusDiceEl.textContent = rollD10();
+                count++;
+                if (count >= 8) {
+                  clearInterval(interval);
+                  bonusDiceEl.classList.remove('rolling');
+                  bonusDiceEl.textContent = player.bonusDice;
+                }
+              }, 50);
+            }
+          } else if (player.isCritical === 'fail') {
+            const penaltyDiceEl = document.getElementById(`penalty-dice-${player.id}`);
+            if (penaltyDiceEl) {
+              penaltyDiceEl.classList.add('rolling');
+              let count = 0;
+              const interval = setInterval(() => {
+                penaltyDiceEl.textContent = rollD10();
+                count++;
+                if (count >= 8) {
+                  clearInterval(interval);
+                  penaltyDiceEl.classList.remove('rolling');
+                  penaltyDiceEl.textContent = player.bonusDice;
+                }
+              }, 50);
+            }
+          }
+        });
+        
+        updateRanks();
+        roundCount++;
+        addHistoryRound(results);
+        showResult(results);
+      }, 400);
+      
+    }, 600);
+  }
+  
+  function rollSingle(playerId) {
+    const player = players.find(p => p.id === playerId);
+    const diceEl = document.getElementById(`dice-${playerId}`);
+    
+    diceEl.classList.add('rolling');
+    
+    let rollCount = 0;
+    const rollInterval = setInterval(() => {
+      diceEl.textContent = rollD10();
+      rollCount++;
+      if (rollCount >= 10) {
+        clearInterval(rollInterval);
+      }
+    }, 50);
+    
+    setTimeout(() => {
+      diceEl.classList.remove('rolling');
+      
+      player.diceResult = rollD10();
+      player.isCritical = null;
+      player.bonusDice = null;
+      
+      diceEl.textContent = player.diceResult;
+      
+      setTimeout(() => {
+        if (player.diceResult === 10) {
+          player.isCritical = 'success';
+          player.bonusDice = rollD10();
+        } else if (player.diceResult === 1) {
+          player.isCritical = 'fail';
+          player.bonusDice = rollD10();
+        }
+        
+        recalculateTotal(player);
+        renderPlayers();
+        
+        if (player.isCritical === 'success') {
+          const bonusDiceEl = document.getElementById(`bonus-dice-${playerId}`);
+          if (bonusDiceEl) {
+            bonusDiceEl.classList.add('rolling');
+            let count = 0;
+            const interval = setInterval(() => {
+              bonusDiceEl.textContent = rollD10();
+              count++;
+              if (count >= 8) {
+                clearInterval(interval);
+                bonusDiceEl.classList.remove('rolling');
+                bonusDiceEl.textContent = player.bonusDice;
+              }
+            }, 50);
+          }
+        } else if (player.isCritical === 'fail') {
+          const penaltyDiceEl = document.getElementById(`penalty-dice-${playerId}`);
+          if (penaltyDiceEl) {
+            penaltyDiceEl.classList.add('rolling');
+            let count = 0;
+            const interval = setInterval(() => {
+              penaltyDiceEl.textContent = rollD10();
+              count++;
+              if (count >= 8) {
+                clearInterval(interval);
+                penaltyDiceEl.classList.remove('rolling');
+                penaltyDiceEl.textContent = player.bonusDice;
+              }
+            }, 50);
+          }
+        }
+        
+        updateRanks();
+        roundCount++;
+        
+        const skill = player.selectedSkillId 
+          ? player.skills.find(s => s.id === player.selectedSkillId) 
+          : null;
+        
+        const aimNames = {
+          0: '躯干',
+          '-4': '腿部',
+          '-6': '手臂',
+          '-8': '头部',
+          '-10': '裆部'
+        };
+        
+        addHistoryRound([{
+          name: player.name,
+          skillName: skill ? skill.name : null,
+          aimPenalty: player.aimPenalty,
+          aimName: aimNames[player.aimPenalty] || '躯干',
+          dice: player.diceResult,
+          bonusDice: player.bonusDice,
+          isCritical: player.isCritical,
+          bonus: player.bonus,
+          total: player.total
+        }], true);
+        
+      }, 300);
+      
+    }, 500);
+  }
+  
+  // 玩家卡片内投掷武器伤害（跳转到伤害骰页面）
+  function rollPlayerWeapon(playerId) {
+    const player = players.find(p => p.id === playerId);
+    if (!player) return;
+    
+    const weaponSelect = document.getElementById(`weapon-select-${playerId}`);
+    const weaponId = parseInt(weaponSelect.value);
+    
+    if (!weaponId) {
+      alert('请先选择武器');
+      return;
+    }
+    
+    const weapon = player.weapons.find(w => w.id === weaponId);
+    if (!weapon) return;
+    
+    // 切换到伤害骰标签页
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      btn.classList.remove('active');
+      if (i === 1) btn.classList.add('active');
+    });
+    document.querySelectorAll('.tab-content').forEach((el, i) => {
+      el.classList.remove('active');
+      if (i === 1) el.classList.add('active');
+    });
+    
+    // 填入公式并投掷
+    document.getElementById('damageFormula').value = weapon.damage;
+    setTimeout(() => rollDamage(), 100);
+  }
+  
+  function updateRanks() {
+    const validPlayers = players.filter(p => p.total !== null);
+    if (validPlayers.length < 2) return;
+    
+    const sorted = [...validPlayers].sort((a, b) => b.total - a.total);
+    clearRanks();
+    
+    const maxTotal = sorted[0].total;
+    const winners = sorted.filter(p => p.total === maxTotal);
+    const isTie = winners.length > 1;
+    
+    if (isTie) {
+      winners.forEach(p => {
+        const card = document.getElementById(`player-${p.id}`);
+        if (card) card.classList.add('tied');
+      });
+      document.getElementById('resultText').textContent = `⚖️ ${winners.map(w => w.name).join('、')} 平局！`;
+      document.getElementById('resultText').style.color = '#f9ed69';
+    } else {
+      let rank = 1;
+      let prevTotal = null;
+      
+      sorted.forEach((player, index) => {
+        if (prevTotal !== null && player.total < prevTotal) {
+          rank = index + 1;
+        }
+        prevTotal = player.total;
+        
+        if (rank <= 3) {
+          const card = document.getElementById(`player-${player.id}`);
+          if (card) {
+            card.classList.add(`rank-${rank}`);
+            const badge = card.querySelector('.rank-badge');
+            if (badge) badge.textContent = rank;
+          }
+        }
+      });
+    }
+  }
+  
+  function clearRanks() {
+    players.forEach(player => {
+      const card = document.getElementById(`player-${player.id}`);
+      if (card) {
+        card.classList.remove('rank-1', 'rank-2', 'rank-3', 'tied');
+      }
+    });
+  }
+  
+  function showResult(results) {
+    const sorted = [...results].sort((a, b) => b.total - a.total);
+    const maxTotal = sorted[0].total;
+    const winners = sorted.filter(r => r.total === maxTotal);
+    
+    const resultEl = document.getElementById('resultText');
+    
+    const criticalSuccesses = results.filter(r => r.isCritical === 'success');
+    const criticalFails = results.filter(r => r.isCritical === 'fail');
+    
+    let extraText = '';
+    if (criticalSuccesses.length > 0) {
+      extraText += ` ✨${criticalSuccesses.map(c => c.name).join('、')}大成功！`;
+    }
+    if (criticalFails.length > 0) {
+      extraText += ` 💀${criticalFails.map(c => c.name).join('、')}大失败`;
+    }
+    
+    if (winners.length > 1) {
+      resultEl.innerHTML = `⚖️ ${winners.map(w => w.name).join('、')} 平局！（${maxTotal}分）${extraText}`;
+      resultEl.style.color = '#f9ed69';
+    } else {
+      resultEl.innerHTML = `🏆 ${winners[0].name} 获胜！（${maxTotal}分）${extraText}`;
+      resultEl.style.color = '#4ecca3';
+    }
+  }
+  
+  function addHistoryRound(results, isSingle = false) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    
+    const maxTotal = Math.max(...results.map(r => r.total));
+    const winners = results.filter(r => r.total === maxTotal);
+    
+    battleHistory.unshift({
+      round: roundCount,
+      time: timeStr,
+      isSingle: isSingle,
+      results: results,
+      winners: winners.map(w => w.name),
+      isTie: winners.length > 1
+    });
+    
+    if (battleHistory.length > 50) battleHistory.pop();
+    renderHistory();
+  }
+  
+  function renderHistory() {
+    const listEl = document.getElementById('historyList');
+    
+    if (battleHistory.length === 0) {
+      listEl.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">暂无对抗记录</div>';
+      return;
+    }
+    
+    listEl.innerHTML = battleHistory.map(h => {
+      let winnersText = '';
+      if (!h.isSingle) {
+        if (h.isTie) {
+          winnersText = ` - 平局`;
+        } else if (h.winners.length > 0) {
+          winnersText = ` - ${h.winners.join('、')}胜`;
+        }
+      }
+      
+      return `
+        <div class="history-round">
+          <div class="history-round-header">
+            <span class="history-round-title">
+              ${h.isSingle ? '🎯 单独投掷' : `第 ${h.round} 轮`}
+              ${winnersText}
+            </span>
+            <span>${h.time}</span>
+          </div>
+          <div class="history-entries">
+            ${h.results.sort((a, b) => b.total - a.total).map((r, index) => {
+              const isWinner = h.winners.includes(r.name) && !h.isTie && !h.isSingle;
+              const criticalClass = r.isCritical === 'success' ? 'critical-success-entry' : 
+                                   r.isCritical === 'fail' ? 'critical-fail-entry' : '';
+              const totalClass = r.isCritical === 'success' ? 'critical-success' : 
+                                r.isCritical === 'fail' ? 'critical-fail' : '';
+              
+              let diceDetail = `${r.dice}`;
+              if (r.isCritical === 'success') {
+                diceDetail += ` + <span class="bonus-dice-num">${r.bonusDice}</span>`;
+              } else if (r.isCritical === 'fail') {
+                diceDetail += ` - <span class="penalty-dice-num">${r.bonusDice}</span>`;
+              }
+              if (r.bonus > 0) {
+                diceDetail += ` + ${r.bonus}`;
+              }
+              
+              let criticalTag = '';
+              if (r.isCritical === 'success') {
+                criticalTag = '<span class="critical-tag success">大成功</span>';
+              } else if (r.isCritical === 'fail') {
+                criticalTag = '<span class="critical-tag fail">大失败</span>';
+              }
+              
+              const skillText = r.skillName ? `<div class="history-skill-name">技能：${r.skillName}</div>` : '';
+              const aimText = r.aimName && r.aimPenalty !== 0 ? `<div class="history-skill-name">瞄准：${r.aimName} (${r.aimPenalty})</div>` : '';
+              
+              return `
+                <div class="history-entry ${isWinner ? 'winner' : ''} ${criticalClass}">
+                  <div>
+                    <span class="history-rank">${index + 1}</span><span class="history-player-name">${r.name}</span>
+                    ${criticalTag}
+                  </div>
+                  ${skillText}
+                  ${aimText}
+                  <div class="history-dice-detail">${diceDetail}</div>
+                  <div class="history-result ${totalClass}">${r.total}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  function clearHistory() {
+    if (confirm('确定要清空所有对抗记录吗？')) {
+      battleHistory = [];
+      roundCount = 0;
+      renderHistory();
+    }
+  }
+  
+  // ==================== 第二页：伤害骰 & 暴击 ====================
+  function parseDiceFormula(formula) {
+    const match = formula.toLowerCase().match(/(\d+)d(\d+)([+-]\d+)?/);
+    if (!match) return null;
+    
+    return {
+      count: parseInt(match[1]),
+      sides: parseInt(match[2]),
+      modifier: match[3] ? parseInt(match[3]) : 0
+    };
+  }
+  
+  function getCritThreshold(sides) {
+    return critThresholds[sides] || sides;
+  }
+  
+  function checkCrit(results, sides) {
+    if (results.length === 0) return false;
+    
+    const threshold = getCritThreshold(sides);
+    
+    // D10 特殊规则：只要有一个出10就算暴击
+    if (sides === 10) {
+      const hasMax = results.some(r => r === 10);
+      if (hasMax) return true;
+    }
+    
+    // 通用规则：所有骰子都达到阈值才算暴击
+    const allCrit = results.every(r => r >= threshold);
+    return allCrit;
+  }
+  
+  function rollDamage() {
+    const formulaInput = document.getElementById('damageFormula');
+    const resultEl = document.getElementById('damageResult');
+    const formula = formulaInput.value.trim();
+    
+    const parsed = parseDiceFormula(formula);
+    if (!parsed) {
+      resultEl.innerHTML = '<div style="color: #e94560; padding: 20px;">公式格式错误，请使用 XdY+Z 格式</div>';
+      return;
+    }
+    
+    if (parsed.count < 1 || parsed.count > 20) {
+      resultEl.innerHTML = '<div style="color: #e94560; padding: 20px;">骰子数量必须在1-20之间</div>';
+      return;
+    }
+    
+    // 生成骰子HTML
+    let diceHtml = '<div class="damage-dice-display">';
+    for (let i = 0; i < parsed.count; i++) {
+      diceHtml += `<div class="damage-dice rolling" id="damage-dice-${i}">-</div>`;
+    }
+    diceHtml += '</div>';
+    diceHtml += '<div class="damage-total" id="damage-total">-</div>';
+    
+    resultEl.innerHTML = diceHtml;
+    
+    // 动画
+    let rollCount = 0;
+    const rollInterval = setInterval(() => {
+      for (let i = 0; i < parsed.count; i++) {
+        const el = document.getElementById(`damage-dice-${i}`);
+        if (el) el.textContent = Math.floor(Math.random() * parsed.sides) + 1;
+      }
+      rollCount++;
+      if (rollCount >= 15) {
+        clearInterval(rollInterval);
+      }
+    }, 40);
+    
+    // 最终结果
+    setTimeout(() => {
+      const results = [];
+      let total = 0;
+      
+      for (let i = 0; i < parsed.count; i++) {
+        const value = Math.floor(Math.random() * parsed.sides) + 1;
+        results.push(value);
+        total += value;
+        
+        const el = document.getElementById(`damage-dice-${i}`);
+        if (el) {
+          el.classList.remove('rolling');
+          el.textContent = value;
+        }
+      }
+      
+      total += parsed.modifier;
+      
+      // 判断暴击
+      const isCrit = checkCrit(results, parsed.sides);
+      const threshold = getCritThreshold(parsed.sides);
+      
+      // 标记暴击骰子
+      results.forEach((value, i) => {
+        const el = document.getElementById(`damage-dice-${i}`);
+        if (el && value >= threshold) {
+          el.classList.add('crit');
+        }
+      });
+      
+      const totalEl = document.getElementById('damage-total');
+      if (totalEl) {
+        totalEl.textContent = total;
+        if (isCrit) {
+          totalEl.classList.add('is-crit');
+        }
+      }
+      
+      // 暴击徽章
+      if (isCrit) {
+        const critBadge = document.createElement('div');
+        critBadge.className = 'crit-badge';
+        critBadge.textContent = '💥 暴击！';
+        resultEl.appendChild(critBadge);
+      }
+      
+      // 显示公式详情
+      const detail = document.createElement('div');
+      detail.className = 'damage-detail';
+      let detailText = `${parsed.count}D${parsed.sides}`;
+      if (parsed.modifier !== 0) {
+        detailText += parsed.modifier > 0 ? `+${parsed.modifier}` : parsed.modifier;
+      }
+      detailText += ` = ${results.join(' + ')}`;
+      if (parsed.modifier > 0) {
+        detailText += ` + ${parsed.modifier}`;
+      } else if (parsed.modifier < 0) {
+        detailText += ` - ${Math.abs(parsed.modifier)}`;
+      }
+      detail.textContent = detailText;
+      resultEl.appendChild(detail);
+      
+      // 暴击说明
+      if (isCrit) {
+        const critDetail = document.createElement('div');
+        critDetail.style.cssText = 'color: #e94560; font-size: 12px; margin-top: 5px;';
+        critDetail.textContent = parsed.sides === 10 && results.some(r => r === 10) && !results.every(r => r >= threshold)
+          ? '触发条件：单出10'
+          : `触发条件：全部出 ${threshold}+`;
+        resultEl.appendChild(critDetail);
+      }
+      
+    }, 600);
+  }
+  
+  // D12 重伤表
+  function updateInjuryPlayerSelect() {
+    const select = document.getElementById('injuryPlayerSelect');
+    const currentValue = select.value;
+    
+    const activePlayers = players.filter(p => p.active);
+    select.innerHTML = '<option value="">选择受伤玩家</option>' +
+      activePlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+    
+    if (activePlayers.find(p => p.id == currentValue)) {
+      select.value = currentValue;
+    }
+  }
+  
+  function rollD12() {
+    const diceEl = document.getElementById('d12dice');
+    const isHead = document.getElementById('headInjury').checked;
+    const playerId = document.getElementById('injuryPlayerSelect').value;
+    const resultEl = document.getElementById('injuryResult');
+    const victimEl = document.getElementById('injuryVictim');
+    const nameEl = document.getElementById('injuryName');
+    const effectEl = document.getElementById('injuryEffect');
+    const typeLabel = document.getElementById('injuryTypeLabel');
+    
+    diceEl.classList.add('rolling');
+    
+    let rollCount = 0;
+    const rollInterval = setInterval(() => {
+      diceEl.textContent = Math.floor(Math.random() * 12) + 1;
+      rollCount++;
+      if (rollCount >= 12) {
+        clearInterval(rollInterval);
+      }
+    }, 40);
+    
+    setTimeout(() => {
+      diceEl.classList.remove('rolling');
+      
+      const result = Math.floor(Math.random() * 12) + 1;
+      diceEl.textContent = result;
+      
+      const injuryTable = isHead ? headInjuries : torsoInjuries;
+      const injury = injuryTable[result];
+      
+      if (injury) {
+        if (playerId) {
+          const player = players.find(p => p.id == playerId);
+          if (player) {
+            victimEl.textContent = `💔 ${player.name} 受伤了！`;
+            victimEl.style.display = 'block';
+          }
+        } else {
+          victimEl.style.display = 'none';
+        }
+        
+        nameEl.textContent = `出目 ${result}：${injury.name}`;
+        effectEl.textContent = injury.effect;
+        
+        typeLabel.textContent = isHead ? '头部伤势' : '躯干伤势';
+        typeLabel.className = 'injury-type-label ' + (isHead ? 'injury-type-head' : 'injury-type-torso');
+        
+        resultEl.style.display = 'block';
+      }
+    }, 500);
+  }
+  
+  // ==================== 第三页：备忘录 ====================
+  function renderPlayerList() {
+    const playersListEl = document.getElementById('playerListPlayers');
+    const monstersListEl = document.getElementById('playerListMonsters');
+    
+    const playerCharacters = players.filter(p => p.type === 'player');
+    const monsterCharacters = players.filter(p => p.type === 'npc');
+    
+    const renderItem = (p) => `
+      <div class="player-list-item ${selectedPlayerId === p.id ? 'selected' : ''} ${p.active ? 'active-player' : ''}" onclick="selectPlayer(${p.id})">
+        <input type="checkbox" class="player-active-checkbox" ${p.active ? 'checked' : ''} 
+               onclick="event.stopPropagation(); togglePlayerActive(${p.id})">
+        <div>
+          <div class="player-name">${p.name}</div>
+          <div class="player-stats">${p.weapons.length}武器 / ${p.skills.length}技能</div>
+        </div>
+        <button class="delete-player-btn" onclick="event.stopPropagation(); removePlayerMemo(${p.id})">×</button>
+      </div>
+    `;
+    
+    if (playersListEl) {
+      playersListEl.innerHTML = playerCharacters.length > 0 
+        ? playerCharacters.map(renderItem).join('')
+        : '<div style="text-align: center; color: #666; padding: 15px; font-size: 13px;">暂无玩家</div>';
+    }
+    
+    if (monstersListEl) {
+      monstersListEl.innerHTML = monsterCharacters.length > 0 
+        ? monsterCharacters.map(renderItem).join('')
+        : '<div style="text-align: center; color: #666; padding: 15px; font-size: 13px;">暂无NPC</div>';
+    }
+  }
+  
+  function selectPlayer(playerId) {
+    selectedPlayerId = playerId;
+    renderPlayerList();
+    renderMemo();
+    
+    const player = players.find(p => p.id === playerId);
+    if (player) {
+      document.getElementById('memoPlayerTitle').textContent = `📋 ${player.name} 的备忘录`;
+    }
+  }
+  
+  function togglePlayerActive(playerId) {
+    const player = players.find(p => p.id === playerId);
+    if (!player) return;
+    
+    // 检查是否超过最大活跃玩家数
+    const activeCount = players.filter(p => p.active).length;
+    if (!player.active && activeCount >= 20) {
+      alert('最多只能有20个玩家同时参与对抗');
+      renderPlayerList(); // 恢复复选框状态
+      return;
+    }
+    
+    // 至少保留2个活跃玩家
+    if (player.active && activeCount <= 2) {
+      alert('至少保留2个参与对抗的玩家');
+      renderPlayerList(); // 恢复复选框状态
+      return;
+    }
+    
+    player.active = !player.active;
+    renderPlayerList();
+    renderPlayers();
+    updateInjuryPlayerSelect();
+    renderPlayerChips();
+  }
+  
+  function addPlayerFromMemo(type = 'player') {
+    const input = document.getElementById('newPlayerNameMemo');
+    const defaultName = type === 'npc' ? `NPC${nextPlayerId}` : `玩家${nextPlayerId}`;
+    const name = input.value.trim() || defaultName;
+    
+    if (players.length >= 20) {
+      alert('最多支持20个角色');
+      return;
+    }
+    
+    players.push({
+      id: nextPlayerId,
+      name: name,
+      type: type,
+      bonus: 0,
+      selectedSkillId: null,
+      aimPenalty: 0,
+      active: true,
+      diceResult: null,
+      bonusDice: null,
+      isCritical: null,
+      total: null,
+      weapons: [],
+      skills: []
+    });
+    nextPlayerId++;
+    
+    input.value = '';
+    renderPlayerList();
+    renderPlayers();
+    renderPlayerChips();
+    updateInjuryPlayerSelect();
+  }
+  
+  function removePlayerMemo(id) {
+    if (players.length <= 2) {
+      alert('至少保留2个玩家');
+      return;
+    }
+    players = players.filter(p => p.id !== id);
+    if (selectedPlayerId === id) {
+      selectedPlayerId = null;
+      document.getElementById('memoPlayerTitle').textContent = '请选择一个玩家';
+    }
+    renderPlayerList();
+    renderMemo();
+    renderPlayers();
+    renderPlayerChips();
+    updateInjuryPlayerSelect();
+  }
+  
+  function switchMemoTab(tab) {
+    currentMemoTab = tab;
+    document.querySelectorAll('.memo-tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.memo-tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(`memo-${tab}`).classList.add('active');
+    event.target.classList.add('active');
+  }
+  
+  function getCurrentMemoPlayer() {
+    return players.find(p => p.id === selectedPlayerId);
+  }
+  
+  function renderMemo() {
+    renderWeapons();
+    renderSkills();
+  }
+  
+  // 武器
+  function addWeapon() {
+    const player = getCurrentMemoPlayer();
+    if (!player) {
+      alert('请先选择玩家');
+      return;
+    }
+    
+    const nameInput = document.getElementById('weaponName');
+    const damageInput = document.getElementById('weaponDamage');
+    
+    const name = nameInput.value.trim();
+    const damage = damageInput.value.trim();
+    
+    if (!name || !damage) {
+      alert('请填写武器名称和伤害公式');
+      return;
+    }
+    
+    const parsed = parseDiceFormula(damage);
+    if (!parsed) {
+      alert('伤害公式格式错误，请使用 XdY+Z 格式');
+      return;
+    }
+    
+    player.weapons.push({
+      id: Date.now(),
+      name: name,
+      damage: damage
+    });
+    
+    nameInput.value = '';
+    damageInput.value = '';
+    renderWeapons();
+    renderPlayerList();
+    renderPlayers(); // 更新技能对抗页的武器选择
+  }
+  
+  function deleteWeapon(weaponId) {
+    const player = getCurrentMemoPlayer();
+    if (!player) return;
+    
+    player.weapons = player.weapons.filter(w => w.id !== weaponId);
+    renderWeapons();
+    renderPlayerList();
+    renderPlayers(); // 更新技能对抗页的武器选择
+  }
+  
+  function renderWeapons() {
+    const listEl = document.getElementById('weaponList');
+    const player = getCurrentMemoPlayer();
+    
+    if (!player) {
+      listEl.innerHTML = '<div class="empty-memo">请先选择玩家</div>';
+      return;
+    }
+    
+    if (player.weapons.length === 0) {
+      listEl.innerHTML = '<div class="empty-memo">暂无武器，添加一个吧~</div>';
+      return;
+    }
+    
+    listEl.innerHTML = player.weapons.map(w => `
+      <div class="item-card weapon">
+        <div class="item-name">${w.name}</div>
+        <div class="item-detail">伤害：<span class="formula">${w.damage}</span></div>
+        <div class="item-actions">
+          <button class="quick-roll-btn" onclick="quickRollWeapon(${w.id})">⚔️ 快速投掷</button>
+          <button class="delete-item-btn" onclick="deleteWeapon(${w.id})">删除</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  function quickRollWeapon(weaponId) {
+    const player = getCurrentMemoPlayer();
+    if (!player) return;
+    
+    const weapon = player.weapons.find(w => w.id === weaponId);
+    if (!weapon) return;
+    
+    // 切换到伤害骰标签页
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      btn.classList.remove('active');
+      if (i === 1) btn.classList.add('active');
+    });
+    document.querySelectorAll('.tab-content').forEach((el, i) => {
+      el.classList.remove('active');
+      if (i === 1) el.classList.add('active');
+    });
+    
+    // 填入公式并投掷
+    document.getElementById('damageFormula').value = weapon.damage;
+    setTimeout(() => rollDamage(), 100);
+  }
+  
+  // 技能
+  function addSkill() {
+    const player = getCurrentMemoPlayer();
+    if (!player) {
+      alert('请先选择玩家');
+      return;
+    }
+    
+    const nameInput = document.getElementById('skillName');
+    const bonusInput = document.getElementById('skillBonus');
+    
+    const name = nameInput.value.trim();
+    const bonus = parseInt(bonusInput.value) || 0;
+    
+    if (!name) {
+      alert('请填写技能名称');
+      return;
+    }
+    
+    player.skills.push({
+      id: Date.now(),
+      name: name,
+      bonus: bonus
+    });
+    
+    nameInput.value = '';
+    bonusInput.value = '';
+    renderSkills();
+    renderPlayerList();
+    renderPlayers(); // 更新技能对抗页的技能选项
+  }
+  
+  function deleteSkill(skillId) {
+    const player = getCurrentMemoPlayer();
+    if (!player) return;
+    
+    player.skills = player.skills.filter(s => s.id !== skillId);
+    
+    // 如果当前选中的技能被删除，取消选中
+    if (player.selectedSkillId === skillId) {
+      player.selectedSkillId = null;
+    }
+    
+    renderSkills();
+    renderPlayerList();
+    renderPlayers(); // 更新技能对抗页的技能选项
+  }
+  
+  function renderSkills() {
+    const listEl = document.getElementById('skillList');
+    const player = getCurrentMemoPlayer();
+    
+    if (!player) {
+      listEl.innerHTML = '<div class="empty-memo">请先选择玩家</div>';
+      return;
+    }
+    
+    if (player.skills.length === 0) {
+      listEl.innerHTML = '<div class="empty-memo">暂无技能，添加一个吧~</div>';
+      return;
+    }
+    
+    listEl.innerHTML = player.skills.map(s => `
+      <div class="item-card skill">
+        <div class="item-name">${s.name}</div>
+        <div class="item-detail">加值：<span class="bonus">+${s.bonus}</span></div>
+        <div class="item-actions">
+          <button class="quick-roll-btn skill-btn" onclick="quickRollSkill(${s.id})">🎲 技能检定</button>
+          <button class="delete-item-btn" onclick="deleteSkill(${s.id})">删除</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  function quickRollSkill(skillId) {
+    const player = getCurrentMemoPlayer();
+    if (!player) return;
+    
+    const skill = player.skills.find(s => s.id === skillId);
+    if (!skill) return;
+    
+    // 切换到技能对抗标签页
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      btn.classList.remove('active');
+      if (i === 0) btn.classList.add('active');
+    });
+    document.querySelectorAll('.tab-content').forEach((el, i) => {
+      el.classList.remove('active');
+      if (i === 0) el.classList.add('active');
+    });
+    
+    // 选中该玩家和该技能
+    selectedPlayerId = player.id;
+    player.selectedSkillId = skill.id;
+    player.bonus = skill.bonus;
+    
+    renderPlayers();
+    renderPlayerList();
+    
+    // 单独投掷该玩家
+    setTimeout(() => rollSingle(player.id), 100);
+  }
+  
+  // ==================== 快捷键 ====================
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT') {
+      e.preventDefault();
+      const activeTab = document.querySelector('.tab-content.active');
+      if (activeTab.id === 'tab-battle') {
+        rollAll();
+      } else if (activeTab.id === 'tab-damage') {
+        rollDamage();
+      }
+    }
+  });
+  
+  document.getElementById('newPlayerName').addEventListener('keydown', (e) => {
+    if (e.code === 'Enter') {
+      addPlayer();
+    }
+  });
+  
+  document.getElementById('newPlayerNameMemo').addEventListener('keydown', (e) => {
+    if (e.code === 'Enter') {
+      addPlayerFromMemo();
+    }
+  });
+  
+  document.getElementById('damageFormula').addEventListener('keydown', (e) => {
+    if (e.code === 'Enter') {
+      rollDamage();
+    }
+  });
+  
+  // 初始化
+  init();
+
+    // ==================== 联机功能 JS ====================
+    
+    // 离线模式
+    function useOfflineMode() {
+      currentUser = '玩家';
+      showPage('roomPage');
+      document.getElementById('currentRoomName').textContent = '🎲 赛博朋克红小工具';
+      document.getElementById('memberCount').textContent = '离线模式';
+      updateStatus(true);
+      
+      // 隐藏不需要的元素
+      document.querySelector('.room-sidebar').style.display = 'none';
+      document.querySelector('.back-btn').style.display = 'none';
+      
+      // 让内容区占满
+      document.querySelector('.room-content').style.padding = '20px';
+      
+      // 初始化完整工具
+      setTimeout(function() {
+        if (typeof init === 'function') {
+          init();
+        }
+      }, 100);
+    }
+
+    // 页面切换
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
@@ -952,25 +4418,14 @@
       document.getElementById(pageId).classList.add('active');
     }
 
-    // ==================== 工具标签切换 ====================
-    function switchToolTab(tabId) {
-      document.querySelectorAll('.tool-tab').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.querySelectorAll('.tool-content').forEach(content => {
-        content.classList.remove('active');
-      });
-      event.target.classList.add('active');
-      document.getElementById(tabId + 'Tab').classList.add('active');
+    // 显示消息
+    function showLoginMessage(message, type) {
+      const msgBox = document.getElementById('loginMessage');
+      msgBox.innerHTML = message;
+      msgBox.className = 'message-box ' + type;
     }
 
-    // ==================== 登录/注册 ====================
-    function showLoginMessage(text, type) {
-      const msgEl = document.getElementById('loginMessage');
-      msgEl.textContent = text;
-      msgEl.className = 'login-message ' + type;
-    }
-
+    // 注册
     async function registerUser() {
       const username = document.getElementById('usernameInput').value.trim();
       const password = document.getElementById('passwordInput').value;
@@ -995,11 +4450,11 @@
           showLoginMessage(data.message, 'error');
         }
       } catch (error) {
-        showLoginMessage('无法连接服务器', 'error');
-        console.error(error);
+        showLoginMessage('注册失败（可能是服务器未启动）<br>可以点击下方「离线使用」直接体验工具', 'error');
       }
     }
 
+    // 登录
     async function loginUser() {
       const username = document.getElementById('usernameInput').value.trim();
       const password = document.getElementById('passwordInput').value;
@@ -1021,98 +4476,107 @@
         if (data.success) {
           currentUser = username;
           localStorage.setItem('currentUser', username);
+          
+          // 连接 Socket.io
           connectSocket();
         } else {
           showLoginMessage(data.message, 'error');
         }
       } catch (error) {
-        showLoginMessage('无法连接服务器', 'error');
-        console.error(error);
+        showLoginMessage('登录失败（可能是服务器未启动）<br>可以点击下方「离线使用」直接体验工具', 'error');
       }
     }
 
-    function logoutUser() {
-      if (currentRoomId) {
-        leaveRoom();
+    // 连接 Socket.io
+    function connectSocket() {
+      try {
+        socket = io();
+
+        socket.on('connect', function() {
+          // 认证
+          socket.emit('auth', { username: currentUser });
+        });
+
+        socket.on('auth_success', function() {
+          updateStatus(true);
+          showPage('lobbyPage');
+          document.getElementById('displayUsername').textContent = currentUser;
+          document.getElementById('userAvatar').textContent = currentUser.charAt(0).toUpperCase();
+          loadRoomList();
+        });
+
+        socket.on('auth_error', function(msg) {
+          showLoginMessage('认证失败: ' + msg, 'error');
+        });
+
+        socket.on('disconnect', function() {
+          updateStatus(false);
+        });
+
+        socket.on('room_list_update', function(rooms) {
+          renderRoomList(rooms);
+        });
+
+        socket.on('room_joined', function(room) {
+          currentRoomId = room.id;
+          currentRoomData = room;
+          showPage('roomPage');
+          document.getElementById('currentRoomName').textContent = room.name;
+          updateMemberList(room.members, room.creator);
+        });
+
+        socket.on('member_joined', function(data) {
+          if (currentRoomData) {
+            currentRoomData.members = data.members;
+            updateMemberList(data.members, currentRoomData.creator);
+          }
+        });
+
+        socket.on('member_left', function(data) {
+          if (currentRoomData) {
+            currentRoomData.members = data.members;
+            updateMemberList(data.members, currentRoomData.creator);
+          }
+        });
+
+        socket.on('error', function(msg) {
+          alert('错误: ' + msg);
+        });
+
+      } catch (error) {
+        showLoginMessage('连接失败: ' + error.message, 'error');
       }
+    }
+
+    // 更新连接状态
+    function updateStatus(connected) {
+      const dot = document.getElementById('statusDot');
+      const text = document.getElementById('statusText');
       
-      currentUser = null;
-      localStorage.removeItem('currentUser');
-      
+      if (connected) {
+        dot.classList.add('connected');
+        text.textContent = '已连接';
+      } else {
+        dot.classList.remove('connected');
+        text.textContent = '已断开';
+      }
+    }
+
+    // 登出
+    function logoutUser() {
       if (socket) {
         socket.disconnect();
         socket = null;
       }
-      
+      currentUser = null;
+      currentRoomId = null;
+      currentRoomData = null;
+      localStorage.removeItem('currentUser');
       showPage('loginPage');
+      showLoginMessage('', '');
     }
 
-    // ==================== Socket 连接 ====================
-    function connectSocket() {
-      if (socket) {
-        socket.disconnect();
-      }
-
-      socket = io();
-
-      socket.on('connect', () => {
-        console.log('已连接到服务器');
-        socket.emit('auth', currentUser);
-      });
-
-      socket.on('auth_success', (username) => {
-        console.log('认证成功:', username);
-        document.getElementById('usernameDisplay').textContent = username;
-        document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
-        showPage('lobbyPage');
-        loadRoomList();
-      });
-
-      socket.on('auth_error', (message) => {
-        showLoginMessage('认证失败: ' + message, 'error');
-      });
-
-      socket.on('room_list_update', (rooms) => {
-        renderRoomList(rooms);
-      });
-
-      socket.on('room_created', (room) => {
-        currentRoomId = room.id;
-        currentRoomData = room;
-        enterRoom(room);
-      });
-
-      socket.on('room_joined', (room) => {
-        currentRoomId = room.id;
-        currentRoomData = room;
-        enterRoom(room);
-      });
-
-      socket.on('member_joined', (data) => {
-        updateMemberList(data.members);
-        showNotification(`${data.member} 加入了房间`);
-      });
-
-      socket.on('member_left', (data) => {
-        updateMemberList(data.members);
-        showNotification(`${data.member} 离开了房间`);
-      });
-
-      socket.on('dice_rolled', (roll) => {
-        addRollToHistory(roll);
-      });
-
-      socket.on('error', (message) => {
-        alert(message);
-      });
-
-      socket.on('disconnect', () => {
-        console.log('与服务器断开连接');
-        showNotification('与服务器断开连接');
-      });
-    }
-
-    // ==================== 大厅功能 ====================
+    // 加载房间列表
     async function loadRoomList() {
       try {
         const response = await fetch('/api/rooms');
@@ -1125,269 +4589,114 @@
       }
     }
 
+    // 渲染房间列表
     function renderRoomList(rooms) {
       const grid = document.getElementById('roomGrid');
-
+      
       if (!rooms || rooms.length === 0) {
         grid.innerHTML = '<div class="empty-rooms">暂无房间，创建一个吧~</div>';
         return;
       }
 
-      grid.innerHTML = rooms.map(room => `
-        <div class="room-card" onclick="joinRoom('${room.id}', ${room.hasPassword})">
-          <div class="room-card-header">
-            <span class="room-name">${room.name}</span>
-            <span class="room-lock">${room.hasPassword ? '🔒' : '🔓'}</span>
+      grid.innerHTML = rooms.map(room => {
+        const hasPassword = room.hasPassword;
+        return `
+          <div class="room-card">
+            <div class="room-card-header">
+              <div class="room-name">${room.name}</div>
+              ${hasPassword ? '<div class="room-lock">🔒</div>' : ''}
+            </div>
+            <div class="room-info">房主: <span class="room-creator">${room.creator}</span></div>
+            <div class="room-info">人数: ${room.memberCount} 人</div>
+            <button class="room-join-btn" onclick="joinRoom('${room.id}', ${hasPassword})">加入房间</button>
           </div>
-          <div class="room-info">
-            <span class="room-creator">房主: ${room.creator}</span>
-            <span style="margin: 0 5px;">|</span>
-            <span class="room-members">${room.memberCount}人</span>
-          </div>
-          <button class="join-room-btn">${room.hasPassword ? '🔑 输入密码加入' : '🚪 加入房间'}</button>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
+    // 创建房间
     function createRoom() {
-      const roomName = document.getElementById('roomNameInput').value.trim();
-      const roomPassword = document.getElementById('roomPasswordInput').value;
+      const name = document.getElementById('roomNameInput').value.trim();
+      const password = document.getElementById('roomPasswordInput').value;
 
-      if (!roomName) {
+      if (!name) {
         alert('请输入房间名称');
         return;
       }
 
-      if (!socket) {
-        alert('未连接到服务器');
-        return;
+      if (socket) {
+        socket.emit('create_room', { name: name, password: password });
       }
-
-      socket.emit('create_room', {
-        roomName,
-        password: roomPassword || ''
-      });
-
-      document.getElementById('roomNameInput').value = '';
-      document.getElementById('roomPasswordInput').value = '';
     }
 
+    // 加入房间
     function joinRoom(roomId, hasPassword) {
       let password = '';
-
       if (hasPassword) {
-        password = prompt('请输入房间密码：');
+        password = prompt('请输入房间密码:');
         if (password === null) return;
       }
 
-      if (!socket) {
-        alert('未连接到服务器');
-        return;
+      if (socket) {
+        socket.emit('join_room', { roomId: roomId, password: password });
       }
-
-      socket.emit('join_room', { roomId, password });
     }
 
-    // ==================== 房间功能 ====================
-    function enterRoom(room) {
-      document.getElementById('currentRoomName').textContent = room.name;
-      updateMemberList(room.members);
-      
-      // 清空历史
-      document.getElementById('rollHistoryList').innerHTML = '<div class="empty-history">还没有人投掷骰子</div>';
-      document.getElementById('fullHistoryList').innerHTML = '<div class="empty-history">还没有投掷记录</div>';
-      
-      // 加载历史记录
-      if (room.rolls && room.rolls.length > 0) {
-        const sortedRolls = [...room.rolls].sort((a, b) => b.time - a.time);
-        sortedRolls.forEach(roll => addRollToHistory(roll, false));
-      }
-      
-      showPage('roomPage');
-    }
-
+    // 离开房间
     function leaveRoom() {
-      if (!socket || !currentRoomId) return;
-
-      socket.emit('leave_room');
+      if (socket && currentRoomId) {
+        socket.emit('leave_room', { roomId: currentRoomId });
+      }
       currentRoomId = null;
       currentRoomData = null;
       showPage('lobbyPage');
       loadRoomList();
     }
 
-    function updateMemberList(members) {
+    // 更新成员列表
+    function updateMemberList(members, creator) {
       const list = document.getElementById('memberList');
-      const creator = currentRoomData ? currentRoomData.creator : '';
-
-      list.innerHTML = members.map(member => `
-        <div class="member-item ${member === creator ? 'creator' : ''}">
-          <div class="member-avatar-small">${member.charAt(0).toUpperCase()}</div>
-          <span class="member-name">${member}</span>
-          ${member === creator ? '<span class="member-tag">房主</span>' : ''}
-        </div>
-      `).join('');
-
-      document.getElementById('roomMemberCount').textContent = `(${members.length}人)`;
+      const count = document.getElementById('memberCount');
+      
+      count.textContent = members.length + ' 人在线';
+      
+      list.innerHTML = members.map(member => {
+        const isCreator = member === creator;
+        return `
+          <li class="member-item ${isCreator ? 'creator' : ''}">
+            <div class="member-avatar">${member.charAt(0).toUpperCase()}</div>
+            <span class="member-name">${member}</span>
+            ${isCreator ? '<span class="creator-badge">房主</span>' : ''}
+          </li>
+        `;
+      }).join('');
     }
 
-    // ==================== 骰子功能 ====================
-    function setDiceFormula(formula) {
-      document.getElementById('diceFormulaInput').value = formula;
-    }
-
-    function rollOnlineDice() {
-      const formula = document.getElementById('diceFormulaInput').value.trim();
-
-      if (!formula) {
-        alert('请输入骰子公式');
-        return;
+    // 回车键登录
+    document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        loginUser();
       }
-
-      if (!socket || !currentRoomId) {
-        alert('未连接到服务器或不在房间内');
-        return;
-      }
-
-      // 解析骰子公式
-      const parsed = parseDiceFormula(formula);
-
-      if (!parsed) {
-        alert('骰子公式格式错误，正确格式如：1d10+5 或 2d6+3');
-        return;
-      }
-
-      // 投掷骰子
-      const results = [];
-      let total = 0;
-
-      for (let i = 0; i < parsed.count; i++) {
-        const roll = Math.floor(Math.random() * parsed.sides) + 1;
-        results.push(roll);
-        total += roll;
-      }
-
-      total += parsed.bonus;
-
-      // 构建结果详情
-      const detail = `骰子：[${results.join(', ')}] ${parsed.bonus >= 0 ? '+' : ''}${parsed.bonus}`;
-
-      // 发送到服务器
-      socket.emit('roll_dice', {
-        formula,
-        result: total,
-        detail
-      });
-    }
-
-    function parseDiceFormula(formula) {
-      const match = formula.match(/^(\d+)d(\d+)([+-]\d+)?$/i);
-
-      if (!match) {
-        return null;
-      }
-
-      return {
-        count: parseInt(match[1]),
-        sides: parseInt(match[2]),
-        bonus: match[3] ? parseInt(match[3]) : 0
-      };
-    }
-
-    function addRollToHistory(roll, prepend = true) {
-      const historyList = document.getElementById('rollHistoryList');
-      const fullHistoryList = document.getElementById('fullHistoryList');
-
-      // 移除空状态
-      [historyList, fullHistoryList].forEach(list => {
-        const emptyEl = list.querySelector('.empty-history');
-        if (emptyEl) emptyEl.remove();
-      });
-
-      const time = new Date(roll.time);
-      const timeStr = time.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      const isOwn = roll.player === currentUser;
-
-      const rollHtml = `
-        <div class="roll-entry ${isOwn ? 'own' : ''}">
-          <div class="roll-entry-header">
-            <span class="roll-player">${roll.player}${isOwn ? ' (我)' : ''}</span>
-            <span class="roll-time">${timeStr}</span>
-          </div>
-          <div class="roll-formula">${roll.formula}</div>
-          <div class="roll-result">${roll.result}</div>
-          ${roll.detail ? `<div class="roll-detail">${roll.detail}</div>` : ''}
-        </div>
-      `;
-
-      if (prepend) {
-        historyList.insertAdjacentHTML('afterbegin', rollHtml);
-        fullHistoryList.insertAdjacentHTML('afterbegin', rollHtml);
-      } else {
-        historyList.insertAdjacentHTML('beforeend', rollHtml);
-        fullHistoryList.insertAdjacentHTML('beforeend', rollHtml);
-      }
-
-      // 只保留最近50条
-      [historyList, fullHistoryList].forEach(list => {
-        const entries = list.querySelectorAll('.roll-entry');
-        if (entries.length > 50) {
-          entries[entries.length - 1].remove();
-        }
-      });
-    }
-
-    // ==================== 通知 ====================
-    function showNotification(message) {
-      const notification = document.createElement('div');
-      notification.className = 'notification';
-      notification.textContent = message;
-      document.body.appendChild(notification);
-
-      setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transform = 'translateX(100%)';
-        notification.style.transition = 'all 0.3s';
-        setTimeout(() => notification.remove(), 300);
-      }, 3000);
-    }
-
-    // ==================== 初始化 ====================
-    document.addEventListener('DOMContentLoaded', function() {
-      // 检查登录状态
-      const savedUser = localStorage.getItem('currentUser');
-      if (savedUser) {
-        currentUser = savedUser;
-        document.getElementById('usernameInput').value = savedUser;
-        connectSocket();
-      }
-
-      // 回车键登录
-      document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          loginUser();
-        }
-      });
-
-      // 回车键投掷
-      document.getElementById('diceFormulaInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          rollOnlineDice();
-        }
-      });
-
-      // 回车键创建房间
-      document.getElementById('roomPasswordInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          createRoom();
-        }
-      });
     });
 
     // 页面关闭时离开房间
     window.addEventListener('beforeunload', function() {
       if (socket && currentRoomId) {
-        socket.emit('leave_room');
+        socket.emit('leave_room', { roomId: currentRoomId });
+      }
+    });
+
+    // 检查登录状态
+    window.addEventListener('load', function() {
+      const savedUser = localStorage.getItem('currentUser');
+      if (savedUser) {
+        currentUser = savedUser;
+        document.getElementById('usernameInput').value = savedUser;
+      }
+      
+      // 初始化完整工具
+      if (typeof init === 'function') {
+        init();
       }
     });
   </script>
