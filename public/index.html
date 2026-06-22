@@ -615,9 +615,9 @@
   }
 
   body.mobile-mode .main-dice {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
   }
 
   body.mobile-mode .bonus-dice,
@@ -4242,8 +4242,8 @@
     renderHistory();
     
     // 同步到房间
-    if (typeof sendSharedDataUpdate === 'function') {
-      sendSharedDataUpdate('history', battleHistory);
+    if (typeof syncRoomData === 'function') {
+      syncRoomData('battleHistory', battleHistory);
     }
   }
   
@@ -4639,8 +4639,8 @@
     updateInjuryPlayerSelect();
     
     // 同步到房间
-    if (typeof sendSharedDataUpdate === 'function') {
-      sendSharedDataUpdate('players', players);
+    if (typeof syncRoomData === 'function') {
+      syncRoomData('players', players);
     }
   }
   
@@ -4716,8 +4716,8 @@
     renderPlayers(); // 更新技能对抗页的武器选择
     
     // 同步到房间
-    if (typeof sendSharedDataUpdate === 'function') {
-      sendSharedDataUpdate('players', players);
+    if (typeof syncRoomData === 'function') {
+      syncRoomData('players', players);
     }
   }
   
@@ -4731,8 +4731,8 @@
     renderPlayers(); // 更新技能对抗页的武器选择
     
     // 同步到房间
-    if (typeof sendSharedDataUpdate === 'function') {
-      sendSharedDataUpdate('players', players);
+    if (typeof syncRoomData === 'function') {
+      syncRoomData('players', players);
     }
   }
   
@@ -4816,8 +4816,8 @@
     renderPlayers(); // 更新技能对抗页的技能选项
     
     // 同步到房间
-    if (typeof sendSharedDataUpdate === 'function') {
-      sendSharedDataUpdate('players', players);
+    if (typeof syncRoomData === 'function') {
+      syncRoomData('players', players);
     }
   }
   
@@ -4837,8 +4837,8 @@
     renderPlayers(); // 更新技能对抗页的技能选项
     
     // 同步到房间
-    if (typeof sendSharedDataUpdate === 'function') {
-      sendSharedDataUpdate('players', players);
+    if (typeof syncRoomData === 'function') {
+      syncRoomData('players', players);
     }
   }
   
@@ -5109,6 +5109,9 @@
           }
         });
 
+        // 接收共享数据更新
+        
+
         // 房间被删除
         socket.on('room_deleted', function(data) {
           alert('房间已被房主删除');
@@ -5245,16 +5248,7 @@
       }
     }
 
-    // 发送共享数据更新到服务器
-    function sendSharedDataUpdate(type, data) {
-      if (!isOnlineMode || !socket || !currentRoomId) return;
-      if (isReceivingServerUpdate) return; // 防止循环
-      
-      socket.emit('update_shared_data', {
-        type: type,
-        data: data
-      });
-    }
+}
 
     // 删除房间（仅房主）
     function deleteRoom() {
