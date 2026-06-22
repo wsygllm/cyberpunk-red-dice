@@ -5074,6 +5074,15 @@ function addRoomRollHistory(playerName, result) {
         resultEl.appendChild(critDetail);
       }
       
+      // 发送到服务器（如果在线）
+      if (typeof sendRollToServer === 'function') {
+        sendRollToServer(
+          `伤害骰 ${formula}`,
+          total + (isCrit ? ' 💥暴击!' : ''),
+          `${parsed.count}个D${parsed.sides}`
+        );
+      }
+      
     }, 600);
   }
   
@@ -5139,6 +5148,17 @@ function addRoomRollHistory(playerName, result) {
         typeLabel.className = 'injury-type-label ' + (isHead ? 'injury-type-head' : 'injury-type-torso');
         
         resultEl.style.display = 'block';
+        
+        // 发送到服务器（如果在线）
+        if (typeof sendRollToServer === 'function') {
+          const injuryName = isHead ? headInjuries[roll - 1].name : bodyInjuries[roll - 1].name;
+          const playerName = document.getElementById('injuryPlayer')?.value || '未知';
+          sendRollToServer(
+            `${playerName} - ${isHead ? '头部' : '躯干'}重伤`,
+            `D12: ${roll} - ${injuryName}`,
+            ''
+          );
+        }
       }
     }, 500);
   }
