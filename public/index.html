@@ -4494,7 +4494,7 @@
 
         socket.on('connect', function() {
           // 认证
-          socket.emit('auth', { username: currentUser });
+          socket.emit('auth', currentUser);
         });
 
         socket.on('auth_success', function() {
@@ -4625,7 +4625,7 @@
       }
 
       if (socket) {
-        socket.emit('create_room', { name: name, password: password });
+        socket.emit('create_room', { roomName: name, password: password });
       }
     }
 
