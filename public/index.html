@@ -3168,17 +3168,7 @@
   }
 
   /* 手机模式强制隐藏成员列表 - 最高优先级 */
-  body.mobile-mode #roomSidebar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-    opacity: 0 !important;
-    position: absolute !important;
-    left: -9999px !important;
-  }
+  body.mobile-mode 
   
   body.mobile-mode .room-content {
     width: 100% !important;
@@ -3593,6 +3583,38 @@
   .mobile-mode .room-content {
     padding: 15px !important;
   }
+
+  /* ========== 手机模式侧边栏（正常布局，不遮盖内容） ========== */
+  .mobile-mode .room-sidebar {
+    display: none !important;
+    width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    flex-shrink: 0;
+  }
+  
+  /* 手机模式下侧边栏展开状态 */
+  .mobile-mode .room-sidebar.sidebar-open {
+    display: block !important;
+    width: 160px !important;
+    padding: 15px 10px !important;
+    margin: 0 !important;
+    overflow-y: auto !important;
+  }
+  
+  /* 手机模式下内容区域自适应 */
+  .mobile-mode .room-content {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  /* 展开按钮样式调整 */
+  .mobile-mode .sidebar-expand-btn {
+    display: none !important;
+  }
+  
+  /* 手机模式下用顶部栏的按钮切换 */
 </style>
 </head>
 <body>
@@ -4306,6 +4328,18 @@
     updateInjuryPlayerSelect();
     renderPlayerChips();
     renderHistory();
+  
+    // 初始化侧边栏状态
+    var sidebar = document.getElementById('roomSidebar');
+    if (sidebar) {
+      var memberVisible = localStorage.getItem('memberListVisible');
+      var isMobile = document.body.classList.contains('mobile-mode');
+      if (memberVisible === 'true') {
+        sidebar.classList.add('sidebar-open');
+      } else if (memberVisible === 'false' && !isMobile) {
+        sidebar.classList.remove('sidebar-open');
+      }
+    }
   }
   
   // ==================== 第一页：技能对抗 ====================
@@ -6206,7 +6240,6 @@
       const btn = document.getElementById('mobileToggleBtn');
       const sidebar = document.getElementById('roomSidebar');
       const toggleBtn = document.getElementById('memberToggleBtn');
-      const content = document.querySelector('.room-content');
       
       if (body.classList.contains('mobile-mode')) {
         // 切换到电脑模式
@@ -6215,10 +6248,12 @@
         btn.classList.remove('active');
         localStorage.setItem('mobileMode', 'false');
         
-        // 电脑模式显示成员列表
+        // 电脑模式显示成员列表（正常布局）
         if (sidebar) {
-          sidebar.style.setProperty('display', 'block', 'important');
-          if (content) content.style.setProperty('width', '', 'important');
+          sidebar.classList.remove('sidebar-open');
+          sidebar.style.display = '';
+          sidebar.style.width = '';
+          sidebar.style.padding = '';
           if (toggleBtn) {
             toggleBtn.textContent = '✕';
             toggleBtn.title = '隐藏成员列表';
@@ -6232,10 +6267,12 @@
         btn.classList.add('active');
         localStorage.setItem('mobileMode', 'true');
         
-        // 手机模式强制隐藏成员列表，给内容腾空间
+        // 手机模式默认隐藏成员列表（用户可以手动展开）
         if (sidebar) {
-          sidebar.style.setProperty('display', 'none', 'important');
-          if (content) content.style.setProperty('width', '100%', 'important');
+          sidebar.classList.remove('sidebar-open');
+          sidebar.style.display = '';
+          sidebar.style.width = '';
+          sidebar.style.padding = '';
           if (toggleBtn) {
             toggleBtn.textContent = '👥';
             toggleBtn.title = '显示成员列表';
@@ -6248,29 +6285,34 @@
     // 切换侧边栏折叠状态
         function toggleSidebar() {
       var sidebar = document.getElementById('roomSidebar');
-      var body = document.getElementById('roomBody');
+      var toggleBtn = document.getElementById('memberToggleBtn');
       var expandBtn = document.getElementById('sidebarExpandBtn');
+      var isMobile = document.body.classList.contains('mobile-mode');
       
       if (!sidebar) {
-        alert('找不到侧边栏');
         return;
       }
       
-      if (sidebar.style.display === 'none') {
-        // 展开
-        sidebar.style.display = '';
-        sidebar.style.width = '';
+      if (sidebar.classList.contains('sidebar-open')) {
+        // 折叠
+        sidebar.classList.remove('sidebar-open');
+        if (toggleBtn) {
+          toggleBtn.textContent = isMobile ? '👥' : '✕';
+          toggleBtn.title = isMobile ? '显示成员列表' : '隐藏成员列表';
+        }
+        if (expandBtn && isMobile) expandBtn.style.display = 'block';
+        localStorage.setItem('sidebarCollapsed', 'true');
+        localStorage.setItem('memberListVisible', 'false');
+      } else {
+        // 展开 - 正常布局，不遮盖内容
+        sidebar.classList.add('sidebar-open');
+        if (toggleBtn) {
+          toggleBtn.textContent = '✕';
+          toggleBtn.title = '隐藏成员列表';
+        }
         if (expandBtn) expandBtn.style.display = 'none';
         localStorage.setItem('sidebarCollapsed', 'false');
-      } else {
-        // 折叠 - 直接隐藏
-        sidebar.style.display = 'none';
-        sidebar.style.width = '0px';
-        sidebar.style.padding = '0px';
-        sidebar.style.margin = '0px';
-        sidebar.style.overflow = 'hidden';
-        if (expandBtn) expandBtn.style.display = 'block';
-        localStorage.setItem('sidebarCollapsed', 'true');
+        localStorage.setItem('memberListVisible', 'true');
       }
     }
 
