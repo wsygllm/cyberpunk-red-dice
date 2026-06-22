@@ -3343,6 +3343,256 @@
   .mobile-mode .tabs {
     width: 100%;
   }
+
+  /* 伤害目标选择 */
+  .damage-target-select {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .damage-target-select label {
+    color: #ccc;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  
+  .damage-target-select select {
+    flex: 1;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .damage-target-select select:focus {
+    border-color: #e94560;
+  }
+  
+  /* 手机模式下目标选择更小 */
+  .mobile-mode .damage-target-select {
+    margin-bottom: 8px;
+  }
+  
+  .mobile-mode .damage-target-select label {
+    font-size: 12px;
+  }
+  
+  .mobile-mode .damage-target-select select {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  /* ========== 手机模式布局优化 ========== */
+  /* 伤害页改成单列 */
+  .mobile-mode .damage-page {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+  
+  /* 减少各区域间距 */
+  .mobile-mode .damage-roller {
+    padding: 15px !important;
+  }
+  
+  .mobile-mode .crit-table-section {
+    padding: 15px !important;
+  }
+  
+  .mobile-mode .injury-section {
+    margin-top: 15px !important;
+    padding-top: 15px !important;
+  }
+  
+  /* 标题更小 */
+  .mobile-mode .damage-roller h2 {
+    font-size: 18px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .mobile-mode .crit-table-section h2 {
+    font-size: 18px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .mobile-mode .injury-title {
+    font-size: 18px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  /* 历史记录更紧凑 */
+  .mobile-mode .history-section {
+    margin-top: 12px !important;
+    padding: 10px !important;
+  }
+  
+  .mobile-mode .history-title {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .mobile-mode .history-item {
+    padding: 8px !important;
+    margin-bottom: 6px !important;
+    font-size: 12px !important;
+  }
+  
+  /* 骰子更小 */
+  .mobile-mode .damage-dice {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 18px !important;
+  }
+  
+  .mobile-mode .damage-total {
+    font-size: 32px !important;
+  }
+  
+  /* D12更小 */
+  .mobile-mode .d12-dice {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 22px !important;
+  }
+  
+  /* 按钮更小 */
+  .mobile-mode .roll-damage-btn,
+  .mobile-mode .roll-d12-btn {
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+  }
+  
+  /* 输入框更小 */
+  .mobile-mode .dice-formula-input input {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+  }
+  
+  /* 暴击表更紧凑 */
+  .mobile-mode .crit-table-grid {
+    gap: 8px !important;
+  }
+  
+  .mobile-mode .crit-table-item {
+    padding: 8px !important;
+  }
+  
+  .mobile-mode .dice-type {
+    font-size: 13px !important;
+  }
+  
+  .mobile-mode .crit-condition {
+    font-size: 11px !important;
+  }
+  
+  /* 重伤区域更紧凑 */
+  .mobile-mode .injury-controls {
+    gap: 8px !important;
+  }
+  
+  .mobile-mode .injury-result {
+    padding: 12px !important;
+  }
+  
+  .mobile-mode .injury-name {
+    font-size: 18px !important;
+  }
+  
+  .mobile-mode .injury-effect {
+    font-size: 12px !important;
+  }
+  
+  /* 标签页更紧凑 */
+  .mobile-mode .tabs {
+    gap: 5px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .mobile-mode .tab-btn {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+  }
+  
+  /* 房间头部更紧凑 */
+  .mobile-mode .room-header {
+    padding: 10px 15px !important;
+  }
+  
+  .mobile-mode .room-title {
+    font-size: 16px !important;
+  }
+  
+  /* 技能对抗页更紧凑 */
+  .mobile-mode .player-chips {
+    margin-bottom: 12px !important;
+    gap: 6px !important;
+  }
+  
+  .mobile-mode .player-chip {
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+  }
+  
+  .mobile-mode .player-grid {
+    gap: 10px !important;
+  }
+  
+  .mobile-mode .player-card {
+    padding: 10px !important;
+  }
+  
+  .mobile-mode .player-name {
+    font-size: 14px !important;
+  }
+  
+  .mobile-mode .main-dice {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 20px !important;
+  }
+  
+  .mobile-mode .total-score {
+    font-size: 24px !important;
+  }
+  
+  /* 全员投掷按钮 */
+  .mobile-mode .roll-all-btn {
+    padding: 12px !important;
+    font-size: 15px !important;
+    margin-top: 15px !important;
+  }
+  
+  /* 历史记录区域 */
+  .mobile-mode .battle-history-section {
+    margin-top: 15px !important;
+    padding: 12px !important;
+  }
+  
+  /* 备忘录页更紧凑 */
+  .mobile-mode .memo-container {
+    gap: 15px !important;
+  }
+  
+  .mobile-mode .memo-sidebar {
+    padding: 10px !important;
+  }
+  
+  .mobile-mode .memo-content {
+    padding: 10px !important;
+  }
+  
+  /* 去掉整体zoom的空白问题 - 让内容区域最小高度适配 */
+  .mobile-mode .room-body {
+    min-height: auto !important;
+  }
+  
+  .mobile-mode .room-content {
+    padding: 15px !important;
+  }
 </style>
 </head>
 <body>
@@ -3591,6 +3841,13 @@
           
           <div class="damage-formula-hint">
             格式：<span>XdY+Z</span>（如 2d6+3、4d4、3d8+2）
+          </div>
+          
+          <div class="damage-target-select">
+            <label>🎯 目标角色：</label>
+            <select id="damageTargetSelect">
+              <option value="">无（仅记录伤害）</option>
+            </select>
           </div>
           
           <div class="dice-formula-input">
@@ -4186,7 +4443,36 @@
         }
       }
     });
+  
+    // 更新伤害目标选择下拉框
+    updateDamageTargetSelect();
   }
+
+  // 更新伤害目标选择下拉框
+  function updateDamageTargetSelect() {
+    const select = document.getElementById('damageTargetSelect');
+    if (!select) return;
+    
+    const currentValue = select.value;
+    
+    let html = '<option value="">无（仅记录伤害）</option>';
+    
+    if (typeof players !== 'undefined' && players) {
+      players.forEach(player => {
+        if (player.name) {
+          html += `<option value="${player.name}">${player.name}</option>`;
+        }
+      });
+    }
+    
+    select.innerHTML = html;
+    
+    // 恢复之前的选择
+    if (currentValue) {
+      select.value = currentValue;
+    }
+  }
+
   
   function selectPlayerSkill(playerId, skillId) {
     const player = players.find(p => p.id === playerId);
@@ -4777,6 +5063,7 @@
                 </div>
                 <div class="history-total ${record.isCrit ? 'is-crit' : ''}">${record.total}</div>
                 <div class="history-detail">${record.detail}</div>
+                ${record.target ? '<div class="history-target" style="color: #a855f7; font-size: 12px; margin-top: 4px;">🎯 目标：' + record.target + '</div>' : ''}
               </div>
             `;
           });
@@ -5034,13 +5321,18 @@
         resultEl.appendChild(critDetail);
       }
       
+      // 获取目标角色
+      const targetSelect = document.getElementById('damageTargetSelect');
+      const targetName = targetSelect ? targetSelect.value : '';
+      
       // 添加历史记录
       addDamageHistory('damage', {
         formula: formula,
         total: total,
         isCrit: isCrit,
         detail: detail.textContent,
-        results: results
+        results: results,
+        target: targetName
       });
       
     }, 600);
