@@ -550,9 +550,9 @@
   .sidebar-toggle-btn {
     display: none;
     position: fixed;
-    top: 60px;
+    top: 70px;
     left: 10px;
-    z-index: 100;
+    z-index: 9999;
     background: rgba(124, 58, 237, 0.9);
     color: white;
     border: none;
@@ -3174,13 +3174,10 @@
       </div>
     </div>
 
-    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" >👥</button>
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()">👥</button>
     <div class="room-body" id="roomBody">
       <div class="room-sidebar" id="roomSidebar">
-        <div class="sidebar-title" >
-          <span>👥 成员列表</span>
-          
-        </div>
+        <div class="sidebar-title">👥 成员列表</div>
         <ul class="member-list" id="memberList">
         </ul>
       </div>
