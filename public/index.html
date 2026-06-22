@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>赛博朋克红小工具</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* 赛博朋克背景效果 */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(transparent 50%, rgba(0, 255, 255, 0.02) 50%),
+        linear-gradient(90deg, rgba(255, 0, 255, 0.02), transparent);
+      background-size: 100% 4px, 4px 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.5) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      display: none;
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* ==================== 登录页面 ==================== */
+    #loginPage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: rgba(15, 15, 25, 0.9);
+      border: 1px solid #ff00ff;
+      border-radius: 8px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 
+        0 0 20px rgba(255, 0, 255, 0.3),
+        inset 0 0 20px rgba(255, 0, 255, 0.05);
+      position: relative;
+    }
+
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
+      border-radius: 8px;
+      z-index: -1;
+      opacity: 0.5;
+      animation: borderGlow 3s linear infinite;
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+
+    .app-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #ff00ff, #00ffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+      letter-spacing: 2px;
+    }
+
+    .app-subtitle {
+      text-align: center;
+      color: #888;
+      font-size: 12px;
+      margin-bottom: 30px;
+      letter-spacing: 4px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      color: #00ffff;
+      font-size: 12px;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 14px;
+      font-family: 'Courier New', monospace;
+      transition: all 0.3s;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #ff00ff;
+      box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .cyber-btn {
+      flex: 1;
+      padding: 12px 20px;
+      background: transparent;
+      border: 1px solid;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cyber-btn.primary {
+      border-color: #ff00ff;
+      color: #ff00ff;
+    }
+
+    .cyber-btn.primary:hover {
+      background: rgba(255, 0, 255, 0.2);
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+    }
+
+    .cyber-btn.secondary {
+      border-color: #00ffff;
+      color: #00ffff;
+    }
+
+    .cyber-btn.secondary:hover {
+      background: rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+    }
+
+    .login-message {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      text-align: center;
+      display: none;
+    }
+
+    .login-message.error {
+      display: block;
+      background: rgba(255, 0, 0, 0.1);
+      border: 1px solid #ff4444;
+      color: #ff6666;
+    }
+
+    .login-message.success {
+      display: block;
+      background: rgba(0, 255, 0, 0.1);
+      border: 1px solid #44ff44;
+      color: #66ff66;
+    }
+
+    /* ==================== 大厅页面 ==================== */
+    #lobbyPage {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .lobby-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #333;
+      margin-bottom: 30px;
+    }
+
+    .lobby-title {
+      font-size: 24px;
+      background: linear-gradient(90deg, #ff00ff, #00ffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff00ff, #00ffff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .username-display {
+      color: #00ffff;
+    }
+
+    .logout-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid #ff4444;
+      color: #ff6666;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 68, 68, 0.2);
+    }
+
+    .create-room-section {
+      background: rgba(15, 15, 25, 0.8);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      color: #ff00ff;
+      font-size: 16px;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    .create-room-form {
+      display: flex;
+      gap: 15px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .form-field {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .form-field label {
+      display: block;
+      color: #888;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .form-field input {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+    }
+
+    .form-field input:focus {
+      outline: none;
+      border-color: #00ffff;
+    }
+
+    .room-list-section {
+      background: rgba(15, 15, 25, 0.8);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 25px;
+    }
+
+    .room-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+    }
+
+    .room-card {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid #444;
+      border-radius: 6px;
+      padding: 20px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .room-card:hover {
+      border-color: #ff00ff;
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .room-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .room-name {
+      font-size: 16px;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .room-lock {
+      font-size: 14px;
+    }
+
+    .room-info {
+      color: #888;
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+
+    .room-creator {
+      color: #00ffff;
+    }
+
+    .room-members {
+      color: #ff00ff;
+    }
+
+    .join-room-btn {
+      width: 100%;
+      padding: 8px;
+      background: transparent;
+      border: 1px solid #00ffff;
+      color: #00ffff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      transition: all 0.3s;
+    }
+
+    .join-room-btn:hover {
+      background: rgba(0, 255, 255, 0.2);
+    }
+
+    .empty-rooms {
+      text-align: center;
+      color: #666;
+      padding: 40px;
+      font-size: 14px;
+    }
+
+    /* ==================== 房间页面 ==================== */
+    #roomPage {
+      padding: 0;
+    }
+
+    .room-header {
+      background: rgba(15, 15, 25, 0.95);
+      border-bottom: 1px solid #333;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .room-header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      padding: 8px 12px;
+      background: transparent;
+      border: 1px solid #666;
+      color: #888;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+
+    .back-btn:hover {
+      border-color: #ff4444;
+      color: #ff6666;
+    }
+
+    .room-title-display {
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .room-member-count {
+      color: #00ffff;
+      font-size: 12px;
+    }
+
+    .room-header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00ff00;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .room-main {
+      display: flex;
+      height: calc(100vh - 60px);
+    }
+
+    .room-sidebar {
+      width: 200px;
+      background: rgba(10, 10, 20, 0.9);
+      border-right: 1px solid #333;
+      padding: 20px 15px;
+      overflow-y: auto;
+    }
+
+    .sidebar-title {
+      color: #ff00ff;
+      font-size: 12px;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    .member-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .member-item.creator {
+      border: 1px solid #ff00ff;
+    }
+
+    .member-avatar-small {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff00ff, #00ffff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .member-name {
+      flex: 1;
+      color: #ddd;
+    }
+
+    .member-tag {
+      font-size: 10px;
+      color: #ff00ff;
+    }
+
+    .room-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* 骰子工具区域 */
+    .dice-tool {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .tool-tabs {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #333;
+    }
+
+    .tool-tab {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .tool-tab:hover {
+      color: #fff;
+    }
+
+    .tool-tab.active {
+      color: #ff00ff;
+      border-bottom-color: #ff00ff;
+    }
+
+    .tool-content {
+      display: none;
+    }
+
+    .tool-content.active {
+      display: block;
+    }
+
+    /* 在线骰子投掷区 */
+    .online-dice-section {
+      background: rgba(15, 15, 25, 0.8);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+
+    .dice-input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .dice-formula-input {
+      flex: 1;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #444;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 16px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .dice-formula-input:focus {
+      outline: none;
+      border-color: #ff00ff;
+    }
+
+    .roll-btn {
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #ff00ff, #00ffff);
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .roll-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+    }
+
+    .quick-dice {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .quick-dice-btn {
+      padding: 6px 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid #444;
+      border-radius: 4px;
+      color: #aaa;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      transition: all 0.3s;
+    }
+
+    .quick-dice-btn:hover {
+      border-color: #00ffff;
+      color: #00ffff;
+    }
+
+    /* 投掷历史 */
+    .roll-history-section {
+      background: rgba(15, 15, 25, 0.8);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .history-title {
+      color: #ff00ff;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .roll-history-list {
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .roll-entry {
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 3px solid #00ffff;
+      padding: 12px 15px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .roll-entry.own {
+      border-left-color: #ff00ff;
+    }
+
+    .roll-entry-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .roll-player {
+      color: #00ffff;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .roll-entry.own .roll-player {
+      color: #ff00ff;
+    }
+
+    .roll-time {
+      color: #666;
+      font-size: 11px;
+    }
+
+    .roll-formula {
+      color: #888;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .roll-result {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .roll-detail {
+      color: #666;
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .empty-history {
+      text-align: center;
+      color: #666;
+      padding: 30px;
+      font-size: 13px;
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .room-main {
+        flex-direction: column;
+      }
+      
+      .room-sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #333;
+      }
+      
+      .member-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      
+      .create-room-form {
+        flex-direction: column;
+      }
+      
+      .btn-group {
+        flex-direction: column;
+      }
+    }
+
+    /* 加载动画 */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #333;
+      border-radius: 50%;
+      border-top-color: #ff00ff;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* 通知提示 */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      background: rgba(15, 15, 25, 0.95);
+      border: 1px solid #00ffff;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 13px;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== 登录页面 ==================== -->
+  <div id="loginPage" class="page active">
+    <div class="login-container">
+      <h1 class="app-title">赛博朋克红小工具</h1>
+      <p class="app-subtitle">CYBERPUNK RED TOOLKIT</p>
+      
+      <div class="input-group">
+        <label>用户名 / USERNAME</label>
+        <input type="text" id="usernameInput" placeholder="输入用户名">
+      </div>
+      
+      <div class="input-group">
+        <label>密码 / PASSWORD</label>
+        <input type="password" id="passwordInput" placeholder="输入密码">
+      </div>
+      
+      <div class="btn-group">
+        <button class="cyber-btn primary" onclick="loginUser()">登录</button>
+        <button class="cyber-btn secondary" onclick="registerUser()">注册</button>
+      </div>
+      
+      <div id="loginMessage" class="login-message"></div>
+    </div>
+  </div>
+
+  <!-- ==================== 大厅页面 ==================== -->
+  <div id="lobbyPage" class="page">
+    <div class="lobby-header">
+      <h2 class="lobby-title">🎮 联机大厅</h2>
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <span class="username-display" id="usernameDisplay">用户</span>
+        <button class="logout-btn" onclick="logoutUser()">退出</button>
+      </div>
+    </div>
+
+    <div class="create-room-section">
+      <h3 class="section-title">⚡ 创建房间</h3>
+      <div class="create-room-form">
+        <div class="form-field">
+          <label>房间名称</label>
+          <input type="text" id="roomNameInput" placeholder="输入房间名称">
+        </div>
+        <div class="form-field">
+          <label>房间密码（可选）</label>
+          <input type="text" id="roomPasswordInput" placeholder="留空表示无密码">
+        </div>
+        <div class="form-field" style="flex: 0 0 auto;">
+          <button class="cyber-btn primary" onclick="createRoom()" style="padding: 10px 25px;">创建房间</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="room-list-section">
+      <h3 class="section-title">🏠 房间列表</h3>
+      <div class="room-grid" id="roomGrid">
+        <div class="empty-rooms">暂无房间，创建一个吧~</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 房间页面 ==================== -->
+  <div id="roomPage" class="page">
+    <div class="room-header">
+      <div class="room-header-left">
+        <button class="back-btn" onclick="leaveRoom()">← 返回大厅</button>
+        <span class="room-title-display" id="currentRoomName">房间名称</span>
+        <span class="room-member-count" id="roomMemberCount">(0人)</span>
+      </div>
+      <div class="room-header-right">
+        <div class="online-dot"></div>
+        <span style="font-size: 12px; color: #888;">在线</span>
+      </div>
+    </div>
+
+    <div class="room-main">
+      <div class="room-sidebar">
+        <h4 class="sidebar-title">👥 房间成员</h4>
+        <div class="member-list" id="memberList">
+        </div>
+      </div>
+
+      <div class="room-content">
+        <div class="dice-tool">
+          <div class="tool-tabs">
+            <button class="tool-tab active" onclick="switchToolTab('dice')">🎲 骰子投掷</button>
+            <button class="tool-tab" onclick="switchToolTab('history')">📜 投掷历史</button>
+          </div>
+
+          <div id="diceTab" class="tool-content active">
+            <div class="online-dice-section">
+              <div class="dice-input-row">
+                <input type="text" class="dice-formula-input" id="diceFormulaInput" placeholder="输入骰子公式，如：1d10+5 或 2d6+3">
+                <button class="roll-btn" onclick="rollOnlineDice()">投掷！</button>
+              </div>
+              <div class="quick-dice">
+                <button class="quick-dice-btn" onclick="setDiceFormula('1d4')">D4</button>
+                <button class="quick-dice-btn" onclick="setDiceFormula('1d6')">D6</button>
+                <button class="quick-dice-btn" onclick="setDiceFormula('1d8')">D8</button>
+                <button class="quick-dice-btn" onclick="setDiceFormula('1d10')">D10</button>
+                <button class="quick-dice-btn" onclick="setDiceFormula('1d12')">D12</button>
+                <button class="quick-dice-btn" onclick="setDiceFormula('1d20')">D20</button>
+                <button class="quick-dice-btn" onclick="setDiceFormula('1d100')">D100</button>
+                <button class="quick-dice-btn" onclick="setDiceFormula('2d6+3')">2D6+3</button>
+                <button class="quick-dice-btn" onclick="setDiceFormula('3d6+2')">3D6+2</button>
+              </div>
+            </div>
+
+            <div class="roll-history-section">
+              <h4 class="history-title">最近投掷</h4>
+              <div class="roll-history-list" id="rollHistoryList">
+                <div class="empty-history">还没有人投掷骰子</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="historyTab" class="tool-content">
+            <div class="roll-history-section">
+              <h4 class="history-title">全部投掷历史</h4>
+              <div class="roll-history-list" id="fullHistoryList">
+                <div class="empty-history">还没有投掷记录</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // ==================== 全局状态 ====================
+    let currentUser = null;
+    let currentRoomId = null;
+    let socket = null;
+    let currentRoomData = null;
+
+    // ==================== 页面切换 ====================
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    // ==================== 工具标签切换 ====================
+    function switchToolTab(tabId) {
+      document.querySelectorAll('.tool-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.tool-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      document.getElementById(tabId + 'Tab').classList.add('active');
+    }
+
+    // ==================== 登录/注册 ====================
+    function showLoginMessage(text, type) {
+      const msgEl = document.getElementById('loginMessage');
+      msgEl.textContent = text;
+      msgEl.className = 'login-message ' + type;
+    }
+
+    async function registerUser() {
+      const username = document.getElementById('usernameInput').value.trim();
+      const password = document.getElementById('passwordInput').value;
+
+      if (!username || !password) {
+        showLoginMessage('请输入用户名和密码', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showLoginMessage('注册成功，请登录', 'success');
+        } else {
+          showLoginMessage(data.message, 'error');
+        }
+      } catch (error) {
+        showLoginMessage('无法连接服务器', 'error');
+        console.error(error);
+      }
+    }
+
+    async function loginUser() {
+      const username = document.getElementById('usernameInput').value.trim();
+      const password = document.getElementById('passwordInput').value;
+
+      if (!username || !password) {
+        showLoginMessage('请输入用户名和密码', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          currentUser = username;
+          localStorage.setItem('currentUser', username);
+          connectSocket();
+        } else {
+          showLoginMessage(data.message, 'error');
+        }
+      } catch (error) {
+        showLoginMessage('无法连接服务器', 'error');
+        console.error(error);
+      }
+    }
+
+    function logoutUser() {
+      if (currentRoomId) {
+        leaveRoom();
+      }
+      
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      
+      if (socket) {
+        socket.disconnect();
+        socket = null;
+      }
+      
+      showPage('loginPage');
+    }
+
+    // ==================== Socket 连接 ====================
+    function connectSocket() {
+      if (socket) {
+        socket.disconnect();
+      }
+
+      socket = io();
+
+      socket.on('connect', () => {
+        console.log('已连接到服务器');
+        socket.emit('auth', currentUser);
+      });
+
+      socket.on('auth_success', (username) => {
+        console.log('认证成功:', username);
+        document.getElementById('usernameDisplay').textContent = username;
+        document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
+        showPage('lobbyPage');
+        loadRoomList();
+      });
+
+      socket.on('auth_error', (message) => {
+        showLoginMessage('认证失败: ' + message, 'error');
+      });
+
+      socket.on('room_list_update', (rooms) => {
+        renderRoomList(rooms);
+      });
+
+      socket.on('room_created', (room) => {
+        currentRoomId = room.id;
+        currentRoomData = room;
+        enterRoom(room);
+      });
+
+      socket.on('room_joined', (room) => {
+        currentRoomId = room.id;
+        currentRoomData = room;
+        enterRoom(room);
+      });
+
+      socket.on('member_joined', (data) => {
+        updateMemberList(data.members);
+        showNotification(`${data.member} 加入了房间`);
+      });
+
+      socket.on('member_left', (data) => {
+        updateMemberList(data.members);
+        showNotification(`${data.member} 离开了房间`);
+      });
+
+      socket.on('dice_rolled', (roll) => {
+        addRollToHistory(roll);
+      });
+
+      socket.on('error', (message) => {
+        alert(message);
+      });
+
+      socket.on('disconnect', () => {
+        console.log('与服务器断开连接');
+        showNotification('与服务器断开连接');
+      });
+    }
+
+    // ==================== 大厅功能 ====================
+    async function loadRoomList() {
+      try {
+        const response = await fetch('/api/rooms');
+        const data = await response.json();
+        if (data.success) {
+          renderRoomList(data.rooms);
+        }
+      } catch (error) {
+        console.error('加载房间列表失败:', error);
+      }
+    }
+
+    function renderRoomList(rooms) {
+      const grid = document.getElementById('roomGrid');
+
+      if (!rooms || rooms.length === 0) {
+        grid.innerHTML = '<div class="empty-rooms">暂无房间，创建一个吧~</div>';
+        return;
+      }
+
+      grid.innerHTML = rooms.map(room => `
+        <div class="room-card" onclick="joinRoom('${room.id}', ${room.hasPassword})">
+          <div class="room-card-header">
+            <span class="room-name">${room.name}</span>
+            <span class="room-lock">${room.hasPassword ? '🔒' : '🔓'}</span>
+          </div>
+          <div class="room-info">
+            <span class="room-creator">房主: ${room.creator}</span>
+            <span style="margin: 0 5px;">|</span>
+            <span class="room-members">${room.memberCount}人</span>
+          </div>
+          <button class="join-room-btn">${room.hasPassword ? '🔑 输入密码加入' : '🚪 加入房间'}</button>
+        </div>
+      `).join('');
+    }
+
+    function createRoom() {
+      const roomName = document.getElementById('roomNameInput').value.trim();
+      const roomPassword = document.getElementById('roomPasswordInput').value;
+
+      if (!roomName) {
+        alert('请输入房间名称');
+        return;
+      }
+
+      if (!socket) {
+        alert('未连接到服务器');
+        return;
+      }
+
+      socket.emit('create_room', {
+        roomName,
+        password: roomPassword || ''
+      });
+
+      document.getElementById('roomNameInput').value = '';
+      document.getElementById('roomPasswordInput').value = '';
+    }
+
+    function joinRoom(roomId, hasPassword) {
+      let password = '';
+
+      if (hasPassword) {
+        password = prompt('请输入房间密码：');
+        if (password === null) return;
+      }
+
+      if (!socket) {
+        alert('未连接到服务器');
+        return;
+      }
+
+      socket.emit('join_room', { roomId, password });
+    }
+
+    // ==================== 房间功能 ====================
+    function enterRoom(room) {
+      document.getElementById('currentRoomName').textContent = room.name;
+      updateMemberList(room.members);
+      
+      // 清空历史
+      document.getElementById('rollHistoryList').innerHTML = '<div class="empty-history">还没有人投掷骰子</div>';
+      document.getElementById('fullHistoryList').innerHTML = '<div class="empty-history">还没有投掷记录</div>';
+      
+      // 加载历史记录
+      if (room.rolls && room.rolls.length > 0) {
+        const sortedRolls = [...room.rolls].sort((a, b) => b.time - a.time);
+        sortedRolls.forEach(roll => addRollToHistory(roll, false));
+      }
+      
+      showPage('roomPage');
+    }
+
+    function leaveRoom() {
+      if (!socket || !currentRoomId) return;
+
+      socket.emit('leave_room');
+      currentRoomId = null;
+      currentRoomData = null;
+      showPage('lobbyPage');
+      loadRoomList();
+    }
+
+    function updateMemberList(members) {
+      const list = document.getElementById('memberList');
+      const creator = currentRoomData ? currentRoomData.creator : '';
+
+      list.innerHTML = members.map(member => `
+        <div class="member-item ${member === creator ? 'creator' : ''}">
+          <div class="member-avatar-small">${member.charAt(0).toUpperCase()}</div>
+          <span class="member-name">${member}</span>
+          ${member === creator ? '<span class="member-tag">房主</span>' : ''}
+        </div>
+      `).join('');
+
+      document.getElementById('roomMemberCount').textContent = `(${members.length}人)`;
+    }
+
+    // ==================== 骰子功能 ====================
+    function setDiceFormula(formula) {
+      document.getElementById('diceFormulaInput').value = formula;
+    }
+
+    function rollOnlineDice() {
+      const formula = document.getElementById('diceFormulaInput').value.trim();
+
+      if (!formula) {
+        alert('请输入骰子公式');
+        return;
+      }
+
+      if (!socket || !currentRoomId) {
+        alert('未连接到服务器或不在房间内');
+        return;
+      }
+
+      // 解析骰子公式
+      const parsed = parseDiceFormula(formula);
+
+      if (!parsed) {
+        alert('骰子公式格式错误，正确格式如：1d10+5 或 2d6+3');
+        return;
+      }
+
+      // 投掷骰子
+      const results = [];
+      let total = 0;
+
+      for (let i = 0; i < parsed.count; i++) {
+        const roll = Math.floor(Math.random() * parsed.sides) + 1;
+        results.push(roll);
+        total += roll;
+      }
+
+      total += parsed.bonus;
+
+      // 构建结果详情
+      const detail = `骰子：[${results.join(', ')}] ${parsed.bonus >= 0 ? '+' : ''}${parsed.bonus}`;
+
+      // 发送到服务器
+      socket.emit('roll_dice', {
+        formula,
+        result: total,
+        detail
+      });
+    }
+
+    function parseDiceFormula(formula) {
+      const match = formula.match(/^(\d+)d(\d+)([+-]\d+)?$/i);
+
+      if (!match) {
+        return null;
+      }
+
+      return {
+        count: parseInt(match[1]),
+        sides: parseInt(match[2]),
+        bonus: match[3] ? parseInt(match[3]) : 0
+      };
+    }
+
+    function addRollToHistory(roll, prepend = true) {
+      const historyList = document.getElementById('rollHistoryList');
+      const fullHistoryList = document.getElementById('fullHistoryList');
+
+      // 移除空状态
+      [historyList, fullHistoryList].forEach(list => {
+        const emptyEl = list.querySelector('.empty-history');
+        if (emptyEl) emptyEl.remove();
+      });
+
+      const time = new Date(roll.time);
+      const timeStr = time.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const isOwn = roll.player === currentUser;
+
+      const rollHtml = `
+        <div class="roll-entry ${isOwn ? 'own' : ''}">
+          <div class="roll-entry-header">
+            <span class="roll-player">${roll.player}${isOwn ? ' (我)' : ''}</span>
+            <span class="roll-time">${timeStr}</span>
+          </div>
+          <div class="roll-formula">${roll.formula}</div>
+          <div class="roll-result">${roll.result}</div>
+          ${roll.detail ? `<div class="roll-detail">${roll.detail}</div>` : ''}
+        </div>
+      `;
+
+      if (prepend) {
+        historyList.insertAdjacentHTML('afterbegin', rollHtml);
+        fullHistoryList.insertAdjacentHTML('afterbegin', rollHtml);
+      } else {
+        historyList.insertAdjacentHTML('beforeend', rollHtml);
+        fullHistoryList.insertAdjacentHTML('beforeend', rollHtml);
+      }
+
+      // 只保留最近50条
+      [historyList, fullHistoryList].forEach(list => {
+        const entries = list.querySelectorAll('.roll-entry');
+        if (entries.length > 50) {
+          entries[entries.length - 1].remove();
+        }
+      });
+    }
+
+    // ==================== 通知 ====================
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.textContent = message;
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(100%)';
+        notification.style.transition = 'all 0.3s';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+
+    // ==================== 初始化 ====================
+    document.addEventListener('DOMContentLoaded', function() {
+      // 检查登录状态
+      const savedUser = localStorage.getItem('currentUser');
+      if (savedUser) {
+        currentUser = savedUser;
+        document.getElementById('usernameInput').value = savedUser;
+        connectSocket();
+      }
+
+      // 回车键登录
+      document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          loginUser();
+        }
+      });
+
+      // 回车键投掷
+      document.getElementById('diceFormulaInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          rollOnlineDice();
+        }
+      });
+
+      // 回车键创建房间
+      document.getElementById('roomPasswordInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          createRoom();
+        }
+      });
+    });
+
+    // 页面关闭时离开房间
+    window.addEventListener('beforeunload', function() {
+      if (socket && currentRoomId) {
+        socket.emit('leave_room');
+      }
+    });
+  </script>
+</body>
+</html>
