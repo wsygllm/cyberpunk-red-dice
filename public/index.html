@@ -440,7 +440,7 @@
   }
   
   .sidebar-toggle-header-btn {
-    display: none;
+    display: inline-block;
     background: rgba(124, 58, 237, 0.3);
     color: white;
     border: 1px solid rgba(124, 58, 237, 0.5);
@@ -456,7 +456,7 @@
     background: rgba(124, 58, 237, 0.5);
   }
   
-  .mobile-mode .sidebar-toggle-header-btn {
+  .sidebar-toggle-header-btn {
     display: inline-block;
   }
 
@@ -563,8 +563,10 @@
   }
   
   /* 折叠时内容区占满 */
-  .room-body.sidebar-collapsed .room-content {
-    width: 100%;
+  .room-body.sidebar-collapsed   .room-content {
+    flex: 1;
+    min-width: 0;
+    overflow: auto;
   }
   
   /* 侧边栏切换按钮 */
@@ -648,7 +650,9 @@
 
   /* ==================== 手机模式 ==================== */
   body.mobile-mode .room-content {
+    flex: 1;
     padding: 10px;
+    min-width: 0;
   }
 
   body.mobile-mode .tabs {
@@ -2944,7 +2948,9 @@
   
   /* ==================== 手机模式 ==================== */
   body.mobile-mode .room-content {
+    flex: 1;
     padding: 10px;
+    min-width: 0;
   }
 
   body.mobile-mode .tabs {
@@ -3181,7 +3187,7 @@
     <div class="room-header">
       <div class="room-header-left">
         <button class="back-btn" onclick="leaveRoom()">← 返回</button>
-        <button class="sidebar-toggle-header-btn" onclick="toggleSidebar()" id="sidebarToggleHeaderBtn">👥</button>
+        <button class="sidebar-toggle-header-btn" onclick="toggleSidebar()" id="sidebarToggleHeaderBtn">👥 成员</button>
         <div class="room-title" id="currentRoomName">房间</div>
       </div>
       <div class="room-header-right">
@@ -5632,7 +5638,7 @@
         
         // 切换顶部栏按钮
         if (headerBtn) {
-          headerBtn.textContent = isCollapsed ? '👥' : '✕';
+          headerBtn.textContent = isCollapsed ? '👥 成员' : '✕ 收起';
         }
       }
     }}
