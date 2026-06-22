@@ -5668,17 +5668,44 @@
     function toggleMobileMode() {
       const body = document.body;
       const btn = document.getElementById('mobileToggleBtn');
+      const sidebar = document.getElementById('roomSidebar');
+      const toggleBtn = document.getElementById('memberToggleBtn');
+      const content = document.querySelector('.room-content');
       
       if (body.classList.contains('mobile-mode')) {
+        // 切换到电脑模式
         body.classList.remove('mobile-mode');
         btn.textContent = '📱 手机模式';
         btn.classList.remove('active');
         localStorage.setItem('mobileMode', 'false');
+        
+        // 电脑模式显示成员列表
+        if (sidebar) {
+          sidebar.style.display = '';
+          if (content) content.style.width = '';
+          if (toggleBtn) {
+            toggleBtn.textContent = '✕';
+            toggleBtn.title = '隐藏成员列表';
+          }
+          localStorage.setItem('memberListVisible', 'true');
+        }
       } else {
+        // 切换到手机模式
         body.classList.add('mobile-mode');
         btn.textContent = '🖥️ 电脑模式';
         btn.classList.add('active');
         localStorage.setItem('mobileMode', 'true');
+        
+        // 手机模式隐藏成员列表，给内容腾空间
+        if (sidebar) {
+          sidebar.style.display = 'none';
+          if (content) content.style.width = '100%';
+          if (toggleBtn) {
+            toggleBtn.textContent = '👥';
+            toggleBtn.title = '显示成员列表';
+          }
+          localStorage.setItem('memberListVisible', 'false');
+        }
       }
     }
     
