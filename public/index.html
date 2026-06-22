@@ -4724,6 +4724,11 @@
   
 
   // 添加伤害/伤势历史记录
+  
+  
+  // 渲染伤害历史记录
+  }
+
   function addDamageHistory(type, data) {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -4749,8 +4754,7 @@
       syncRoomData('damageHistory', damageHistory);
     }
   }
-  
-  // 渲染伤害历史记录
+
   function renderDamageHistory() {
       // 渲染伤害投掷记录
       const damageContainer = document.getElementById('damageRollHistory');
@@ -4808,7 +4812,8 @@
           injuryContainer.innerHTML = html;
         }
       }
-    }}
+    }
+
   
   function renderHistory() {
     const listEl = document.getElementById('historyList');
@@ -5637,6 +5642,13 @@
           document.getElementById('displayUsername').textContent = currentUser;
           document.getElementById('userAvatar').textContent = currentUser.charAt(0).toUpperCase();
           loadRoomList();
+          // 检查是否有保存的房间，自动加入（重连恢复）
+          const lastRoomId = localStorage.getItem('lastRoomId');
+          if (lastRoomId) {
+            setTimeout(() => {
+              joinRoom(lastRoomId, false);
+            }, 500);
+          }
         });
 
         socket.on('auth_error', function(msg) {
@@ -5656,6 +5668,8 @@
           currentRoomData = room;
           isOnlineMode = true;
           showPage('roomPage');
+          // 保存房间ID到localStorage，用于重连后自动加入
+          localStorage.setItem('lastRoomId', room.id);
           document.getElementById('currentRoomName').textContent = room.name;
           updateMemberList(room.members, room.creator);
           
@@ -5701,6 +5715,7 @@
 
         // 房间被删除
         socket.on('room_deleted', function(data) {
+      localStorage.removeItem('lastRoomId');
           alert('房间已被房主删除');
           currentRoomId = null;
           currentRoomData = null;
@@ -5837,6 +5852,8 @@
 
     // 删除房间（仅房主）
     function deleteRoom() {
+      // 清除保存的房间ID
+      localStorage.removeItem('lastRoomId');
       if (!confirm('确定要删除这个房间吗？删除后无法恢复。')) return;
       
       if (socket && currentRoomId) {
@@ -5846,6 +5863,8 @@
 
     // 离开房间
     function leaveRoom() {
+      // 清除保存的房间ID
+      localStorage.removeItem('lastRoomId');
       if (socket && currentRoomId) {
         socket.emit('leave_room', { roomId: currentRoomId });
       }
