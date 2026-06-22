@@ -3159,6 +3159,25 @@
   #roomPage.offline-mode .room-sidebar {
     display: none !important;
   }
+
+  /* 手机模式强制隐藏成员列表 - 最高优先级 */
+  body.mobile-mode #roomSidebar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+  }
+  
+  body.mobile-mode .room-content {
+    width: 100% !important;
+    flex: 1 !important;
+    margin-left: 0 !important;
+  }
 </style>
 </head>
 <body>
@@ -3254,40 +3273,41 @@
 
     <!-- 成员列表开关按钮 -->
     <button id="memberToggleBtn" onclick="
-      const sidebar = document.getElementById('roomSidebar');
-      const btn = document.getElementById('memberToggleBtn');
-      const content = document.querySelector('.room-content');
-      if (sidebar.style.display === 'none') {
-        sidebar.style.display = '';
-        content.style.width = '';
-        btn.textContent = '✕';
-        btn.title = '隐藏成员列表';
-        localStorage.setItem('memberListVisible', 'true');
-      } else {
-        sidebar.style.display = 'none';
-        content.style.width = '100%';
-        btn.textContent = '👥';
-        btn.title = '显示成员列表';
-        localStorage.setItem('memberListVisible', 'false');
-      }
-    " style="
-      position: fixed;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      background: linear-gradient(135deg, #7c3aed, #a855f7);
-      color: white;
-      border: none;
-      border-radius: 12px 0 0 12px;
-      padding: 15px 8px;
-      font-size: 18px;
-      cursor: pointer;
-      z-index: 99999;
-      box-shadow: -2px 0 20px rgba(124, 58, 237, 0.6);
-      font-weight: bold;
-    ">
-      👥
-    </button>
+  const sidebar = document.getElementById('roomSidebar');
+  const btn = document.getElementById('memberToggleBtn');
+  const content = document.querySelector('.room-content');
+  const isHidden = sidebar.style.display === 'none' || sidebar.style.display === '';
+  if (isHidden) {
+    sidebar.style.setProperty('display', 'block', 'important');
+    content.style.setProperty('width', '', 'important');
+    btn.textContent = '✕';
+    btn.title = '隐藏成员列表';
+    localStorage.setItem('memberListVisible', 'true');
+  } else {
+    sidebar.style.setProperty('display', 'none', 'important');
+    content.style.setProperty('width', '100%', 'important');
+    btn.textContent = '👥';
+    btn.title = '显示成员列表';
+    localStorage.setItem('memberListVisible', 'false');
+  }
+" style="
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: white;
+  border: none;
+  border-radius: 12px 0 0 12px;
+  padding: 15px 8px;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 99999;
+  box-shadow: -2px 0 20px rgba(124, 58, 237, 0.6);
+  font-weight: bold;
+">
+  👥
+</button>
     <div class="room-body" id="roomBody">
       <div class="room-sidebar" id="roomSidebar">
         <div class="sidebar-title">👥 成员列表</div>
@@ -5692,8 +5712,8 @@
         
         // 电脑模式显示成员列表
         if (sidebar) {
-          sidebar.style.display = 'block';
-          if (content) content.style.width = '';
+          sidebar.style.setProperty('display', 'block', 'important');
+          if (content) content.style.setProperty('width', '', 'important');
           if (toggleBtn) {
             toggleBtn.textContent = '✕';
             toggleBtn.title = '隐藏成员列表';
@@ -5707,10 +5727,10 @@
         btn.classList.add('active');
         localStorage.setItem('mobileMode', 'true');
         
-        // 手机模式隐藏成员列表，给内容腾空间
+        // 手机模式强制隐藏成员列表，给内容腾空间
         if (sidebar) {
-          sidebar.style.display = 'none';
-          if (content) content.style.width = '100%';
+          sidebar.style.setProperty('display', 'none', 'important');
+          if (content) content.style.setProperty('width', '100%', 'important');
           if (toggleBtn) {
             toggleBtn.textContent = '👥';
             toggleBtn.title = '显示成员列表';
@@ -5765,18 +5785,18 @@
         
         if (sidebar && btn) {
           if (shouldShow) {
-            sidebar.style.display = 'block';
-            content.style.width = '';
+            sidebar.style.setProperty('display', 'block', 'important');
+            content.style.setProperty('width', '', 'important');
             btn.textContent = '✕';
             btn.title = '隐藏成员列表';
           } else {
-            sidebar.style.display = 'none';
-            content.style.width = '100%';
+            sidebar.style.setProperty('display', 'none', 'important');
+            content.style.setProperty('width', '100%', 'important');
             btn.textContent = '👥';
             btn.title = '显示成员列表';
           }
         }
-      }, 300);
+      }, 100);;
 ;
 
       const savedUser = localStorage.getItem('currentUser');
