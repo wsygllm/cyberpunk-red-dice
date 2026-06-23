@@ -4642,7 +4642,7 @@
         
         <button class="delete-room-btn" onclick="deleteRoom()" id="deleteRoomBtn" style="display: none;">🗑️ 删除房间</button>
         <button class="sound-toggle-btn" onclick="toggleSound()" id="soundToggleBtn">🔊 音效开</button>
-    <button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn">🌙 黑夜模式</button>
+    <button onclick="switchTheme()" class="theme-toggle-btn" id="themeToggleBtn">🌙 黑夜模式</button>
         <button class="mobile-toggle-btn" onclick="toggleMobileMode()" id="mobileToggleBtn">📱 手机模式</button>
         <div class="member-count" id="memberCount">0 人在线</div>
         <div class="connection-status">
@@ -4963,51 +4963,39 @@
 
     
 
-  // 主题切换功能 - 放在最前面确保全局可用
-  window.currentTheme = localStorage.getItem('dice-theme') || 'dark';
-  
-  // 立即应用主题（避免闪烁）
-  document.documentElement.classList.add(window.currentTheme + '-theme');
-  
-  function toggleTheme() {
-    if (window.currentTheme === 'dark') {
-      window.currentTheme = 'light';
+  // 最简单的主题切换函数（确保一定能工作）
+  function switchTheme() {
+    var html = document.documentElement;
+    var btn = document.getElementById('themeToggleBtn');
+    if (html.classList.contains('dark-theme')) {
+      // 切换到白天模式
+      html.classList.remove('dark-theme');
+      html.classList.add('light-theme');
+      localStorage.setItem('dice-theme', 'light');
+      if (btn) btn.innerHTML = '☀️ 白天模式';
     } else {
-      window.currentTheme = 'dark';
+      // 切换到黑夜模式
+      html.classList.remove('light-theme');
+      html.classList.add('dark-theme');
+      localStorage.setItem('dice-theme', 'dark');
+      if (btn) btn.innerHTML = '🌙 黑夜模式';
     }
-    localStorage.setItem('dice-theme', window.currentTheme);
-    applyTheme(window.currentTheme);
   }
   
-  function applyTheme(theme) {
-    const html = document.documentElement;
-    html.classList.remove('dark-theme', 'light-theme');
-    html.classList.add(theme + '-theme');
-    
-    // 更新所有主题切换按钮的文字
-    const btns = document.querySelectorAll('[id="themeToggleBtn"]');
-    btns.forEach(btn => {
-      if (theme === 'dark') {
-        btn.innerHTML = '🌙 黑夜模式';
-      } else {
-        btn.innerHTML = '☀️ 白天模式';
+  // 初始化主题
+  (function() {
+    var savedTheme = localStorage.getItem('dice-theme') || 'dark';
+    var html = document.documentElement;
+    html.classList.add(savedTheme + '-theme');
+    // 更新按钮文字（等DOM加载完）
+    document.addEventListener('DOMContentLoaded', function() {
+      var btn = document.getElementById('themeToggleBtn');
+      if (btn) {
+        btn.innerHTML = savedTheme === 'dark' ? '🌙 黑夜模式' : '☀️ 白天模式';
       }
     });
-  }
-  function initTheme() {
-    const savedTheme = localStorage.getItem('dice-theme');
-    if (savedTheme) {
-      window.currentTheme = savedTheme;
-    }
-    applyTheme(window.currentTheme);
-  }
+  })();
   
-  // 挂载到全局，确保 onclick 能调用到
-  window.toggleTheme = toggleTheme;
-  window.applyTheme = applyTheme;
-  window.initTheme = initTheme;
-
-
 // ==================== 完整工具 JS ====================
 
   // ==================== 通用数据 ====================
@@ -5363,7 +5351,7 @@
   // ==================== 初始化 ====================
   function init() {
     // 初始化主题
-    initTheme();
+    // 主题已在脚本开头初始化
     
     renderPlayers();
     renderPlayerList();
@@ -5392,14 +5380,7 @@
       }
     }
     
-    // 给主题切换按钮绑定事件（双保险）
-    var themeBtn = document.getElementById('themeToggleBtn');
-    if (themeBtn) {
-      themeBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        toggleTheme();
-      });
-    }
+
   }
   
   // ==================== 第一页：技能对抗 ====================
