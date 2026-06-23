@@ -4994,6 +4994,14 @@
       }
     });
   }
+  function initTheme() {
+    const savedTheme = localStorage.getItem('dice-theme');
+    if (savedTheme) {
+      window.currentTheme = savedTheme;
+    }
+    applyTheme(window.currentTheme);
+  }
+  
   // 挂载到全局，确保 onclick 能调用到
   window.toggleTheme = toggleTheme;
   window.applyTheme = applyTheme;
