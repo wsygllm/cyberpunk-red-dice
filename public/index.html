@@ -5061,53 +5061,158 @@
       initAudio();
       if (!audioContext) return;
     }
-    
-    const now = audioContext.currentTime;
-    
-    // 生成多个短促的撞击声，模拟骰子滚动
-    const bounceCount = 6 + Math.floor(Math.random() * 4); // 6-9次撞击
-    
-    for (let i = 0; i < bounceCount; i++) {
-      const time = now + i * (0.08 + Math.random() * 0.05);
-      const freq = 1500 + Math.random() * 2000;
-      const volume = 0.1 + Math.random() * 0.15 - (i * 0.01);
-      
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(freq, time);
-      osc.frequency.exponentialRampToValueAtTime(freq * 0.5, time + 0.05);
-      
-      gain.gain.setValueAtTime(0, time);
-      gain.gain.linearRampToValueAtTime(Math.max(0.05, volume), time + 0.005);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
-      
-      osc.connect(gain);
-      gain.connect(audioContext.destination);
-      
-      osc.start(time);
-      osc.stop(time + 0.1);
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
     }
     
-    // 最后一声落定的声音
-    const landTime = now + bounceCount * 0.1;
-    const osc2 = audioContext.createOscillator();
-    const gain2 = audioContext.createGain();
+    const now = audioContext.currentTime;
+    const sampleRate = audioContext.sampleRate;
     
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(800, landTime);
-    osc2.frequency.exponentialRampToValueAtTime(200, landTime + 0.15);
+    // 生成白噪音 buffer（用于碰撞声和滚动声）
+    function createNoiseBuffer(duration) {
+      const bufferSize = Math.floor(sampleRate * duration);
+      const buffer = audioContext.createBuffer(1, bufferSize, sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      return buffer;
+    }
     
-    gain2.gain.setValueAtTime(0, landTime);
-    gain2.gain.linearRampToValueAtTime(0.2, landTime + 0.01);
-    gain2.gain.exponentialRampToValueAtTime(0.001, landTime + 0.2);
+    // 播放一次碰撞声
+    function playBounce(time, volume, freqLow, freqHigh, decay) {
+      const noise = audioContext.createBufferSource();
+      noise.buffer = createNoiseBuffer(0.15);
+      
+      const bandpass = audioContext.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.value = (freqLow + freqHigh) / 2;
+      bandpass.Q.value = 0.8;
+      
+      const highpass = audioContext.createBiquadFilter();
+      highpass.type = 'highpass';
+      highpass.frequency.value = freqLow;
+      
+      const gain = audioContext.createGain();
+      gain.gain.setValueAtTime(0, time);
+      gain.gain.linearRampToValueAtTime(volume, time + 0.003);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+      
+      noise.connect(bandpass);
+      bandpass.connect(highpass);
+      highpass.connect(gain);
+      gain.connect(audioContext.destination);
+      
+      noise.start(time);
+      noise.stop(time + decay);
+    }
     
-    osc2.connect(gain2);
-    gain2.connect(audioContext.destination);
+    // 播放滚动摩擦声
+    function playRollSound(startTime, endTime, volume) {
+      const duration = endTime - startTime;
+      const noise = audioContext.createBufferSource();
+      noise.buffer = createNoiseBuffer(duration);
+      
+      const lowpass = audioContext.createBiquadFilter();
+      lowpass.type = 'lowpass';
+      lowpass.frequency.value = 2000;
+      lowpass.Q.value = 0.5;
+      
+      const highpass = audioContext.createBiquadFilter();
+      highpass.type = 'highpass';
+      highpass.frequency.value = 300;
+      
+      const gain = audioContext.createGain();
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(volume * 0.3, startTime + 0.05);
+      gain.gain.linearRampToValueAtTime(volume * 0.1, endTime - 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, endTime);
+      
+      noise.connect(lowpass);
+      lowpass.connect(highpass);
+      highpass.connect(gain);
+      gain.connect(audioContext.destination);
+      
+      noise.start(startTime);
+      noise.stop(endTime);
+    }
     
-    osc2.start(landTime);
-    osc2.stop(landTime + 0.25);
+    // 总时长
+    const totalDuration = 0.4 + Math.random() * 0.2; // 0.4-0.6秒
+    
+    // 播放滚动摩擦背景声
+    playRollSound(now, now + totalDuration, 0.08);
+    
+    // 生成多次碰撞
+    const bounceCount = 8 + Math.floor(Math.random() * 5); // 8-12次碰撞
+    let currentTime = now + 0.02;
+    
+    for (let i = 0; i < bounceCount; i++) {
+      // 时间间隔逐渐变大（骰子减速）
+      const interval = 0.03 + (i / bounceCount) * 0.08 + Math.random() * 0.02;
+      currentTime += interval;
+      
+      if (currentTime > now + totalDuration - 0.05) break;
+      
+      // 音量逐渐变小
+      const volume = 0.15 - (i / bounceCount) * 0.08 + Math.random() * 0.03;
+      
+      // 频率随机变化（不同角度碰撞）
+      const freqLow = 800 + Math.random() * 600;
+      const freqHigh = 3000 + Math.random() * 2000;
+      
+      // 衰减时间
+      const decay = 0.05 + Math.random() * 0.05;
+      
+      playBounce(currentTime, Math.max(0.03, volume), freqLow, freqHigh, decay);
+    }
+    
+    // 最后一声落定声（更沉、更响）
+    const landTime = now + totalDuration - 0.05;
+    
+    // 落定的碰撞声
+    const landNoise = audioContext.createBufferSource();
+    landNoise.buffer = createNoiseBuffer(0.2);
+    
+    const landBandpass = audioContext.createBiquadFilter();
+    landBandpass.type = 'bandpass';
+    landBandpass.frequency.value = 600;
+    landBandpass.Q.value = 0.6;
+    
+    const landLowpass = audioContext.createBiquadFilter();
+    landLowpass.type = 'lowpass';
+    landLowpass.frequency.value = 1500;
+    
+    const landGain = audioContext.createGain();
+    landGain.gain.setValueAtTime(0, landTime);
+    landGain.gain.linearRampToValueAtTime(0.2, landTime + 0.005);
+    landGain.gain.exponentialRampToValueAtTime(0.001, landTime + 0.15);
+    
+    landNoise.connect(landBandpass);
+    landBandpass.connect(landLowpass);
+    landLowpass.connect(landGain);
+    landGain.connect(audioContext.destination);
+    
+    landNoise.start(landTime);
+    landNoise.stop(landTime + 0.2);
+    
+    // 加一个低频的"咚"声，模拟骰子落到桌面
+    const thudOsc = audioContext.createOscillator();
+    const thudGain = audioContext.createGain();
+    
+    thudOsc.type = 'sine';
+    thudOsc.frequency.setValueAtTime(150, landTime);
+    thudOsc.frequency.exponentialRampToValueAtTime(50, landTime + 0.1);
+    
+    thudGain.gain.setValueAtTime(0, landTime);
+    thudGain.gain.linearRampToValueAtTime(0.15, landTime + 0.01);
+    thudGain.gain.exponentialRampToValueAtTime(0.001, landTime + 0.12);
+    
+    thudOsc.connect(thudGain);
+    thudGain.connect(audioContext.destination);
+    
+    thudOsc.start(landTime);
+    thudOsc.stop(landTime + 0.15);
   }
 
   // 切换音效开关
