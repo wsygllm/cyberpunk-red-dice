@@ -1028,9 +1028,9 @@
     transition: all 0.3s ease;
     position: relative;
   }
-  .player-card.rank-1 { }
-  .player-card.rank-2 { }
-  .player-card.rank-3 { }
+  .player-card.rank-1 { /* 排名功能已移除 */ }
+  .player-card.rank-2 { /* 排名功能已移除 */ }
+  .player-card.rank-3 { /* 排名功能已移除 */ }
   .player-card.tied {
     border-color: #f9ed69;
   }
@@ -1066,6 +1066,7 @@
     opacity: 1;
   }
   .rank-badge {
+    display: none !important;
     background: rgba(229, 62, 62, 0.1);
     color: #e53e3e;
     border: 1px solid #fc8181;
@@ -3964,6 +3965,7 @@
   
   /* 排名徽章 - 黑夜模式 */
   html.dark-theme body .rank-badge {
+    display: none !important;
     background: rgba(0, 0, 0, 0.5) !important;
     color: #fff !important;
   }
@@ -5446,9 +5448,7 @@
                         player.isCritical === 'fail' ? 'critical-fail' : '';
       
       return `
-        <div class="player-card ${criticalClass}" id="player-${player.id}">
-          <div class="rank-badge">1</div>
-          <div class="critical-badge">${criticalText}</div>
+        <div class="player-card ${criticalClass}" id="player-${player.id}"><div class="critical-badge">${criticalText}</div>
           
           <input type="text" class="player-name-input" value="${player.name}" 
                  onchange="updatePlayerName(${player.id}, this.value)" maxlength="10">
@@ -5981,52 +5981,11 @@
   }
   
   function updateRanks() {
-    const validPlayers = players.filter(p => p.total !== null);
-    if (validPlayers.length < 2) return;
-    
-    const sorted = [...validPlayers].sort((a, b) => b.total - a.total);
-    clearRanks();
-    
-    const maxTotal = sorted[0].total;
-    const winners = sorted.filter(p => p.total === maxTotal);
-    const isTie = winners.length > 1;
-    
-    if (isTie) {
-      winners.forEach(p => {
-        const card = document.getElementById(`player-${p.id}`);
-        if (card) card.classList.add('tied');
-      });
-      document.getElementById('resultText').textContent = `⚖️ ${winners.map(w => w.name).join('、')} 平局！`;
-      document.getElementById('resultText').style.color = '#f9ed69';
-    } else {
-      let rank = 1;
-      let prevTotal = null;
-      
-      sorted.forEach((player, index) => {
-        if (prevTotal !== null && player.total < prevTotal) {
-          rank = index + 1;
-        }
-        prevTotal = player.total;
-        
-        if (rank <= 3) {
-          const card = document.getElementById(`player-${player.id}`);
-          if (card) {
-            card.classList.add(`rank-${rank}`);
-            const badge = card.querySelector('.rank-badge');
-            if (badge) badge.textContent = rank;
-          }
-        }
-      });
-    }
+    // 排名功能已移除
   }
   
   function clearRanks() {
-    players.forEach(player => {
-      const card = document.getElementById(`player-${player.id}`);
-      if (card) {
-        card.classList.remove('rank-1', 'rank-2', 'rank-3', 'tied');
-      }
-    });
+    // 排名功能已移除
   }
   
   function showResult(results) {
