@@ -1029,17 +1029,16 @@
     position: relative;
   }
   .player-card.rank-1 {
-    border-color: #ffd700;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-    transform: scale(1.03);
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    color: #fff;
   }
   .player-card.rank-2 {
-    border-color: #c0c0c0;
-    box-shadow: 0 0 20px rgba(192, 192, 192, 0.3);
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    color: #fff;
   }
   .player-card.rank-3 {
-    border-color: #cd7f32;
-    box-shadow: 0 0 15px rgba(205, 127, 50, 0.3);
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    color: #fff;
   }
   .player-card.tied {
     border-color: #f9ed69;
@@ -3990,9 +3989,18 @@
     color: #fff !important;
   }
   
-  html.dark-theme body .rank-1 { background: linear-gradient(135deg, #ffd700 0%, #ffb800 100%) !important; color: #000 !important; }
-  html.dark-theme body .rank-2 { background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%) !important; color: #000 !important; }
-  html.dark-theme body .rank-3 { background: linear-gradient(135deg, #cd7f32 0%, #b87333 100%) !important; color: #fff !important; }
+  html.dark-theme body .rank-1 {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    color: #fff;
+  }
+  html.dark-theme body .rank-2 {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    color: #fff;
+  }
+  html.dark-theme body .rank-3 {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    color: #fff;
+  }
   
   /* 大成功/大失败 - 黑夜模式 */
   html.dark-theme body .crit-success {
@@ -4569,6 +4577,40 @@
     box-shadow: 0 3px 10px rgba(229, 62, 62, 0.2) !important;
   }
 </style>
+
+<script>
+  // 主题切换功能 - 放在最前面确保全局可用
+  window.currentTheme = localStorage.getItem('dice-theme') || 'dark';
+  
+  // 立即应用主题（避免闪烁）
+  document.documentElement.classList.add(window.currentTheme + '-theme');
+  
+  function toggleTheme() {
+    if (window.currentTheme === 'dark') {
+      window.currentTheme = 'light';
+    } else {
+      window.currentTheme = 'dark';
+    }
+    localStorage.setItem('dice-theme', window.currentTheme);
+    applyTheme(window.currentTheme);
+  }
+  
+  function applyTheme(theme) {
+    const html = document.documentElement;
+    html.classList.remove('dark-theme', 'light-theme');
+    html.classList.add(theme + '-theme');
+    
+    // 更新所有主题切换按钮的文字
+    const btns = document.querySelectorAll('[id="themeToggleBtn"]');
+    btns.forEach(btn => {
+      if (theme === 'dark') {
+        btn.innerHTML = '🌙 黑夜模式';
+      } else {
+        btn.innerHTML = '☀️ 白天模式';
+      }
+    });
+  }
+</script>
 </head>
 <body>
 <script>
@@ -5363,10 +5405,7 @@
   }
   
   // ==================== 初始化 ====================
-  function init() {
-    // 初始化主题
-    initTheme();
-    renderPlayers();
+  function init() {    renderPlayers();
     renderPlayerList();
     updateInjuryPlayerSelect();
     renderPlayerChips();
@@ -7635,42 +7674,6 @@
 
 }
   
-  // 主题切换功能
-  let currentTheme = 'dark'; // 默认黑夜模式
-  
-  function initTheme() {
-    const savedTheme = localStorage.getItem('dice-theme');
-    if (savedTheme) {
-      currentTheme = savedTheme;
-    }
-    applyTheme(currentTheme);
-  }
-  
-  function toggleTheme() {
-    if (currentTheme === 'dark') {
-      currentTheme = 'light';
-    } else {
-      currentTheme = 'dark';
-    }
-    localStorage.setItem('dice-theme', currentTheme);
-    applyTheme(currentTheme);
-  }
-  
-  function applyTheme(theme) {
-    const body = document.body;
-    body.classList.remove('dark-theme', 'light-theme');
-    body.classList.add(theme + '-theme');
-    
-    // 更新按钮文字（显示当前模式）
-    const btn = document.getElementById('themeToggleBtn');
-    if (btn) {
-      if (theme === 'dark') {
-        btn.innerHTML = '🌙 黑夜模式';
-      } else {
-        btn.innerHTML = '☀️ 白天模式';
-      }
-    }
-  }
-</script>
+  </script>
 </body>
 </html>
