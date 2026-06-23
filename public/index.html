@@ -680,12 +680,16 @@
 
   /* ==================== 手机模式 ==================== */
   /* 手机版UI整体缩小45%（原来的55%大小） */
-  body.mobile-mode {
+  bodybody.mobile-mode {
     zoom: 0.55;
     -moz-transform: scale(0.55);
     -moz-transform-origin: top left;
-    width: calc(100vw / 0.55);
-    min-height: calc(100vh / 0.55);
+    width: calc(100vw / 0.55) !important;
+    min-height: calc(100vh / 0.55) !important;
+    height: calc(100vh / 0.55) !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   body.mobile-mode .room-content {
@@ -4535,20 +4539,13 @@
   
   /* 修复手机模式下扫描线背景遮挡问题 */
 
-  /* 手机模式底部空白修复补充 */
-  html.mobile-mode,
-  body.mobile-mode {
-    width: 100%;
+  /* 确保 html 占满，不影响 zoom 计算 */
+  html {
     height: 100%;
+    width: 100%;
     overflow: hidden;
-  }
-  
-  .mobile-mode .room-container,
-  .mobile-mode .lobby-container,
-  .mobile-mode .login-container {
-    width: 100%;
-    height: 100%;
-    min-height: 100%;
+    margin: 0;
+    padding: 0;
   }
 </style>
 </head>
