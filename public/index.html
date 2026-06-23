@@ -2619,6 +2619,119 @@ body.mobile-mode .player-grid {
     line-height: 1.5;
   }
 
+  /* ==================== 重伤选择模态框 ==================== */
+  .injury-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+  }
+
+  .injury-modal {
+    background: #1a1a2e;
+    border: 1px solid #e94560;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+  }
+
+  .injury-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #333;
+  }
+
+  .injury-modal-header h3 {
+    margin: 0;
+    color: #e94560;
+    font-size: 16px;
+  }
+
+  .injury-modal-close {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+  }
+
+  .injury-modal-close:hover {
+    color: #e94560;
+  }
+
+  .injury-modal-tabs {
+    display: flex;
+    border-bottom: 1px solid #333;
+  }
+
+  .injury-tab {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 2px solid transparent;
+  }
+
+  .injury-tab.active {
+    color: #e94560;
+    border-bottom-color: #e94560;
+  }
+
+  .injury-modal-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .injury-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .injury-item {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .injury-item:hover {
+    background: rgba(233, 69, 96, 0.1);
+    border-color: #e94560;
+  }
+
+  .injury-item-name {
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
+  .injury-item-effect {
+    font-size: 12px;
+    color: #999;
+    line-height: 1.4;
+  }
+
   /* ==================== 地图页面 ==================== */
   .map-container {
     display: flex;
@@ -5855,18 +5968,77 @@ body.mobile-mode .player-grid {
     const player = players.find(p => p.id === playerId);
     if (!player) return;
     
-    // 简单起见，直接添加一个示例重伤，实际可以做选择器
-    // 这里先添加一个默认的重伤，后续可以优化
-    const defaultInjuries = [
-      { name: '断臂', effect: '失去断掉的那只手臂，手里东西掉落，基础死亡豁免惩罚+1', isHead: false },
-      { name: '肠胃撕裂', effect: '每回合损失1体格，30分钟未处理死亡', isHead: false },
-      { name: '气胸', effect: '每回合损失1敏捷，30分钟未处理死亡', isHead: false },
-      { name: '脑震荡', effect: '跳过一回合', isHead: true },
-      { name: '目盲', effect: '双眼暂时失明，-10战斗技能、闪避和视觉感知', isHead: true }
-    ];
+    if (!player.injuries) player.injuries = [];
+    if (player.injuries.length >= 5) {
+      alert('最多只能有5个重伤状态');
+      return;
+    }
     
-    // 随机添加一个（实际应该让用户选择，这里简化处理）
-    const randomInjury = defaultInjuries[Math.floor(Math.random() * defaultInjuries.length)];
+    // 保存当前玩家ID
+    window.currentInjuryPlayerId = playerId;
+    
+    // 创建模态框
+    const modal = document.createElement('div');
+    modal.className = 'injury-modal-overlay';
+    modal.id = 'injuryModal';
+    
+    modal.innerHTML = `
+      <div class="injury-modal">
+        <div class="injury-modal-header">
+          <h3>选择重伤类型</h3>
+          <button class="injury-modal-close" onclick="closeInjuryModal()">✕</button>
+        </div>
+        <div class="injury-modal-tabs">
+          <button class="injury-tab active" onclick="switchInjuryTab('torso')">躯干伤势</button>
+          <button class="injury-tab" onclick="switchInjuryTab('head')">头部伤势</button>
+        </div>
+        <div class="injury-modal-content" id="injuryModalContent">
+          ${renderInjuryList('torso', playerId)}
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // 点击背景关闭
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeInjuryModal();
+      }
+    });
+  }
+  
+  function switchInjuryTab(type) {
+    const tabs = document.querySelectorAll('.injury-tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    const content = document.getElementById('injuryModalContent');
+    const playerId = window.currentInjuryPlayerId;
+    content.innerHTML = renderInjuryList(type, playerId);
+  }
+  
+  function renderInjuryList(type, playerId) {
+    const injuryTable = type === 'head' ? headInjuries : torsoInjuries;
+    let html = '<div class="injury-list">';
+    
+    Object.keys(injuryTable).forEach(key => {
+      const injury = injuryTable[key];
+      html += `
+        <div class="injury-item" onclick="addPlayerInjury(${playerId}, '${type}', ${key})">
+          <div class="injury-item-name">${key}. ${injury.name}</div>
+          <div class="injury-item-effect">${injury.effect}</div>
+        </div>
+      `;
+    });
+    
+    html += '</div>';
+    return html;
+  }
+  
+  function addPlayerInjury(playerId, type, roll) {
+    const player = players.find(p => p.id === playerId);
+    if (!player) return;
     
     if (!player.injuries) player.injuries = [];
     if (player.injuries.length >= 5) {
@@ -5874,9 +6046,27 @@ body.mobile-mode .player-grid {
       return;
     }
     
-    player.injuries.push({ ...randomInjury });
-    syncRoomData('players');
-    renderStatusGrid();
+    const injuryTable = type === 'head' ? headInjuries : torsoInjuries;
+    const injury = injuryTable[roll];
+    
+    if (injury) {
+      player.injuries.push({ 
+        name: injury.name, 
+        effect: injury.effect, 
+        isHead: type === 'head' 
+      });
+      syncRoomData('players');
+      renderStatusGrid();
+    }
+    
+    closeInjuryModal();
+  }
+  
+  function closeInjuryModal() {
+    const modal = document.getElementById('injuryModal');
+    if (modal) {
+      modal.remove();
+    }
   }
   
   function removePlayerInjury(playerId, injuryIndex) {
@@ -7426,6 +7616,35 @@ body.mobile-mode .player-grid {
       // 获取目标角色
       const targetSelect = document.getElementById('damageTargetSelect');
       const targetName = targetSelect ? targetSelect.value : '';
+      
+      // 暴击时自动给目标添加重伤
+      if (isCrit && targetName && typeof players !== 'undefined') {
+        const targetPlayer = players.find(p => p.name === targetName);
+        if (targetPlayer) {
+          if (!targetPlayer.injuries) targetPlayer.injuries = [];
+          if (targetPlayer.injuries.length < 5) {
+            // 随机添加一个躯干重伤
+            const injuryKeys = Object.keys(torsoInjuries);
+            const randomKey = injuryKeys[Math.floor(Math.random() * injuryKeys.length)];
+            const randomInjury = torsoInjuries[randomKey];
+            targetPlayer.injuries.push({ 
+              name: randomInjury.name, 
+              effect: randomInjury.effect, 
+              isHead: false 
+            });
+            
+            // 同步到服务器
+            if (typeof syncRoomData === 'function') {
+              syncRoomData('players');
+            }
+            
+            // 更新玩家状态页面
+            if (typeof renderStatusGrid === 'function') {
+              renderStatusGrid();
+            }
+          }
+        }
+      }
       
       // 添加历史记录
       addDamageHistory('damage', {
