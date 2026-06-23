@@ -712,7 +712,41 @@
     font-size: 12px;
   }
 
-  body.mobile-mode .player-grid {
+  
+  body.mobile-mode .map-container {
+    height: calc(100vh / 0.55 - 100px);
+  }
+  
+  body.mobile-mode .map-main {
+    flex-direction: column;
+  }
+  
+  body.mobile-mode .map-frame-wrapper {
+    height: 50%;
+    min-height: 300px;
+  }
+  
+  body.mobile-mode .map-records-panel {
+    width: 100%;
+    height: 40%;
+    min-height: 200px;
+  }
+  
+  body.mobile-mode .map-url-bar {
+    padding: 8px;
+    gap: 6px;
+  }
+  
+  body.mobile-mode .map-url-input {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  
+  body.mobile-mode .map-url-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+body.mobile-mode .player-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 10px !important;
   }
@@ -2314,6 +2348,190 @@
   .memo-tab-content {
     display: none;
   }
+  
+  /* ==================== 地图页面 ==================== */
+  .map-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+    gap: 12px;
+  }
+  
+  .map-url-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    background: rgba(229, 62, 62, 0.05);
+    border: 1px solid rgba(229, 62, 62, 0.2);
+    border-radius: 8px;
+  }
+  
+  .map-url-input {
+    flex: 1;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #fc8181;
+    border-radius: 6px;
+    color: #333;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s;
+  }
+  
+  .map-url-input:focus {
+    outline: none;
+    border-color: #e53e3e;
+    box-shadow: 0 0 8px rgba(229, 62, 62, 0.3);
+  }
+  
+  .map-url-btn {
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #e53e3e, #c53030);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+  
+  .map-url-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+  }
+  
+  .map-url-btn.secondary {
+    background: transparent;
+    color: #e53e3e;
+    border: 1px solid #e53e3e;
+  }
+  
+  .map-url-btn.secondary:hover {
+    background: rgba(229, 62, 62, 0.1);
+  }
+  
+  .map-main {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    min-height: 0;
+  }
+  
+  .map-frame-wrapper {
+    flex: 1;
+    background: white;
+    border: 1px solid rgba(229, 62, 62, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 0;
+  }
+  
+  .map-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+  
+  .map-records-panel {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(229, 62, 62, 0.03);
+    border: 1px solid rgba(229, 62, 62, 0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  
+  .map-records-tabs {
+    display: flex;
+    background: rgba(229, 62, 62, 0.08);
+    border-bottom: 1px solid rgba(229, 62, 62, 0.15);
+  }
+  
+  .map-record-tab {
+    flex: 1;
+    padding: 10px 8px;
+    background: transparent;
+    border: none;
+    color: #666;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s;
+    border-bottom: 2px solid transparent;
+  }
+  
+  .map-record-tab:hover {
+    background: rgba(229, 62, 62, 0.05);
+  }
+  
+  .map-record-tab.active {
+    color: #e53e3e;
+    font-weight: bold;
+    border-bottom-color: #e53e3e;
+    background: rgba(229, 62, 62, 0.05);
+  }
+  
+  .map-records-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  
+  .map-record-item {
+    display: none;
+  }
+  
+  .map-record-item.active {
+    display: block;
+  }
+  
+  /* 记录条目样式 */
+  .map-record-entry {
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(229, 62, 62, 0.1);
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  
+  .map-record-entry .record-time {
+    font-size: 10px;
+    color: #999;
+    margin-bottom: 4px;
+  }
+  
+  .map-record-entry .record-title {
+    font-weight: bold;
+    color: #e53e3e;
+    margin-bottom: 4px;
+  }
+  
+  .map-record-entry .record-detail {
+    color: #555;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  
+  .map-record-entry.crit {
+    border-left: 3px solid #ffd700;
+    background: rgba(255, 215, 0, 0.05);
+  }
+  
+  .map-empty {
+    text-align: center;
+    color: #999;
+    padding: 30px 10px;
+    font-size: 12px;
+  }
+
   .memo-tab-content.active {
     display: block;
   }
@@ -3969,6 +4187,73 @@
     background: rgba(0, 0, 0, 0.5) !important;
     color: #fff !important;
   }
+    
+    /* 地图页面 - 黑夜模式 */
+    html.dark-theme body .map-url-bar {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(229, 62, 62, 0.3);
+    }
+    
+    html.dark-theme body .map-url-input {
+      background: rgba(0, 0, 0, 0.5);
+      border-color: rgba(229, 62, 62, 0.4);
+      color: #e0e0e0;
+    }
+    
+    html.dark-theme body .map-url-input:focus {
+      border-color: #e53e3e;
+    }
+    
+    html.dark-theme body .map-frame-wrapper {
+      background: #1a1a1a;
+      border-color: rgba(229, 62, 62, 0.3);
+    }
+    
+    html.dark-theme body .map-records-panel {
+      background: rgba(0, 0, 0, 0.2);
+      border-color: rgba(229, 62, 62, 0.2);
+    }
+    
+    html.dark-theme body .map-records-tabs {
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom-color: rgba(229, 62, 62, 0.2);
+    }
+    
+    html.dark-theme body .map-record-tab {
+      color: #888;
+    }
+    
+    html.dark-theme body .map-record-tab.active {
+      color: #e53e3e;
+      background: rgba(229, 62, 62, 0.1);
+    }
+    
+    html.dark-theme body .map-record-entry {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(229, 62, 62, 0.15);
+    }
+    
+    html.dark-theme body .map-record-entry .record-time {
+      color: #666;
+    }
+    
+    html.dark-theme body .map-record-entry .record-title {
+      color: #fc8181;
+    }
+    
+    html.dark-theme body .map-record-entry .record-detail {
+      color: #aaa;
+    }
+    
+    html.dark-theme body .map-record-entry.crit {
+      border-left-color: #ffd700;
+      background: rgba(255, 215, 0, 0.08);
+    }
+    
+    html.dark-theme body .map-empty {
+      color: #666;
+    }
+
   
   html.dark-theme body .rank-1 { }
   html.dark-theme body .rank-2 { }
@@ -4767,6 +5052,7 @@
       <button class="tab-btn active" onclick="switchMainTab('battle')">⚔️ 技能对抗</button>
       <button class="tab-btn" onclick="switchMainTab('damage')">💥 伤害 & 暴击</button>
       <button class="tab-btn" onclick="switchMainTab('memo')">📝 备忘录</button>
+          <button class="tab-btn" onclick="switchMainTab('map')">🗺️ 地图</button>
       
     </div>
     
@@ -4946,6 +5232,51 @@
         </div>
       </div>
     </div>
+      
+      <div id="tab-map" class="tab-content">
+        <div class="map-container">
+          <!-- 网址输入栏 -->
+          <div class="map-url-bar">
+            <input type="text" id="mapUrlInput" class="map-url-input" 
+                   placeholder="输入 Owlbear Rodeo 房间网址..." 
+                   value="https://owlbear.rodeo"
+                   onkeydown="if(event.key==='Enter') loadMapUrl()">
+            <button class="map-url-btn" onclick="loadMapUrl()">🔄 跳转</button>
+            <button class="map-url-btn secondary" onclick="openMapNewTab()">🔗 新窗口</button>
+          </div>
+          
+          <!-- 主内容区 -->
+          <div class="map-main">
+            <!-- 地图 iframe -->
+            <div class="map-frame-wrapper">
+              <iframe id="mapIframe" class="map-iframe" 
+                      src="https://owlbear.rodeo"
+                      sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+              </iframe>
+            </div>
+            
+            <!-- 记录面板 -->
+            <div class="map-records-panel">
+              <div class="map-records-tabs">
+                <button class="map-record-tab active" data-tab="battle" onclick="switchMapRecordTab('battle')">
+                  ⚔️ 对抗
+                </button>
+                <button class="map-record-tab" data-tab="damage" onclick="switchMapRecordTab('damage')">
+                  💥 伤害
+                </button>
+                <button class="map-record-tab" data-tab="injury" onclick="switchMapRecordTab('injury')">
+                  🩹 重伤
+                </button>
+              </div>
+              <div class="map-records-content">
+                <div id="map-record-battle" class="map-record-item active"></div>
+                <div id="map-record-damage" class="map-record-item"></div>
+                <div id="map-record-injury" class="map-record-item"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     
   </div>
 
@@ -5058,6 +5389,167 @@
     event.target.classList.add('active');
   }
   
+  // ==================== 地图页面 ====================
+  
+  function loadMapUrl() {
+    const input = document.getElementById('mapUrlInput');
+    const iframe = document.getElementById('mapIframe');
+    if (!input || !iframe) return;
+    
+    let url = input.value.trim();
+    if (!url) return;
+    
+    // 如果没有 http 前缀，自动加上
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+      input.value = url;
+    }
+    
+    iframe.src = url;
+    
+    // 保存到 localStorage
+    try {
+      localStorage.setItem('lastMapUrl', url);
+    } catch(e) {}
+  }
+  
+  function openMapNewTab() {
+    const input = document.getElementById('mapUrlInput');
+    if (!input) return;
+    
+    let url = input.value.trim();
+    if (!url) return;
+    
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+    
+    window.open(url, '_blank');
+  }
+  
+  function switchMapRecordTab(tab) {
+    // 切换标签按钮
+    document.querySelectorAll('.map-record-tab').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.dataset.tab === tab) {
+        btn.classList.add('active');
+      }
+    });
+    
+    // 切换内容
+    document.querySelectorAll('.map-record-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    const target = document.getElementById('map-record-' + tab);
+    if (target) {
+      target.classList.add('active');
+    }
+  }
+  
+  // 渲染地图页面的所有记录
+  function renderMapRecords() {
+    renderMapBattleRecords();
+    renderMapDamageRecords();
+    renderMapInjuryRecords();
+  }
+  
+  // 渲染对抗记录
+  function renderMapBattleRecords() {
+    const container = document.getElementById('map-record-battle');
+    if (!container) return;
+    
+    if (!battleHistory || battleHistory.length === 0) {
+      container.innerHTML = '<div class="map-empty">暂无对抗记录</div>';
+      return;
+    }
+    
+    // 只显示最近 20 条（battleHistory 最新的在前面）
+    const recent = battleHistory.slice(0, 20);
+    
+    container.innerHTML = recent.map(round => {
+      const resultsHtml = round.results.map(r => {
+        const critClass = r.isCritical === 'success' ? 'crit' : '';
+        const critText = r.isCritical === 'success' ? ' ⭐' : r.isCritical === 'fail' ? ' 💀' : '';
+        return `<div style="margin: 2px 0;">${r.name}: <strong>${r.total}</strong>${critText}</div>`;
+      }).join('');
+      
+      return `
+        <div class="map-record-entry">
+          <div class="record-time">${round.time}</div>
+          <div class="record-title">第 ${round.round} 回合</div>
+          <div class="record-detail">${resultsHtml}</div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  // 渲染伤害记录
+  function renderMapDamageRecords() {
+    const container = document.getElementById('map-record-damage');
+    if (!container) return;
+    
+    // 从 damageHistory 里筛选伤害类型
+    const damageRecords = (damageHistory || []).filter(h => h.type === 'damage');
+    
+    if (damageRecords.length === 0) {
+      container.innerHTML = '<div class="map-empty">暂无伤害记录</div>';
+      return;
+    }
+    
+    // 只显示最近 20 条
+    const recent = damageRecords.slice(-20).reverse();
+    
+    container.innerHTML = recent.map(rec => {
+      const critClass = rec.isCrit ? 'crit' : '';
+      const critText = rec.isCrit ? ' 💥 暴击！' : '';
+      const targetText = rec.target ? ` → ${rec.target}` : '';
+      
+      return `
+        <div class="map-record-entry ${critClass}">
+          <div class="record-time">${rec.time}</div>
+          <div class="record-title">${rec.playerName}${targetText}</div>
+          <div class="record-detail">
+            <div>公式: ${rec.formula}</div>
+            <div><strong>总伤害: ${rec.total}</strong>${critText}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  // 渲染重伤记录
+  function renderMapInjuryRecords() {
+    const container = document.getElementById('map-record-injury');
+    if (!container) return;
+    
+    // 从 damageHistory 里筛选伤势类型
+    const injuryRecords = (damageHistory || []).filter(h => h.type === 'injury');
+    
+    if (injuryRecords.length === 0) {
+      container.innerHTML = '<div class="map-empty">暂无重伤记录</div>';
+      return;
+    }
+    
+    // 只显示最近 20 条
+    const recent = injuryRecords.slice(-20).reverse();
+    
+    container.innerHTML = recent.map(rec => {
+      const bodyPart = rec.isHead ? '头部' : '躯干';
+      
+      return `
+        <div class="map-record-entry">
+          <div class="record-time">${rec.time}</div>
+          <div class="record-title">${rec.victim} - ${bodyPart}伤势</div>
+          <div class="record-detail">
+            <div><strong>${rec.name}</strong></div>
+            <div style="margin-top: 4px; font-size: 10px; color: #888;">${rec.effect}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  
   // ==================== 音效系统 ====================
   let audioCtx = null;
   let soundEnabled = true;
@@ -5070,6 +5562,19 @@
         console.log('不支持音频');
       }
     }
+      
+    // 初始化地图页面
+    if (typeof renderMapRecords === 'function') {
+      renderMapRecords();
+    }
+    // 加载保存的地图网址
+    try {
+      const savedUrl = localStorage.getItem('lastMapUrl');
+      if (savedUrl) {
+        const urlInput = document.getElementById('mapUrlInput');
+        if (urlInput) urlInput.value = savedUrl;
+      }
+    } catch(e) {}
   }
 
   // 播放骰子滚动音效
@@ -6042,6 +6547,7 @@
     
     if (battleHistory.length > 50) battleHistory.pop();
     renderHistory();
+    if (typeof renderMapRecords === 'function') renderMapRecords();
     
     // 同步到房间
     if (typeof syncRoomData === 'function') {
@@ -6074,6 +6580,7 @@
     
     if (damageHistory.length > 50) damageHistory.pop();
     renderDamageHistory();
+    if (typeof renderMapRecords === 'function') renderMapRecords();
     
     // 同步到房间
     if (typeof syncRoomData === 'function') {
@@ -7461,12 +7968,14 @@
         if (roomData.battleHistory && typeof battleHistory !== 'undefined') {
           battleHistory = roomData.battleHistory;
           if (typeof renderHistory === 'function') renderHistory();
+          if (typeof renderMapRecords === 'function') renderMapRecords();
         }
         
         // 加载伤害历史记录
         if (roomData.damageHistory && typeof damageHistory !== 'undefined') {
           damageHistory = roomData.damageHistory;
           if (typeof renderDamageHistory === 'function') renderDamageHistory();
+          if (typeof renderMapRecords === 'function') renderMapRecords();
         }
         
         console.log('已加载房间数据');
@@ -7490,9 +7999,11 @@
         } else if (type === 'battleHistory' && typeof battleHistory !== 'undefined') {
           battleHistory = data;
           if (typeof renderHistory === 'function') renderHistory();
+          if (typeof renderMapRecords === 'function') renderMapRecords();
         } else if (type === 'damageHistory' && typeof damageHistory !== 'undefined') {
           damageHistory = data;
           if (typeof renderDamageHistory === 'function') renderDamageHistory();
+          if (typeof renderMapRecords === 'function') renderMapRecords();
         }
         
         console.log('已应用房间数据更新:', type);
