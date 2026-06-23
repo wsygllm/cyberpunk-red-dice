@@ -7723,6 +7723,31 @@ body.mobile-mode .player-grid {
         
         resultEl.style.display = 'block';
         
+        // 自动添加到玩家状态
+        if (playerId) {
+          const player = players.find(p => p.id == playerId);
+          if (player) {
+            if (!player.injuries) player.injuries = [];
+            if (player.injuries.length < 5) {
+              player.injuries.push({ 
+                name: injury.name, 
+                effect: injury.effect, 
+                isHead: isHead 
+              });
+              
+              // 同步到服务器
+              if (typeof syncRoomData === 'function') {
+                syncRoomData('players');
+              }
+              
+              // 更新玩家状态页面
+              if (typeof renderStatusGrid === 'function') {
+                renderStatusGrid();
+              }
+            }
+          }
+        }
+        
         // 添加历史记录
         let victimName = '';
         if (playerId) {
