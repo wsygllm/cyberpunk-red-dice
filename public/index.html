@@ -7724,8 +7724,8 @@ body.mobile-mode .player-grid {
         resultEl.style.display = 'block';
         
         // 自动添加到玩家状态
-        if (playerId) {
-          const player = players.find(p => p.id == playerId);
+        if (playerId && typeof players !== 'undefined') {
+          const player = players.find(p => p.id === parseInt(playerId));
           if (player) {
             if (!player.injuries) player.injuries = [];
             if (player.injuries.length < 5) {
@@ -7737,12 +7737,20 @@ body.mobile-mode .player-grid {
               
               // 同步到服务器
               if (typeof syncRoomData === 'function') {
-                syncRoomData('players');
+                try {
+                  syncRoomData('players');
+                } catch(e) {
+                  console.error('同步玩家数据失败:', e);
+                }
               }
               
               // 更新玩家状态页面
               if (typeof renderStatusGrid === 'function') {
-                renderStatusGrid();
+                try {
+                  renderStatusGrid();
+                } catch(e) {
+                  console.error('更新玩家状态页面失败:', e);
+                }
               }
             }
           }
