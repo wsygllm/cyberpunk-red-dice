@@ -3609,883 +3609,6 @@
   
   /* 手机模式下用顶部栏的按钮切换 */
 
-  /* ========== 红白配色主题 ========== */
-  body {
-    background: linear-gradient(135deg, #fff5f5 0%, #ffffff 50%, #ffe8e8 100%) !important;
-    color: #333 !important;
-  }
-  
-  /* 登录页 */
-  .login-container {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid #ffcccc !important;
-    box-shadow: 0 10px 40px rgba(255, 100, 100, 0.15) !important;
-  }
-  
-  .login-title {
-    color: #e53e3e !important;
-  }
-  
-  .login-subtitle {
-    color: #fc8181 !important;
-  }
-  
-  .login-input {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #333 !important;
-  }
-  
-  .login-input:focus {
-    border-color: #e53e3e !important;
-    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1) !important;
-  }
-  
-  .login-btn {
-    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
-    color: white !important;
-  }
-  
-  .login-btn:hover {
-    box-shadow: 0 5px 20px rgba(229, 62, 62, 0.4) !important;
-  }
-  
-  .register-btn {
-    color: #e53e3e !important;
-    border: 1px solid #e53e3e !important;
-    background: transparent !important;
-  }
-  
-  .offline-btn {
-    color: #c53030 !important;
-    background: rgba(229, 62, 62, 0.08) !important;
-  }
-  
-  /* 大厅页 */
-  .lobby-container {
-    background: transparent !important;
-  }
-  
-  .lobby-header {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border-bottom: 1px solid #ffdddd !important;
-    backdrop-filter: blur(10px);
-  }
-  
-  .user-info {
-    color: #333 !important;
-  }
-  
-  .user-avatar {
-    background: linear-gradient(135deg, #e53e3e, #c53030) !important;
-    color: white !important;
-  }
-  
-  .create-room-section {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid #ffcccc !important;
-    box-shadow: 0 4px 20px rgba(255, 100, 100, 0.1) !important;
-  }
-  
-  .create-room-section h2 {
-    color: #e53e3e !important;
-  }
-  
-  .room-input {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #333 !important;
-  }
-  
-  .room-input:focus {
-    border-color: #e53e3e !important;
-  }
-  
-  .create-btn {
-    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
-    color: white !important;
-  }
-  
-  .room-list-title {
-    color: #e53e3e !important;
-  }
-  
-  .room-card {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid #ffdddd !important;
-    box-shadow: 0 4px 15px rgba(255, 100, 100, 0.08) !important;
-  }
-  
-  .room-card:hover {
-    border-color: #e53e3e !important;
-    box-shadow: 0 6px 25px rgba(229, 62, 62, 0.15) !important;
-  }
-  
-  .room-card-name {
-    color: #333 !important;
-  }
-  
-  .room-card-info {
-    color: #666 !important;
-  }
-  
-  .join-btn {
-    background: #e53e3e !important;
-    color: white !important;
-  }
-  
-  .join-btn:hover {
-    background: #c53030 !important;
-  }
-  
-  /* 房间页 */
-  .room-container {
-    background: transparent !important;
-  }
-  
-  .room-header {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border-bottom: 1px solid #ffdddd !important;
-    backdrop-filter: blur(10px);
-  }
-  
-  .room-title {
-    color: #e53e3e !important;
-  }
-  
-  .room-status {
-    color: #666 !important;
-  }
-  
-  .status-dot {
-    background: #38a169 !important;
-  }
-  
-  .header-btn {
-    background: rgba(229, 62, 62, 0.1) !important;
-    color: #e53e3e !important;
-    border: 1px solid rgba(229, 62, 62, 0.2) !important;
-  }
-  
-  .header-btn:hover {
-    background: rgba(229, 62, 62, 0.2) !important;
-  }
-  
-  .header-btn.active {
-    background: #e53e3e !important;
-    color: white !important;
-  }
-  
-  /* 侧边栏 */
-  .room-sidebar {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border-right: 1px solid #ffdddd !important;
-  }
-  
-  .sidebar-title {
-    color: #e53e3e !important;
-  }
-  
-  .member-item {
-    background: #fff5f5 !important;
-    color: #333 !important;
-    border: 1px solid #ffeeee !important;
-  }
-  
-  .member-item.creator {
-    background: linear-gradient(135deg, #fff5f5, #ffe8e8) !important;
-    border-color: #ffcccc !important;
-  }
-  
-  .member-avatar {
-    background: linear-gradient(135deg, #e53e3e, #c53030) !important;
-    color: white !important;
-  }
-  
-  .creator-badge {
-    background: #e53e3e !important;
-    color: white !important;
-  }
-  
-  /* 主内容区 */
-  .room-content {
-    background: transparent !important;
-  }
-  
-  /* 标签页 */
-  .tabs {
-    background: rgba(255, 255, 255, 0.8) !important;
-    border-bottom: 2px solid #ffeeee !important;
-  }
-  
-  .tab-btn {
-    color: #666 !important;
-    background: transparent !important;
-    border-bottom: 2px solid transparent !important;
-  }
-  
-  .tab-btn:hover {
-    color: #e53e3e !important;
-  }
-  
-  .tab-btn.active {
-    color: #e53e3e !important;
-    border-bottom-color: #e53e3e !important;
-    background: rgba(229, 62, 62, 0.05) !important;
-  }
-  
-  /* 卡片通用 */
-  .card {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid #ffdddd !important;
-    box-shadow: 0 4px 15px rgba(255, 100, 100, 0.08) !important;
-  }
-  
-  .card h2, .card h3 {
-    color: #e53e3e !important;
-  }
-  
-  /* 玩家卡片 */
-  .player-card {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid #ffdddd !important;
-    box-shadow: 0 2px 10px rgba(255, 100, 100, 0.08) !important;
-  }
-  
-  .player-card.active {
-    border-color: #e53e3e !important;
-    box-shadow: 0 4px 20px rgba(229, 62, 62, 0.15) !important;
-  }
-  
-  .player-name {
-    color: #333 !important;
-  }
-  
-  .player-name input {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #333 !important;
-  }
-  
-  .player-bonus input {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #333 !important;
-  }
-  
-  .player-select {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #333 !important;
-  }
-  
-  .main-dice {
-    background: linear-gradient(135deg, #e53e3e, #c53030) !important;
-    color: white !important;
-    box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3) !important;
-  }
-  
-  .main-dice.crit-success {
-    background: linear-gradient(135deg, #38a169, #2f855a) !important;
-    box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4) !important;
-  }
-  
-  .main-dice.crit-fail {
-    background: linear-gradient(135deg, #e53e3e, #9b2c2c) !important;
-    box-shadow: 0 4px 15px rgba(229, 62, 62, 0.5) !important;
-  }
-  
-  .bonus-dice {
-    background: #fff5f5 !important;
-    color: #e53e3e !important;
-    border: 1px solid #ffcccc !important;
-  }
-  
-  .total-score {
-    color: #e53e3e !important;
-  }
-  
-  .rank-badge {
-    background: linear-gradient(135deg, #e53e3e, #c53030) !important;
-    color: white !important;
-  }
-  
-  .rank-badge.gold {
-    background: linear-gradient(135deg, #d69e2e, #b7791f) !important;
-  }
-  
-  .rank-badge.silver {
-    background: linear-gradient(135deg, #a0aec0, #718096) !important;
-  }
-  
-  .rank-badge.bronze {
-    background: linear-gradient(135deg, #dd6b20, #c05621) !important;
-  }
-  
-  .crit-badge {
-    background: #e53e3e !important;
-    color: white !important;
-  }
-  
-  .crit-badge.success {
-    background: #38a169 !important;
-  }
-  
-  .roll-btn {
-    background: linear-gradient(135deg, #e53e3e, #c53030) !important;
-    color: white !important;
-  }
-  
-  .roll-btn:hover {
-    box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4) !important;
-  }
-  
-  .roll-all-btn {
-    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
-    color: white !important;
-    box-shadow: 0 4px 20px rgba(229, 62, 62, 0.3) !important;
-  }
-  
-  .roll-all-btn:hover {
-    box-shadow: 0 6px 25px rgba(229, 62, 62, 0.5) !important;
-  }
-  
-  /* 玩家芯片 */
-  .player-chip {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #666 !important;
-  }
-  
-  .player-chip.active {
-    background: linear-gradient(135deg, #e53e3e, #c53030) !important;
-    color: white !important;
-    border-color: #e53e3e !important;
-  }
-  
-  .player-chip.npc {
-    border-color: #fc8181 !important;
-    color: #c53030 !important;
-  }
-  
-  .player-chip.npc.active {
-    background: linear-gradient(135deg, #fc8181, #f56565) !important;
-    color: white !important;
-  }
-  
-  /* 伤害骰 */
-  .damage-roller {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid #ffdddd !important;
-    box-shadow: 0 4px 15px rgba(255, 100, 100, 0.08) !important;
-  }
-  
-  .damage-roller h2 {
-    color: #e53e3e !important;
-  }
-  
-  .dice-formula-input input {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #333 !important;
-  }
-  
-  .dice-formula-input input:focus {
-    border-color: #e53e3e !important;
-  }
-  
-  .roll-damage-btn {
-    background: linear-gradient(135deg, #e53e3e, #c53030) !important;
-    color: white !important;
-  }
-  
-  .damage-dice {
-    background: linear-gradient(135deg, #e53e3e, #c53030) !important;
-    color: white !important;
-    box-shadow: 0 3px 10px rgba(229, 62, 62, 0.3) !important;
-  }
-  
-  .damage-dice.crit {
-    background: linear-gradient(135deg, #fc8181, #f56565) !important;
-    box-shadow: 0 0 15px rgba(229, 62, 62, 0.6) !important;
-  }
-  
-  .damage-total {
-    color: #e53e3e !important;
-  }
-  
-  .damage-total.is-crit {
-    color: #c53030 !important;
-    text-shadow: 0 0 10px rgba(229, 62, 62, 0.3) !important;
-  }
-  
-  .crit-badge {
-    background: #e53e3e !important;
-    color: white !important;
-  }
-  
-  .damage-detail {
-    color: #666 !important;
-  }
-  
-  /* 暴击表 */
-  .crit-table-section {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid #ffdddd !important;
-    box-shadow: 0 4px 15px rgba(255, 100, 100, 0.08) !important;
-  }
-  
-  .crit-table-section h2 {
-    color: #e53e3e !important;
-  }
-  
-  .crit-table-item {
-    background: #fff5f5 !important;
-    border: 1px solid #ffeeee !important;
-  }
-  
-  .dice-type {
-    color: #e53e3e !important;
-  }
-  
-  .crit-condition {
-    color: #666 !important;
-  }
-  
-  /* D12重伤 */
-  .injury-section {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border-top: 1px solid #ffdddd !important;
-  }
-  
-  .injury-title {
-    color: #e53e3e !important;
-  }
-  
-  .d12-dice {
-    background: linear-gradient(135deg, #9f7aea, #805ad5) !important;
-    color: white !important;
-    box-shadow: 0 4px 15px rgba(159, 122, 234, 0.3) !important;
-  }
-  
-  .roll-d12-btn {
-    background: linear-gradient(135deg, #9f7aea, #805ad5) !important;
-    color: white !important;
-  }
-  
-  .injury-result {
-    background: #faf5ff !important;
-    border: 1px solid #e9d8fd !important;
-  }
-  
-  .injury-name {
-    color: #805ad5 !important;
-  }
-  
-  .injury-effect {
-    color: #666 !important;
-  }
-  
-  .injury-select {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #333 !important;
-  }
-  
-  /* 历史记录 */
-  .battle-history-section,
-  .history-section {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid #ffdddd !important;
-  }
-  
-  .history-title {
-    color: #e53e3e !important;
-  }
-  
-  .history-item {
-    background: #fff5f5 !important;
-    border-left: 3px solid #e53e3e !important;
-  }
-  
-  .history-item.damage-item {
-    border-left-color: #e53e3e !important;
-  }
-  
-  .history-item.injury-item {
-    border-left-color: #9f7aea !important;
-  }
-  
-  .history-time {
-    color: #999 !important;
-  }
-  
-  .history-player {
-    color: #e53e3e !important;
-  }
-  
-  .history-formula {
-    color: #333 !important;
-  }
-  
-  .history-total {
-    color: #e53e3e !important;
-  }
-  
-  .history-total.is-crit {
-    color: #c53030 !important;
-  }
-  
-  .crit-badge-small {
-    background: #e53e3e !important;
-    color: white !important;
-  }
-  
-  .history-detail {
-    color: #666 !important;
-  }
-  
-  .injury-type-badge {
-    background: #9f7aea !important;
-    color: white !important;
-  }
-  
-  .injury-type-head {
-    background: #e53e3e !important;
-  }
-  
-  .injury-name {
-    color: #333 !important;
-  }
-  
-  .injury-victim {
-    color: #666 !important;
-  }
-  
-  .history-target {
-    color: #9f7aea !important;
-  }
-  
-  /* 备忘录 */
-  .memo-container {
-    background: transparent !important;
-  }
-  
-  .memo-sidebar {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid #ffdddd !important;
-  }
-  
-  .memo-content {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid #ffdddd !important;
-  }
-  
-  .memo-section-title {
-    color: #e53e3e !important;
-  }
-  
-  .memo-player-item {
-    background: #fff5f5 !important;
-    border: 1px solid #ffeeee !important;
-    color: #333 !important;
-  }
-  
-  .memo-player-item.active {
-    border-color: #e53e3e !important;
-    background: #ffe8e8 !important;
-  }
-  
-  .memo-player-item.npc {
-    border-color: #fc8181 !important;
-  }
-  
-  .add-player-input {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #333 !important;
-  }
-  
-  .add-player-btn {
-    background: #e53e3e !important;
-    color: white !important;
-  }
-  
-  .add-player-btn.npc {
-    background: #fc8181 !important;
-  }
-  
-  .memo-tabs {
-    border-bottom: 2px solid #ffeeee !important;
-  }
-  
-  .memo-tab-btn {
-    color: #666 !important;
-    background: transparent !important;
-    border-bottom: 2px solid transparent !important;
-  }
-  
-  .memo-tab-btn.active {
-    color: #e53e3e !important;
-    border-bottom-color: #e53e3e !important;
-  }
-  
-  .item-list .item {
-    background: #fff5f5 !important;
-    border: 1px solid #ffeeee !important;
-  }
-  
-  .item-name {
-    color: #333 !important;
-  }
-  
-  .item-damage, .item-bonus {
-    color: #e53e3e !important;
-  }
-  
-  .quick-roll-btn {
-    background: #e53e3e !important;
-    color: white !important;
-  }
-  
-  .delete-btn {
-    background: #fc8181 !important;
-    color: white !important;
-  }
-  
-  .add-item-input {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #333 !important;
-  }
-  
-  .add-item-btn {
-    background: linear-gradient(135deg, #e53e3e, #c53030) !important;
-    color: white !important;
-  }
-  
-  /* 目标选择下拉框 */
-  .damage-target-select label {
-    color: #666 !important;
-  }
-  
-  .damage-target-select select {
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-    color: #333 !important;
-  }
-  
-  .damage-target-select select:focus {
-    border-color: #e53e3e !important;
-  }
-  
-  /* 浮动展开按钮 */
-  .sidebar-expand-btn {
-    background: #e53e3e !important;
-    box-shadow: -2px 0 20px rgba(229, 62, 62, 0.4) !important;
-  }
-  
-  /* 消息提示 */
-  .login-message {
-    color: #e53e3e !important;
-    background: #fff5f5 !important;
-    border: 1px solid #ffcccc !important;
-  }
-  
-  .login-message.error {
-    color: #c53030 !important;
-    background: #fff5f5 !important;
-    border-color: #fc8181 !important;
-  }
-  
-  .login-message.success {
-    color: #38a169 !important;
-    background: #f0fff4 !important;
-    border-color: #9ae6b4 !important;
-  }
-  
-  /* 结果展示区 */
-  .result-section {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid #ffdddd !important;
-  }
-  
-  .result-title {
-    color: #e53e3e !important;
-  }
-  
-  /* 滚动条 */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: #fff5f5;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: #fc8181;
-    border-radius: 4px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: #e53e3e;
-  }
-
-  /* ========== 手机版排版优化 ========== */
-  .mobile-mode .player-card {
-    padding: 12px !important;
-  }
-  
-  .mobile-mode .player-name input,
-  .mobile-mode .player-bonus input,
-  .mobile-mode .player-select {
-    font-size: 13px !important;
-    padding: 6px 8px !important;
-    height: auto !important;
-  }
-  
-  .mobile-mode .main-dice {
-    width: 40px !important;
-    height: 40px !important;
-    font-size: 18px !important;
-  }
-  
-  .mobile-mode .bonus-dice {
-    width: 28px !important;
-    height: 28px !important;
-    font-size: 12px !important;
-  }
-  
-  .mobile-mode .total-score {
-    font-size: 22px !important;
-  }
-  
-  .mobile-mode .roll-btn {
-    padding: 6px 10px !important;
-    font-size: 12px !important;
-  }
-  
-  .mobile-mode .tabs {
-    padding: 0 10px !important;
-    margin-bottom: 10px !important;
-  }
-  
-  .mobile-mode .tab-btn {
-    padding: 10px 12px !important;
-    font-size: 13px !important;
-  }
-  
-  .mobile-mode .damage-roller,
-  .mobile-mode .crit-table-section,
-  .mobile-mode .injury-section {
-    padding: 15px !important;
-  }
-  
-  .mobile-mode .d12-dice {
-    width: 60px !important;
-    height: 60px !important;
-    font-size: 24px !important;
-  }
-  
-  .mobile-mode .injury-result {
-    padding: 12px !important;
-  }
-  
-  .mobile-mode .memo-container {
-    gap: 10px !important;
-  }
-  
-  .mobile-mode .memo-sidebar {
-    width: 140px !important;
-    padding: 10px !important;
-  }
-  
-  .mobile-mode .memo-content {
-    padding: 15px !important;
-  }
-  
-  .mobile-mode .player-chip {
-    padding: 6px 10px !important;
-    font-size: 12px !important;
-  }
-  
-  .mobile-mode .battle-history-section,
-  .mobile-mode .history-section {
-    padding: 15px !important;
-    margin-top: 15px !important;
-  }
-  
-  .mobile-mode .history-title {
-    font-size: 14px !important;
-    margin-bottom: 10px !important;
-  }
-  
-  .mobile-mode .room-header {
-    padding: 8px 12px !important;
-  }
-  
-  .mobile-mode .room-title {
-    font-size: 16px !important;
-  }
-  
-  .mobile-mode .header-btn {
-    padding: 6px 10px !important;
-    font-size: 12px !important;
-  }
-  
-  .mobile-mode .sidebar-title {
-    font-size: 12px !important;
-    margin-bottom: 10px !important;
-  }
-  
-  .mobile-mode .member-item {
-    padding: 8px !important;
-    font-size: 12px !important;
-    margin-bottom: 6px !important;
-  }
-  
-  .mobile-mode .member-avatar {
-    width: 24px !important;
-    height: 24px !important;
-    font-size: 10px !important;
-  }
-  
-  .mobile-mode .roll-all-btn {
-    padding: 12px !important;
-    font-size: 14px !important;
-  }
-  
-  .mobile-mode .damage-target-select select {
-    font-size: 12px !important;
-    padding: 5px 8px !important;
-  }
-  
-  .mobile-mode .dice-formula-input input {
-    font-size: 14px !important;
-    padding: 8px 12px !important;
-  }
-  
-  .mobile-mode .roll-damage-btn {
-    padding: 8px 16px !important;
-    font-size: 13px !important;
-  }
-  
-  .mobile-mode .crit-table-item {
-    padding: 8px !important;
-    font-size: 12px !important;
-  }
-  
-  .mobile-mode .injury-select {
-    font-size: 12px !important;
-    padding: 5px 8px !important;
-  }
-  
-  .mobile-mode .roll-d12-btn {
-    padding: 8px 16px !important;
-    font-size: 13px !important;
-  }
-
   /* 修复双重滚动条 */
   html, body {
     height: 100%;
@@ -4547,9 +3670,808 @@
     margin: 0;
     padding: 0;
   }
+
+  /* ========== 主题系统 ========== */
+  
+  /* 主题切换按钮 */
+  .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s ease;
+  }
+  
+  .theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* 黑夜模式（默认，红黑配色） */
+  body.dark-theme {
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a0f0f 50%, #0a0a0a 100%) !important;
+    color: #e0e0e0 !important;
+  }
+  
+  body.dark-theme .login-container {
+    background: rgba(20, 20, 20, 0.95) !important;
+    border: 1px solid #3a1515 !important;
+    box-shadow: 0 10px 40px rgba(229, 62, 62, 0.2) !important;
+  }
+  
+  body.dark-theme .login-title {
+    color: #e53e3e !important;
+    text-shadow: 0 0 20px rgba(229, 62, 62, 0.3) !important;
+  }
+  
+  body.dark-theme .login-subtitle {
+    color: #fc8181 !important;
+  }
+  
+  body.dark-theme .login-input {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid #4a2020 !important;
+    color: #fff !important;
+  }
+  
+  body.dark-theme .login-input:focus {
+    border-color: #e53e3e !important;
+    box-shadow: 0 0 10px rgba(229, 62, 62, 0.3) !important;
+  }
+  
+  body.dark-theme .login-input::placeholder {
+    color: #666 !important;
+  }
+  
+  body.dark-theme .btn-primary {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    color: #fff !important;
+  }
+  
+  body.dark-theme .btn-primary:hover {
+    background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%) !important;
+    box-shadow: 0 0 20px rgba(229, 62, 62, 0.4) !important;
+  }
+  
+  body.dark-theme .btn-secondary {
+    background: transparent !important;
+    border: 1px solid #e53e3e !important;
+    color: #e53e3e !important;
+  }
+  
+  body.dark-theme .btn-secondary:hover {
+    background: rgba(229, 62, 62, 0.1) !important;
+  }
+  
+  body.dark-theme .offline-btn {
+    background: rgba(229, 62, 62, 0.1) !important;
+    border: 1px dashed #e53e3e !important;
+    color: #fc8181 !important;
+  }
+  
+  body.dark-theme .offline-btn:hover {
+    background: rgba(229, 62, 62, 0.2) !important;
+  }
+  
+  /* 大厅页 - 黑夜模式 */
+  body.dark-theme .lobby-container {
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a0f0f 100%) !important;
+  }
+  
+  body.dark-theme .lobby-header {
+    background: rgba(20, 20, 20, 0.9) !important;
+    border-bottom: 1px solid #333 !important;
+  }
+  
+  body.dark-theme .room-card {
+    background: rgba(30, 30, 30, 0.9) !important;
+    border: 1px solid #3a1515 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  body.dark-theme .room-card:hover {
+    border-color: #e53e3e !important;
+    box-shadow: 0 4px 20px rgba(229, 62, 62, 0.2) !important;
+  }
+  
+  body.dark-theme .room-name {
+    color: #fff !important;
+  }
+  
+  body.dark-theme .room-info {
+    color: #999 !important;
+  }
+  
+  /* 房间页 - 黑夜模式 */
+  body.dark-theme .room-container {
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a0f0f 100%) !important;
+  }
+  
+  body.dark-theme .room-header {
+    background: rgba(20, 20, 20, 0.95) !important;
+    border-bottom: 1px solid #333 !important;
+    color: #fff !important;
+  }
+  
+  body.dark-theme .room-title {
+    color: #e53e3e !important;
+  }
+  
+  body.dark-theme .sidebar {
+    background: rgba(25, 25, 25, 0.95) !important;
+    border-right: 1px solid #333 !important;
+  }
+  
+  body.dark-theme .sidebar-title {
+    color: #e53e3e !important;
+    border-bottom: 1px solid #333 !important;
+  }
+  
+  body.dark-theme .member-item {
+    color: #ccc !important;
+  }
+  
+  body.dark-theme .member-item.creator {
+    color: #e53e3e !important;
+  }
+  
+  /* 标签页 - 黑夜模式 */
+  body.dark-theme .tabs {
+    border-bottom: 1px solid #333 !important;
+  }
+  
+  body.dark-theme .tab-btn {
+    color: #888 !important;
+  }
+  
+  body.dark-theme .tab-btn.active {
+    color: #e53e3e !important;
+    border-bottom: 2px solid #e53e3e !important;
+  }
+  
+  body.dark-theme .tab-btn:hover {
+    color: #fff !important;
+  }
+  
+  /* 玩家卡片 - 黑夜模式 */
+  body.dark-theme .player-card {
+    background: rgba(35, 35, 35, 0.9) !important;
+    border: 1px solid #444 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  body.dark-theme .player-name {
+    color: #fff !important;
+  }
+  
+  body.dark-theme .dice {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 0 15px rgba(229, 62, 62, 0.3) !important;
+  }
+  
+  body.dark-theme .player-total {
+    color: #fff !important;
+  }
+  
+  /* 伤害骰区域 - 黑夜模式 */
+  body.dark-theme .damage-section {
+    background: rgba(35, 35, 35, 0.9) !important;
+    border: 1px solid #444 !important;
+  }
+  
+  body.dark-theme .section-title {
+    color: #e53e3e !important;
+  }
+  
+  body.dark-theme .damage-dice {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    color: #fff !important;
+  }
+  
+  body.dark-theme .damage-total {
+    color: #fff !important;
+  }
+  
+  /* D12重伤 - 黑夜模式 */
+  body.dark-theme .injury-section {
+    background: rgba(35, 35, 35, 0.9) !important;
+    border: 1px solid #444 !important;
+  }
+  
+  body.dark-theme .d12-dice {
+    background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%) !important;
+    color: #fff !important;
+  }
+  
+  body.dark-theme .injury-name {
+    color: #9f7aea !important;
+  }
+  
+  body.dark-theme .injury-effect {
+    color: #ccc !important;
+  }
+  
+  /* 历史记录 - 黑夜模式 */
+  body.dark-theme .history-section {
+    background: rgba(35, 35, 35, 0.9) !important;
+    border: 1px solid #444 !important;
+  }
+  
+  body.dark-theme .history-title {
+    color: #e53e3e !important;
+  }
+  
+  body.dark-theme .history-item {
+    background: rgba(50, 50, 50, 0.5) !important;
+    border-left: 3px solid #e53e3e !important;
+    color: #ccc !important;
+  }
+  
+  body.dark-theme .history-item.injury-item {
+    border-left-color: #9f7aea !important;
+  }
+  
+  body.dark-theme .history-time {
+    color: #888 !important;
+  }
+  
+  /* 备忘录 - 黑夜模式 */
+  body.dark-theme .memo-sidebar {
+    background: rgba(30, 30, 30, 0.9) !important;
+    border-right: 1px solid #333 !important;
+  }
+  
+  body.dark-theme .memo-content {
+    background: rgba(35, 35, 35, 0.9) !important;
+  }
+  
+  body.dark-theme .character-item {
+    background: rgba(50, 50, 50, 0.5) !important;
+    border: 1px solid #444 !important;
+    color: #ccc !important;
+  }
+  
+  body.dark-theme .character-item.active {
+    border-color: #e53e3e !important;
+    background: rgba(229, 62, 62, 0.1) !important;
+  }
+  
+  body.dark-theme .weapon-item,
+  body.dark-theme .skill-item {
+    background: rgba(50, 50, 50, 0.5) !important;
+    border: 1px solid #444 !important;
+    color: #ccc !important;
+  }
+  
+  /* 输入框、下拉框 - 黑夜模式 */
+  body.dark-theme input,
+  body.dark-theme select {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+  }
+  
+  body.dark-theme input:focus,
+  body.dark-theme select:focus {
+    border-color: #e53e3e !important;
+    box-shadow: 0 0 8px rgba(229, 62, 62, 0.3) !important;
+  }
+  
+  /* 按钮 - 黑夜模式 */
+  body.dark-theme button {
+    background: rgba(229, 62, 62, 0.15) !important;
+    border: 1px solid #e53e3e !important;
+    color: #e53e3e !important;
+  }
+  
+  body.dark-theme button:hover {
+    background: rgba(229, 62, 62, 0.25) !important;
+  }
+  
+  /* 玩家芯片 - 黑夜模式 */
+  body.dark-theme .player-chip {
+    background: rgba(50, 50, 50, 0.5) !important;
+    border: 1px solid #555 !important;
+    color: #ccc !important;
+  }
+  
+  body.dark-theme .player-chip.active {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    border-color: #e53e3e !important;
+    color: #fff !important;
+  }
+  
+  /* 排名徽章 - 黑夜模式 */
+  body.dark-theme .rank-badge {
+    background: rgba(0, 0, 0, 0.5) !important;
+    color: #fff !important;
+  }
+  
+  body.dark-theme .rank-1 { background: linear-gradient(135deg, #ffd700 0%, #ffb800 100%) !important; color: #000 !important; }
+  body.dark-theme .rank-2 { background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%) !important; color: #000 !important; }
+  body.dark-theme .rank-3 { background: linear-gradient(135deg, #cd7f32 0%, #b87333 100%) !important; color: #fff !important; }
+  
+  /* 大成功/大失败 - 黑夜模式 */
+  body.dark-theme .crit-success {
+    color: #38a169 !important;
+    text-shadow: 0 0 10px rgba(56, 161, 105, 0.5) !important;
+  }
+  
+  body.dark-theme .crit-fail {
+    color: #e53e3e !important;
+    text-shadow: 0 0 10px rgba(229, 62, 62, 0.5) !important;
+  }
+  
+  /* 暴击徽章 - 黑夜模式 */
+  body.dark-theme .crit-badge {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    color: #fff !important;
+  }
+  
+  /* 滚动条 - 黑夜模式 */
+  body.dark-theme ::-webkit-scrollbar-track {
+    background: #1a1a1a !important;
+  }
+  
+  body.dark-theme ::-webkit-scrollbar-thumb {
+    background: #444 !important;
+    border-radius: 4px;
+  }
+  
+  body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: #e53e3e !important;
+  }
+  
+  /* 消息提示 - 黑夜模式 */
+  body.dark-theme .message {
+    background: rgba(30, 30, 30, 0.95) !important;
+    border: 1px solid #444 !important;
+    color: #ccc !important;
+  }
+  
+  body.dark-theme .message.error {
+    border-color: #e53e3e !important;
+    color: #fc8181 !important;
+  }
+  
+  body.dark-theme .message.success {
+    border-color: #38a169 !important;
+    color: #68d391 !important;
+  }
+  
+  /* 浮动按钮 - 黑夜模式 */
+  body.dark-theme .floating-btn {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4) !important;
+  }
+  
+  /* 顶部栏按钮 - 黑夜模式 */
+  body.dark-theme .room-header button {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ccc !important;
+  }
+  
+  body.dark-theme .room-header button:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  /* 状态指示 - 黑夜模式 */
+  body.dark-theme .status-dot {
+    background: #38a169 !important;
+    box-shadow: 0 0 8px rgba(56, 161, 105, 0.5) !important;
+  }
+  
+  body.dark-theme .status-dot.disconnected {
+    background: #e53e3e !important;
+    box-shadow: 0 0 8px rgba(229, 62, 62, 0.5) !important;
+  }
+  
+  /* 大成功/大失败提示条 - 黑夜模式 */
+  body.dark-theme .crit-hint {
+    background: rgba(229, 62, 62, 0.1) !important;
+    border: 1px solid rgba(229, 62, 62, 0.2) !important;
+    color: #fc8181 !important;
+  }
+  
+  body.dark-theme .crit-hint .success-text {
+    color: #68d391 !important;
+  }
+  
+  body.dark-theme .crit-hint .fail-text {
+    color: #fc8181 !important;
+  }
+  
+  /* 白天模式（浅色） - 覆盖原来的红白主题，加前缀 */
+  body.light-theme {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffffff 50%, #ffe8e8 100%) !important;
+    color: #333 !important;
+  }
+  
+  body.light-theme .login-container {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid #ffcccc !important;
+    box-shadow: 0 10px 40px rgba(255, 100, 100, 0.15) !important;
+  }
+  
+  body.light-theme .login-title {
+    color: #e53e3e !important;
+  }
+  
+  body.light-theme .login-subtitle {
+    color: #fc8181 !important;
+  }
+  
+  body.light-theme .login-input {
+    background: #fff5f5 !important;
+    border: 1px solid #ffcccc !important;
+    color: #333 !important;
+  }
+  
+  body.light-theme .login-input:focus {
+    border-color: #e53e3e !important;
+    box-shadow: 0 0 10px rgba(229, 62, 62, 0.2) !important;
+  }
+  
+  body.light-theme .login-input::placeholder {
+    color: #aaa !important;
+  }
+  
+  body.light-theme .btn-primary {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    color: #fff !important;
+  }
+  
+  body.light-theme .btn-primary:hover {
+    background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%) !important;
+    box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3) !important;
+  }
+  
+  body.light-theme .btn-secondary {
+    background: transparent !important;
+    border: 1px solid #e53e3e !important;
+    color: #e53e3e !important;
+  }
+  
+  body.light-theme .btn-secondary:hover {
+    background: rgba(229, 62, 62, 0.05) !important;
+  }
+  
+  body.light-theme .offline-btn {
+    background: #fff5f5 !important;
+    border: 1px dashed #e53e3e !important;
+    color: #e53e3e !important;
+  }
+  
+  body.light-theme .offline-btn:hover {
+    background: #ffe8e8 !important;
+  }
+  
+  /* 大厅页 - 白天模式 */
+  body.light-theme .lobby-container {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%) !important;
+  }
+  
+  body.light-theme .lobby-header {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-bottom: 1px solid #ffcccc !important;
+  }
+  
+  body.light-theme .room-card {
+    background: #fff !important;
+    border: 1px solid #ffcccc !important;
+    box-shadow: 0 4px 20px rgba(255, 100, 100, 0.1) !important;
+  }
+  
+  body.light-theme .room-card:hover {
+    border-color: #e53e3e !important;
+    box-shadow: 0 4px 20px rgba(229, 62, 62, 0.15) !important;
+  }
+  
+  body.light-theme .room-name {
+    color: #333 !important;
+  }
+  
+  body.light-theme .room-info {
+    color: #666 !important;
+  }
+  
+  /* 房间页 - 白天模式 */
+  body.light-theme .room-container {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%) !important;
+  }
+  
+  body.light-theme .room-header {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-bottom: 1px solid #ffcccc !important;
+    color: #333 !important;
+  }
+  
+  body.light-theme .room-title {
+    color: #e53e3e !important;
+  }
+  
+  body.light-theme .sidebar {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-right: 1px solid #ffcccc !important;
+  }
+  
+  body.light-theme .sidebar-title {
+    color: #e53e3e !important;
+    border-bottom: 1px solid #ffcccc !important;
+  }
+  
+  body.light-theme .member-item {
+    color: #333 !important;
+  }
+  
+  body.light-theme .member-item.creator {
+    color: #e53e3e !important;
+  }
+  
+  /* 标签页 - 白天模式 */
+  body.light-theme .tabs {
+    border-bottom: 1px solid #ffcccc !important;
+  }
+  
+  body.light-theme .tab-btn {
+    color: #999 !important;
+  }
+  
+  body.light-theme .tab-btn.active {
+    color: #e53e3e !important;
+    border-bottom: 2px solid #e53e3e !important;
+  }
+  
+  body.light-theme .tab-btn:hover {
+    color: #333 !important;
+  }
+  
+  /* 玩家卡片 - 白天模式 */
+  body.light-theme .player-card {
+    background: #fff !important;
+    border: 1px solid #ffcccc !important;
+    box-shadow: 0 4px 15px rgba(255, 100, 100, 0.1) !important;
+  }
+  
+  body.light-theme .player-name {
+    color: #333 !important;
+  }
+  
+  body.light-theme .dice {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 0 10px rgba(229, 62, 62, 0.2) !important;
+  }
+  
+  body.light-theme .player-total {
+    color: #333 !important;
+  }
+  
+  /* 伤害骰区域 - 白天模式 */
+  body.light-theme .damage-section {
+    background: #fff !important;
+    border: 1px solid #ffcccc !important;
+  }
+  
+  body.light-theme .section-title {
+    color: #e53e3e !important;
+  }
+  
+  body.light-theme .damage-dice {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    color: #fff !important;
+  }
+  
+  body.light-theme .damage-total {
+    color: #333 !important;
+  }
+  
+  /* D12重伤 - 白天模式 */
+  body.light-theme .injury-section {
+    background: #fff !important;
+    border: 1px solid #e9d8fd !important;
+  }
+  
+  body.light-theme .d12-dice {
+    background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%) !important;
+    color: #fff !important;
+  }
+  
+  body.light-theme .injury-name {
+    color: #805ad5 !important;
+  }
+  
+  body.light-theme .injury-effect {
+    color: #666 !important;
+  }
+  
+  /* 历史记录 - 白天模式 */
+  body.light-theme .history-section {
+    background: #fff !important;
+    border: 1px solid #ffcccc !important;
+  }
+  
+  body.light-theme .history-title {
+    color: #e53e3e !important;
+  }
+  
+  body.light-theme .history-item {
+    background: #fff5f5 !important;
+    border-left: 3px solid #e53e3e !important;
+    color: #333 !important;
+  }
+  
+  body.light-theme .history-item.injury-item {
+    border-left-color: #9f7aea !important;
+    background: #faf5ff !important;
+  }
+  
+  body.light-theme .history-time {
+    color: #999 !important;
+  }
+  
+  /* 备忘录 - 白天模式 */
+  body.light-theme .memo-sidebar {
+    background: #fff !important;
+    border-right: 1px solid #ffcccc !important;
+  }
+  
+  body.light-theme .memo-content {
+    background: #fff !important;
+  }
+  
+  body.light-theme .character-item {
+    background: #fff5f5 !important;
+    border: 1px solid #ffcccc !important;
+    color: #333 !important;
+  }
+  
+  body.light-theme .character-item.active {
+    border-color: #e53e3e !important;
+    background: #ffe8e8 !important;
+  }
+  
+  body.light-theme .weapon-item,
+  body.light-theme .skill-item {
+    background: #fff5f5 !important;
+    border: 1px solid #ffcccc !important;
+    color: #333 !important;
+  }
+  
+  /* 输入框、下拉框 - 白天模式 */
+  body.light-theme input,
+  body.light-theme select {
+    background: #fff5f5 !important;
+    border: 1px solid #ffcccc !important;
+    color: #333 !important;
+  }
+  
+  body.light-theme input:focus,
+  body.light-theme select:focus {
+    border-color: #e53e3e !important;
+    box-shadow: 0 0 8px rgba(229, 62, 62, 0.2) !important;
+  }
+  
+  /* 按钮 - 白天模式 */
+  body.light-theme button {
+    background: #fff5f5 !important;
+    border: 1px solid #fc8181 !important;
+    color: #e53e3e !important;
+  }
+  
+  body.light-theme button:hover {
+    background: #ffe8e8 !important;
+  }
+  
+  /* 玩家芯片 - 白天模式 */
+  body.light-theme .player-chip {
+    background: #fff !important;
+    border: 1px solid #ffcccc !important;
+    color: #666 !important;
+  }
+  
+  body.light-theme .player-chip.active {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    border-color: #e53e3e !important;
+    color: #fff !important;
+  }
+  
+  /* 滚动条 - 白天模式 */
+  body.light-theme ::-webkit-scrollbar-track {
+    background: #fff5f5 !important;
+  }
+  
+  body.light-theme ::-webkit-scrollbar-thumb {
+    background: #fc8181 !important;
+    border-radius: 4px;
+  }
+  
+  body.light-theme ::-webkit-scrollbar-thumb:hover {
+    background: #e53e3e !important;
+  }
+  
+  /* 消息提示 - 白天模式 */
+  body.light-theme .message {
+    background: #fff !important;
+    border: 1px solid #ffcccc !important;
+    color: #333 !important;
+  }
+  
+  body.light-theme .message.error {
+    border-color: #e53e3e !important;
+    color: #c53030 !important;
+  }
+  
+  body.light-theme .message.success {
+    border-color: #38a169 !important;
+    color: #2f855a !important;
+  }
+  
+  /* 浮动按钮 - 白天模式 */
+  body.light-theme .floating-btn {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3) !important;
+  }
+  
+  /* 顶部栏按钮 - 白天模式 */
+  body.light-theme .room-header button {
+    background: #fff5f5 !important;
+    border: 1px solid #ffcccc !important;
+    color: #666 !important;
+  }
+  
+  body.light-theme .room-header button:hover {
+    background: #ffe8e8 !important;
+    border-color: #fc8181 !important;
+  }
+  
+  /* 状态指示 - 白天模式 */
+  body.light-theme .status-dot {
+    background: #38a169 !important;
+    box-shadow: 0 0 6px rgba(56, 161, 105, 0.4) !important;
+  }
+  
+  body.light-theme .status-dot.disconnected {
+    background: #e53e3e !important;
+    box-shadow: 0 0 6px rgba(229, 62, 62, 0.4) !important;
+  }
+  
+  /* 大成功/大失败提示条 - 白天模式 */
+  body.light-theme .crit-hint {
+    background: #fff5f5 !important;
+    border: 1px solid #ffcccc !important;
+    color: #666 !important;
+  }
+  
+  body.light-theme .crit-hint .success-text {
+    color: #38a169 !important;
+  }
+  
+  body.light-theme .crit-hint .fail-text {
+    color: #e53e3e !important;
+  }
+  
+  /* 排名徽章 - 白天模式保持不变 */
+  /* 大成功/大失败文字 - 白天模式保持不变 */
+  /* 暴击徽章 - 白天模式保持不变 */
+  
 </style>
 </head>
 <body>
+<script>
+  // 立即应用主题，避免闪烁
+  (function() {
+    var theme = localStorage.getItem('dice-theme') || 'dark';
+    document.body.classList.add(theme + '-theme');
+  })();
+</script>
   <!-- ==================== 登录页 ==================== -->
   <div id="loginPage" class="page active">
     <div class="login-container">
@@ -4631,6 +4553,7 @@
         
         <button class="delete-room-btn" onclick="deleteRoom()" id="deleteRoomBtn" style="display: none;">🗑️ 删除房间</button>
         <button class="sound-toggle-btn" onclick="toggleSound()" id="soundToggleBtn">🔊 音效开</button>
+    <button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn">🌙 黑夜</button>
         <button class="mobile-toggle-btn" onclick="toggleMobileMode()" id="mobileToggleBtn">📱 手机模式</button>
         <div class="member-count" id="memberCount">0 人在线</div>
         <div class="connection-status">
@@ -5334,6 +5257,8 @@
   
   // ==================== 初始化 ====================
   function init() {
+    // 初始化主题
+    initTheme();
     renderPlayers();
     renderPlayerList();
     updateInjuryPlayerSelect();
@@ -7602,6 +7527,43 @@
     }
 
 }
-  </script>
+  
+  // 主题切换功能
+  let currentTheme = 'dark'; // 默认黑夜模式
+  
+  function initTheme() {
+    const savedTheme = localStorage.getItem('dice-theme');
+    if (savedTheme) {
+      currentTheme = savedTheme;
+    }
+    applyTheme(currentTheme);
+  }
+  
+  function toggleTheme() {
+    if (currentTheme === 'dark') {
+      currentTheme = 'light';
+    } else {
+      currentTheme = 'dark';
+    }
+    localStorage.setItem('dice-theme', currentTheme);
+    applyTheme(currentTheme);
+  }
+  
+  function applyTheme(theme) {
+    const body = document.body;
+    body.classList.remove('dark-theme', 'light-theme');
+    body.classList.add(theme + '-theme');
+    
+    // 更新按钮文字
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) {
+      if (theme === 'dark') {
+        btn.innerHTML = '☀️ 白天';
+      } else {
+        btn.innerHTML = '🌙 黑夜';
+      }
+    }
+  }
+</script>
 </body>
 </html>
