@@ -5003,40 +5003,9 @@
 // ==================== 完整工具 JS ====================
 
   // ==================== 通用数据 ====================
-  let players = [
-    { 
-      id: 1, 
-      name: '玩家1',
-      type: 'player', 
-      bonus: 0, 
-      selectedSkillId: null,
-      aimPenalty: 0,
-      active: true,
-      diceResult: null, 
-      bonusDice: null, 
-      isCritical: null, 
-      total: null, 
-      weapons: [], 
-      skills: [] 
-    },
-    { 
-      id: 2, 
-      name: '玩家2',
-      type: 'player', 
-      bonus: 0, 
-      selectedSkillId: null,
-      aimPenalty: 0,
-      active: true,
-      diceResult: null, 
-      bonusDice: null, 
-      isCritical: null, 
-      total: null, 
-      weapons: [], 
-      skills: [] 
-    }
-  ];
+  let players = []  // 初始为空，用户自己添加;
   let currentMemoTab = 'weapons';
-  let nextPlayerId = 3;
+  let nextPlayerId = 1;
   let selectedPlayerId = null;
   let battleHistory = [];
   let damageHistory = []; // 伤害和伤势历史记录
@@ -5384,24 +5353,17 @@
   }
   
   // ==================== 初始化 ====================
-  function init() {    renderPlayers();
+  function init() {
+    // 初始化主题
+    initTheme();
+    
+    renderPlayers();
     renderPlayerList();
     updateInjuryPlayerSelect();
     renderPlayerChips();
     renderHistory();
   
     // 初始化侧边栏状态
-    var sidebar = document.getElementById('roomSidebar');
-    if (sidebar) {
-      var memberVisible = localStorage.getItem('memberListVisible');
-      var isMobile = document.body.classList.contains('mobile-mode');
-      if (memberVisible === 'true') {
-        sidebar.classList.add('sidebar-open');
-      } else if (memberVisible === 'false' && !isMobile) {
-        sidebar.classList.remove('sidebar-open');
-      }
-    }
-      // 初始化侧边栏状态
     var sidebar = document.getElementById('roomSidebar');
     var toggleBtn = document.getElementById('memberToggleBtn');
     if (sidebar) {
@@ -5421,6 +5383,15 @@
         }
       }
     }
+    
+    // 给主题切换按钮绑定事件（双保险）
+    var themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        toggleTheme();
+      });
+    }
   }
   
   // ==================== 第一页：技能对抗 ====================
@@ -5439,6 +5410,12 @@
   }
   function renderPlayers() {
     const grid = document.getElementById('playersGrid');
+
+    // 空状态
+    if (players.length === 0) {
+      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">暂无玩家，请在「备忘录」页面添加</div>';
+      return;
+    }
     grid.innerHTML = players.filter(p => p.active).map((player) => {
       // 技能选项
       const skillOptions = player.skills.length > 0 
