@@ -4507,12 +4507,50 @@
   
   .room-container, .lobby-container, .login-container {
     height: 100vh;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
   }
   
   .room-body {
-    height: calc(100vh - 60px);
+    flex: 1;
     overflow: hidden;
+    min-height: 0;
+  }
+
+  /* ========== 手机版底部遮挡修复 ========== */
+  .mobile-mode .room-container {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .mobile-mode .room-body {
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+  }
+  
+  .mobile-mode .room-content {
+    height: 100%;
+    overflow-y: auto;
+    padding-bottom: 30px !important;
+    box-sizing: border-box;
+  }
+  
+  /* 确保手机模式下内容能滚动到底部 */
+  .mobile-mode .tab-content {
+    padding-bottom: 20px;
+  }
+  
+  /* 去掉可能造成底部遮挡的元素 */
+  .mobile-mode::before,
+  .mobile-mode::after {
+    display: none !important;
+  }
+  
+  /* 修复手机模式下扫描线背景遮挡问题 */
+  body.mobile-mode::before {
+    display: none !important;
   }
 </style>
 </head>
