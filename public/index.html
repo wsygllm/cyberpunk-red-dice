@@ -1800,13 +1800,14 @@ body.mobile-mode .player-grid {
     box-shadow: 0 3px 10px rgba(243, 156, 18, 0.4);
   }
   .damage-dice.crit {
-    background: linear-gradient(145deg, #e94560, #c73e54);
-    box-shadow: 0 0 20px rgba(233, 69, 96, 0.7);
+    background: linear-gradient(145deg, #ffd700, #ffb700);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
     animation: crit-pulse 1s ease-in-out infinite;
+    color: #333;
   }
   @keyframes crit-pulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(233, 69, 96, 0.5); }
-    50% { transform: scale(1.15); box-shadow: 0 0 30px rgba(233, 69, 96, 0.9); }
+    0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+    50% { transform: scale(1.15); box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
   }
   .damage-dice.rolling {
     animation: damage-shake 0.5s ease-in-out;
@@ -6974,6 +6975,11 @@ body.mobile-mode .player-grid {
       const isCrit = checkCrit(results, parsed.sides);
       const threshold = getCritThreshold(parsed.sides);
       
+      // 暴击额外加5点伤害
+      if (isCrit) {
+        total += 5;
+      }
+      
       // 标记暴击骰子
       results.forEach((value, i) => {
         const el = document.getElementById(`damage-dice-${i}`);
@@ -7011,7 +7017,10 @@ body.mobile-mode .player-grid {
       } else if (parsed.modifier < 0) {
         detailText += ` - ${Math.abs(parsed.modifier)}`;
       }
-      detail.textContent = detailText;
+      if (isCrit) {
+        detailText += ` <span class="crit-bonus">+ 5（暴击加成）</span>`;
+      }
+      detail.innerHTML = detailText;
       resultEl.appendChild(detail);
       
       // 暴击说明
