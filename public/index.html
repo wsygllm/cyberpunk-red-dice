@@ -22,23 +22,6 @@
   }
 
   /* 扫描线效果 */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.15),
-      rgba(0, 0, 0, 0.15) 1px,
-      transparent 1px,
-      transparent 2px
-    );
-    pointer-events: none;
-    z-index: 9999;
-  }
 
   /* ==================== 页面切换 ==================== */
   .page {
@@ -4549,9 +4532,6 @@
   }
   
   /* 修复手机模式下扫描线背景遮挡问题 */
-  body.mobile-mode::before {
-    display: none !important;
-  }
 </style>
 </head>
 <body>
@@ -5061,9 +5041,13 @@
 
   // 播放骰子滚动音效
   function playDiceSound() {
-    if (!soundEnabled || !audioCtx) return;
+    if (!soundEnabled) return;
+    if (!audioContext) {
+      initAudio();
+      if (!audioContext) return;
+    }
     
-    const now = audioCtx.currentTime;
+    const now = audioContext.currentTime;
     
     // 生成多个短促的撞击声，模拟骰子滚动
     const bounceCount = 6 + Math.floor(Math.random() * 4); // 6-9次撞击
@@ -5073,8 +5057,8 @@
       const freq = 1500 + Math.random() * 2000;
       const volume = 0.1 + Math.random() * 0.15 - (i * 0.01);
       
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
       
       osc.type = 'square';
       osc.frequency.setValueAtTime(freq, time);
@@ -5085,7 +5069,7 @@
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
       
       osc.connect(gain);
-      gain.connect(audioCtx.destination);
+      gain.connect(audioContext.destination);
       
       osc.start(time);
       osc.stop(time + 0.1);
@@ -5093,8 +5077,8 @@
     
     // 最后一声落定的声音
     const landTime = now + bounceCount * 0.1;
-    const osc2 = audioCtx.createOscillator();
-    const gain2 = audioCtx.createGain();
+    const osc2 = audioContext.createOscillator();
+    const gain2 = audioContext.createGain();
     
     osc2.type = 'sine';
     osc2.frequency.setValueAtTime(800, landTime);
@@ -5105,7 +5089,7 @@
     gain2.gain.exponentialRampToValueAtTime(0.001, landTime + 0.2);
     
     osc2.connect(gain2);
-    gain2.connect(audioCtx.destination);
+    gain2.connect(audioContext.destination);
     
     osc2.start(landTime);
     osc2.stop(landTime + 0.25);
