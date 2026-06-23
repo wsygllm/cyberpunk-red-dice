@@ -2373,6 +2373,252 @@ body.mobile-mode .player-grid {
     display: none;
   }
   
+  /* ==================== 玩家状态页面 ==================== */
+  .status-page {
+    padding: 20px;
+  }
+  
+  .status-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .status-title {
+    font-size: 24px;
+    color: #e53e3e;
+    margin-bottom: 8px;
+  }
+  
+  .status-hint {
+    font-size: 13px;
+    color: #888;
+  }
+  
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  .status-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+  }
+  
+  .status-card:hover {
+    border-color: rgba(229, 62, 62, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  .status-card.npc-card {
+    border-color: rgba(159, 122, 234, 0.2);
+  }
+  
+  .status-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .status-card-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  .status-card-type {
+    font-size: 11px;
+    padding: 3px 8px;
+    background: rgba(78, 204, 163, 0.2);
+    color: #4ecca3;
+    border-radius: 12px;
+    border: 1px solid rgba(78, 204, 163, 0.3);
+  }
+  
+  .status-card.npc-card .status-card-type {
+    background: rgba(159, 122, 234, 0.2);
+    color: #b794f4;
+    border-color: rgba(159, 122, 234, 0.3);
+  }
+  
+  .status-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .status-stat {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .status-stat-label {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 5px;
+  }
+  
+  .status-stat-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  
+  .status-stat-input {
+    width: 50px;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .status-stat-input:focus {
+    outline: none;
+    border-color: #e53e3e;
+  }
+  
+  .status-stat-sep {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .status-stat-hidden {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+  }
+  
+  .status-injuries {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  }
+  
+  .status-injuries-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .status-injuries-title {
+    font-size: 12px;
+    color: #9f7aea;
+    font-weight: bold;
+  }
+  
+  .status-injury-add {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: #9f7aea;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  
+  .status-injury-add:hover {
+    background: #805ad5;
+    transform: scale(1.1);
+  }
+  
+  .status-injury-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .status-injury-empty {
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .status-injury-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: rgba(159, 122, 234, 0.15);
+    border: 1px solid rgba(159, 122, 234, 0.3);
+    border-radius: 16px;
+    font-size: 11px;
+    color: #b794f4;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .status-injury-tag:hover {
+    background: rgba(159, 122, 234, 0.25);
+    border-color: rgba(159, 122, 234, 0.5);
+  }
+  
+  .status-injury-tag-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+  }
+  
+  .status-injury-tag-remove {
+    font-size: 12px;
+    color: #805ad5;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.7;
+  }
+  
+  .status-injury-tag-remove:hover {
+    opacity: 1;
+    color: #e53e3e;
+  }
+  
+  .status-injury-detail {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(159, 122, 234, 0.3);
+  }
+  
+  .status-injury-detail-item {
+    margin-bottom: 8px;
+  }
+  
+  .status-injury-detail-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .status-injury-detail-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: #b794f4;
+    margin-bottom: 3px;
+  }
+  
+  .status-injury-detail-effect {
+    font-size: 11px;
+    color: #999;
+    line-height: 1.5;
+  }
+
   /* ==================== 地图页面 ==================== */
   .map-container {
     display: flex;
@@ -5181,7 +5427,7 @@ body.mobile-mode .player-grid {
       <button class="tab-btn active" onclick="switchMainTab('battle')">⚔️ 技能对抗</button>
       <button class="tab-btn" onclick="switchMainTab('damage')">💥 伤害 & 暴击</button>
       <button class="tab-btn" onclick="switchMainTab('memo')">📝 备忘录</button>
-          <button class="tab-btn" onclick="switchMainTab('map')">🗺️ 地图</button>
+      <button class="tab-btn" onclick="switchMainTab('status')">🛡️ 玩家状态</button>
       
     </div>
     
@@ -5362,24 +5608,20 @@ body.mobile-mode .player-grid {
       </div>
     </div>
       
-      <div id="tab-map" class="tab-content">
-        <div class="map-container">
-          <!-- 网址输入栏 -->
-          <div class="map-url-bar">
-            <span class="map-url-label">🗺️ 地图网址</span>
-            <input type="text" id="mapUrlInput" class="map-url-input" 
-                   placeholder="输入 Owlbear Rodeo 房间网址..." 
-                   value="https://owlbear.rodeo"
-                   onkeydown="if(event.key==='Enter') openMapNewTab()">
-            <button class="map-url-btn primary" onclick="openMapNewTab()">🔗 打开地图</button>
+      <div id="tab-status" class="tab-content">
+        <div class="status-page">
+          <div class="status-header">
+            <h2 class="status-title">🛡️ 玩家状态</h2>
+            <div class="status-hint">实时同步所有玩家的血量、护甲和重伤状态</div>
           </div>
           
-          <!-- 主内容区 -->
-          <div class="map-main">
-            <!-- 左侧：辅助面板 -->
-            <!-- 右侧：记录面板 -->
-            <div class="map-records-panel">
-              <div class="map-records-tabs">
+          <div class="status-grid" id="statusGrid">
+            <div style="color: #666; text-align: center; padding: 40px; grid-column: 1/-1;">
+              暂无玩家，请在「备忘录」页面添加玩家
+            </div>
+          </div>
+        </div>
+      </div>
                 <button class="map-record-tab active" data-tab="battle" onclick="switchMapRecordTab('battle')">
                   ⚔️ 对抗记录
                 </button>
@@ -5509,6 +5751,154 @@ body.mobile-mode .player-grid {
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById(`tab-${tab}`).classList.add('active');
     event.target.classList.add('active');
+  }
+  
+  // ==================== 玩家状态页面 ====================
+  
+  function renderStatusGrid() {
+    const grid = document.getElementById('statusGrid');
+    if (!grid) return;
+    
+    if (players.length === 0) {
+      grid.innerHTML = `
+        <div style="color: #666; text-align: center; padding: 40px; grid-column: 1/-1;">
+          暂无玩家，请在「备忘录」页面添加玩家
+        </div>
+      `;
+      return;
+    }
+    
+    const isHost = currentRoom && currentUser === currentRoom.creator;
+    
+    grid.innerHTML = players.map(player => {
+      const isNpc = player.type === 'npc';
+      const canSeeStats = !isNpc || isHost;
+      const injuries = player.injuries || [];
+      
+      return `
+        <div class="status-card ${isNpc ? 'npc-card' : ''}" data-id="${player.id}">
+          <div class="status-card-header">
+            <span class="status-card-name">${player.name}</span>
+            <span class="status-card-type">${isNpc ? 'NPC' : '玩家'}</span>
+          </div>
+          
+          <div class="status-stats">
+            <div class="status-stat">
+              <div class="status-stat-label">❤️ 血量</div>
+              <div class="status-stat-value">
+                ${canSeeStats ? `
+                  <input type="number" class="status-stat-input" 
+                         value="${player.hp || 0}" min="0"
+                         onchange="updatePlayerHp(${player.id}, this.value)">
+                  <span class="status-stat-sep">/</span>
+                  <input type="number" class="status-stat-input" 
+                         value="${player.maxHp || 0}" min="0"
+                         onchange="updatePlayerMaxHp(${player.id}, this.value)">
+                ` : `
+                  <span class="status-stat-hidden">仅房主可见</span>
+                `}
+              </div>
+            </div>
+            <div class="status-stat">
+              <div class="status-stat-label">🛡️ 护甲</div>
+              <div class="status-stat-value">
+                ${canSeeStats ? `
+                  <input type="number" class="status-stat-input" 
+                         value="${player.armor || 0}" min="0"
+                         onchange="updatePlayerArmor(${player.id}, this.value)">
+                ` : `
+                  <span class="status-stat-hidden">仅房主可见</span>
+                `}
+              </div>
+            </div>
+          </div>
+          
+          <div class="status-injuries">
+            <div class="status-injuries-header">
+              <span class="status-injuries-title">💀 重伤状态 (${injuries.length}/5)</span>
+              ${canSeeStats && injuries.length < 5 ? `
+                <button class="status-injury-add" onclick="showAddInjuryModal(${player.id})" title="添加重伤">+</button>
+              ` : ''}
+            </div>
+            ${injuries.length === 0 ? `
+              <div class="status-injury-empty">暂无重伤</div>
+            ` : `
+              <div class="status-injury-tags">
+                ${injuries.map((injury, idx) => `
+                  <div class="status-injury-tag" title="${injury.effect}">
+                    <span class="status-injury-tag-name">${injury.name}</span>
+                    ${canSeeStats ? `
+                      <span class="status-injury-tag-remove" onclick="removePlayerInjury(${player.id}, ${idx})">×</span>
+                    ` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  function updatePlayerHp(id, value) {
+    const player = players.find(p => p.id === id);
+    if (!player) return;
+    player.hp = parseInt(value) || 0;
+    syncRoomData('players');
+    renderStatusGrid();
+  }
+  
+  function updatePlayerMaxHp(id, value) {
+    const player = players.find(p => p.id === id);
+    if (!player) return;
+    player.maxHp = parseInt(value) || 0;
+    syncRoomData('players');
+    renderStatusGrid();
+  }
+  
+  function updatePlayerArmor(id, value) {
+    const player = players.find(p => p.id === id);
+    if (!player) return;
+    player.armor = parseInt(value) || 0;
+    syncRoomData('players');
+    renderStatusGrid();
+  }
+  
+  function showAddInjuryModal(playerId) {
+    const player = players.find(p => p.id === playerId);
+    if (!player) return;
+    
+    // 简单起见，直接添加一个示例重伤，实际可以做选择器
+    // 这里先添加一个默认的重伤，后续可以优化
+    const defaultInjuries = [
+      { name: '断臂', effect: '失去断掉的那只手臂，手里东西掉落，基础死亡豁免惩罚+1', isHead: false },
+      { name: '肠胃撕裂', effect: '每回合损失1体格，30分钟未处理死亡', isHead: false },
+      { name: '气胸', effect: '每回合损失1敏捷，30分钟未处理死亡', isHead: false },
+      { name: '脑震荡', effect: '跳过一回合', isHead: true },
+      { name: '目盲', effect: '双眼暂时失明，-10战斗技能、闪避和视觉感知', isHead: true }
+    ];
+    
+    // 随机添加一个（实际应该让用户选择，这里简化处理）
+    const randomInjury = defaultInjuries[Math.floor(Math.random() * defaultInjuries.length)];
+    
+    if (!player.injuries) player.injuries = [];
+    if (player.injuries.length >= 5) {
+      alert('最多只能有5个重伤状态');
+      return;
+    }
+    
+    player.injuries.push({ ...randomInjury });
+    syncRoomData('players');
+    renderStatusGrid();
+  }
+  
+  function removePlayerInjury(playerId, injuryIndex) {
+    const player = players.find(p => p.id === playerId);
+    if (!player || !player.injuries) return;
+    
+    player.injuries.splice(injuryIndex, 1);
+    syncRoomData('players');
+    renderStatusGrid();
   }
   
   // ==================== 地图页面 ====================
@@ -5987,6 +6377,7 @@ body.mobile-mode .player-grid {
     updateInjuryPlayerSelect();
     renderPlayerChips();
     renderHistory();
+    renderStatusGrid();
   
     // 初始化侧边栏状态
     var sidebar = document.getElementById('roomSidebar');
@@ -7250,6 +7641,7 @@ body.mobile-mode .player-grid {
     renderPlayers();
     renderPlayerChips();
     updateInjuryPlayerSelect();
+    renderStatusGrid();
     
     // 同步到房间
     if (typeof syncRoomData === 'function') {
@@ -7272,6 +7664,7 @@ body.mobile-mode .player-grid {
     renderPlayers();
     renderPlayerChips();
     updateInjuryPlayerSelect();
+    renderStatusGrid();
   }
   
   function switchMemoTab(tab) {
@@ -8097,6 +8490,7 @@ body.mobile-mode .player-grid {
           if (typeof renderPlayers === 'function') renderPlayers();
           if (typeof renderPlayerChips === 'function') renderPlayerChips();
           if (typeof renderPlayerList === 'function') renderPlayerList();
+          if (typeof renderStatusGrid === 'function') renderStatusGrid();
         } else {
           // 没有玩家数据，初始化第一个为当前用户
           if (typeof players !== 'undefined' && players.length > 0) {
@@ -8138,6 +8532,7 @@ body.mobile-mode .player-grid {
           if (typeof renderPlayers === 'function') renderPlayers();
           if (typeof renderPlayerChips === 'function') renderPlayerChips();
           if (typeof renderPlayerList === 'function') renderPlayerList();
+          if (typeof renderStatusGrid === 'function') renderStatusGrid();
         } else if (type === 'battleHistory' && typeof battleHistory !== 'undefined') {
           battleHistory = data;
           if (typeof renderHistory === 'function') renderHistory();
