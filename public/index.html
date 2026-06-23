@@ -1865,6 +1865,10 @@ body.mobile-mode .player-grid {
     font-size: 13px;
     margin-top: 10px;
   }
+  .crit-bonus {
+    color: #ffd700;
+    font-weight: bold;
+  }
   
   /* 暴击表 */
   .crit-table-section {
@@ -6990,7 +6994,11 @@ body.mobile-mode .player-grid {
       
       const totalEl = document.getElementById('damage-total');
       if (totalEl) {
-        totalEl.textContent = total;
+        if (isCrit) {
+          totalEl.innerHTML = (total - 5) + '<span style="color: #ffd700; font-size: 0.7em; margin-left: 4px;">+5</span>';
+        } else {
+          totalEl.textContent = total;
+        }
         if (isCrit) {
           totalEl.classList.add('is-crit');
         }
