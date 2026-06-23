@@ -719,32 +719,51 @@
   
   body.mobile-mode .map-main {
     flex-direction: column;
+    overflow-y: auto;
   }
   
-  body.mobile-mode .map-frame-wrapper {
-    height: 50%;
-    min-height: 300px;
+  body.mobile-mode .map-tips-panel {
+    width: 100%;
+    padding: 20px 16px;
+  }
+  
+  body.mobile-mode .map-tips-icon {
+    font-size: 48px;
+  }
+  
+  body.mobile-mode .map-tips-title {
+    font-size: 18px;
+  }
+  
+  body.mobile-mode .map-tips-list {
+    margin-bottom: 16px;
   }
   
   body.mobile-mode .map-records-panel {
     width: 100%;
-    height: 40%;
-    min-height: 200px;
+    min-height: 300px;
+    flex: none;
   }
   
   body.mobile-mode .map-url-bar {
-    padding: 8px;
-    gap: 6px;
+    padding: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  body.mobile-mode .map-url-label {
+    font-size: 12px;
   }
   
   body.mobile-mode .map-url-input {
     padding: 8px 10px;
     font-size: 12px;
+    min-width: 150px;
   }
   
   body.mobile-mode .map-url-btn {
-    padding: 8px 12px;
-    font-size: 11px;
+    padding: 8px 14px;
+    font-size: 12px;
   }
 body.mobile-mode .player-grid {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -2359,18 +2378,25 @@ body.mobile-mode .player-grid {
   
   .map-url-bar {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
-    padding: 12px;
-    background: rgba(229, 62, 62, 0.05);
+    padding: 16px 20px;
+    background: rgba(229, 62, 62, 0.06);
     border: 1px solid rgba(229, 62, 62, 0.2);
-    border-radius: 8px;
+    border-radius: 10px;
+  }
+  
+  .map-url-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #e53e3e;
+    white-space: nowrap;
   }
   
   .map-url-input {
     flex: 1;
     padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.9);
     border: 1px solid #fc8181;
     border-radius: 6px;
     color: #333;
@@ -2386,12 +2412,12 @@ body.mobile-mode .player-grid {
   }
   
   .map-url-btn {
-    padding: 10px 18px;
+    padding: 10px 20px;
     background: linear-gradient(135deg, #e53e3e, #c53030);
     color: white;
     border: none;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
     font-family: 'Courier New', monospace;
@@ -2404,48 +2430,119 @@ body.mobile-mode .player-grid {
     box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
   }
   
-  .map-url-btn.secondary {
-    background: transparent;
-    color: #e53e3e;
-    border: 1px solid #e53e3e;
-  }
-  
-  .map-url-btn.secondary:hover {
-    background: rgba(229, 62, 62, 0.1);
+  .map-url-btn.primary {
+    background: linear-gradient(135deg, #e53e3e, #c53030);
   }
   
   .map-main {
     flex: 1;
     display: flex;
-    gap: 12px;
+    gap: 16px;
     min-height: 0;
   }
   
-  .map-frame-wrapper {
-    flex: 1;
-    background: white;
-    border: 1px solid rgba(229, 62, 62, 0.2);
-    border-radius: 8px;
-    overflow: hidden;
-    min-width: 0;
-  }
-  
-  .map-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-  }
-  
-  .map-records-panel {
+  /* 左侧辅助面板 */
+  .map-tips-panel {
     width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 24px;
+    background: rgba(229, 62, 62, 0.04);
+    border: 1px solid rgba(229, 62, 62, 0.15);
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  
+  .map-tips-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+  }
+  
+  .map-tips-title {
+    font-size: 20px;
+    color: #e53e3e;
+    margin-bottom: 8px;
+    font-family: 'Courier New', monospace;
+  }
+  
+  .map-tips-desc {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  
+  .map-tips-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .map-tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    border: 1px solid rgba(229, 62, 62, 0.1);
+  }
+  
+  .tip-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  
+  .tip-content {
+    flex: 1;
+  }
+  
+  .tip-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  
+  .tip-text {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+  }
+  
+  .map-open-big-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #e53e3e, #c53030);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s;
+    margin-top: auto;
+  }
+  
+  .map-open-big-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(229, 62, 62, 0.4);
+  }
+  
+  /* 右侧记录面板 */
+  .map-records-panel {
+    flex: 1;
     display: flex;
     flex-direction: column;
     background: rgba(229, 62, 62, 0.03);
     border: 1px solid rgba(229, 62, 62, 0.15);
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
-    flex-shrink: 0;
+    min-width: 0;
   }
   
   .map-records-tabs {
@@ -4253,6 +4350,33 @@ body.mobile-mode .player-grid {
     html.dark-theme body .map-empty {
       color: #666;
     }
+    
+    /* 地图辅助面板 - 黑夜模式 */
+    html.dark-theme body .map-tips-panel {
+      background: rgba(0, 0, 0, 0.2);
+      border-color: rgba(229, 62, 62, 0.2);
+    }
+    
+    html.dark-theme body .map-tips-title {
+      color: #fc8181;
+    }
+    
+    html.dark-theme body .map-tips-desc {
+      color: #888;
+    }
+    
+    html.dark-theme body .map-tip-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(229, 62, 62, 0.15);
+    }
+    
+    html.dark-theme body .tip-title {
+      color: #e0e0e0;
+    }
+    
+    html.dark-theme body .tip-text {
+      color: #999;
+    }
 
   
   html.dark-theme body .rank-1 { }
@@ -5237,35 +5361,62 @@ body.mobile-mode .player-grid {
         <div class="map-container">
           <!-- 网址输入栏 -->
           <div class="map-url-bar">
+            <span class="map-url-label">🗺️ 地图网址</span>
             <input type="text" id="mapUrlInput" class="map-url-input" 
                    placeholder="输入 Owlbear Rodeo 房间网址..." 
                    value="https://owlbear.rodeo"
-                   onkeydown="if(event.key==='Enter') loadMapUrl()">
-            <button class="map-url-btn" onclick="loadMapUrl()">🔄 跳转</button>
-            <button class="map-url-btn secondary" onclick="openMapNewTab()">🔗 新窗口</button>
+                   onkeydown="if(event.key==='Enter') openMapNewTab()">
+            <button class="map-url-btn primary" onclick="openMapNewTab()">🔗 打开地图</button>
           </div>
           
           <!-- 主内容区 -->
           <div class="map-main">
-            <!-- 地图 iframe -->
-            <div class="map-frame-wrapper">
-              <iframe id="mapIframe" class="map-iframe" 
-                      src="https://owlbear.rodeo"
-                      sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
-              </iframe>
+            <!-- 左侧：辅助面板 -->
+            <div class="map-tips-panel">
+              <div class="map-tips-icon">🎲</div>
+              <h3 class="map-tips-title">地图辅助面板</h3>
+              <p class="map-tips-desc">配合 Owlbear Rodeo 等地图工具使用</p>
+              
+              <div class="map-tips-list">
+                <div class="map-tip-item">
+                  <span class="tip-icon">📐</span>
+                  <div class="tip-content">
+                    <div class="tip-title">浏览器分屏</div>
+                    <div class="tip-text">左右并排，一边地图一边记录</div>
+                  </div>
+                </div>
+                <div class="map-tip-item">
+                  <span class="tip-icon">⚡</span>
+                  <div class="tip-content">
+                    <div class="tip-title">实时同步</div>
+                    <div class="tip-text">所有投掷记录自动更新</div>
+                  </div>
+                </div>
+                <div class="map-tip-item">
+                  <span class="tip-icon">💾</span>
+                  <div class="tip-content">
+                    <div class="tip-title">自动保存</div>
+                    <div class="tip-text">网址自动记住，下次直接打开</div>
+                  </div>
+                </div>
+              </div>
+              
+              <button class="map-open-big-btn" onclick="openMapNewTab()">
+                🗺️ 在新标签页打开地图
+              </button>
             </div>
             
-            <!-- 记录面板 -->
+            <!-- 右侧：记录面板 -->
             <div class="map-records-panel">
               <div class="map-records-tabs">
                 <button class="map-record-tab active" data-tab="battle" onclick="switchMapRecordTab('battle')">
-                  ⚔️ 对抗
+                  ⚔️ 对抗记录
                 </button>
                 <button class="map-record-tab" data-tab="damage" onclick="switchMapRecordTab('damage')">
-                  💥 伤害
+                  💥 伤害记录
                 </button>
                 <button class="map-record-tab" data-tab="injury" onclick="switchMapRecordTab('injury')">
-                  🩹 重伤
+                  🩹 重伤记录
                 </button>
               </div>
               <div class="map-records-content">
