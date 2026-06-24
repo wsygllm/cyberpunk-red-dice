@@ -5775,7 +5775,8 @@ body.mobile-mode .player-grid {
     
     socket.emit('update_room_data', {
       type: type,
-      data: data || (type === 'players' ? players : null)
+      data: data || (type === 'players' ? players : null),
+      updatedBy: currentUser
     });
   }
   
@@ -8282,7 +8283,13 @@ body.mobile-mode .player-grid {
     // 连接 Socket.io
     function connectSocket() {
       try {
-        socket = io();
+        socket = io({
+          reconnection: true,
+          reconnectionAttempts: Infinity,
+          reconnectionDelay: 1000,
+          reconnectionDelayMax: 5000,
+          timeout: 20000
+        });
 
         socket.on('connect', function() {
           // 认证
@@ -8291,10 +8298,23 @@ body.mobile-mode .player-grid {
 
         socket.on('auth_success', function() {
           updateStatus(true);
-          showPage('lobbyPage');
           document.getElementById('displayUsername').textContent = currentUser;
           document.getElementById('userAvatar').textContent = currentUser.charAt(0).toUpperCase();
+          
+          // 如果已经在房间里，不要跳转到大厅（重连场景）
+          if (currentRoomId) {
+            // 已经在房间，重新加入房间获取最新数据
+            const lastRoomId = localStorage.getItem('lastRoomId');
+            if (lastRoomId && lastRoomId === currentRoomId) {
+              joinRoom(lastRoomId, false);
+              return;
+            }
+          }
+          
+          // 正常登录流程：显示大厅
+          showPage('lobbyPage');
           loadRoomList();
+          
           // 检查是否有保存的房间，自动加入（重连恢复）
           const lastRoomId = localStorage.getItem('lastRoomId');
           if (lastRoomId) {
@@ -8310,6 +8330,22 @@ body.mobile-mode .player-grid {
 
         socket.on('disconnect', function() {
           updateStatus(false);
+        });
+        
+        // 重连中
+        socket.on('reconnecting', function(attemptNumber) {
+          updateStatus(false);
+          console.log('正在重连... 第' + attemptNumber + '次');
+        });
+        
+        // 重连成功
+        socket.on('reconnect', function(attemptNumber) {
+          console.log('重连成功，第' + attemptNumber + '次');
+        });
+        
+        // 重连失败
+        socket.on('reconnect_failed', function() {
+          console.log('重连失败');
         });
 
         socket.on('room_list_update', function(rooms) {
@@ -8350,14 +8386,21 @@ body.mobile-mode .player-grid {
                 if (typeof renderPlayerChips === 'function') {
                   renderPlayerChips();
                 }
+                if (typeof renderPlayerList === 'function') {
+                  renderPlayerList();
+                }
+                if (typeof renderStatusGrid === 'function') {
+                  renderStatusGrid();
+                }
               }
             }
-          }, 300);
+          }, 500);
         });
 
         // 房间数据更新
         socket.on('room_data_updated', function({ type, data, updatedBy }) {
-          if (updatedBy === currentUser) return; // 自己发的不用处理
+          // 自己发的更新也需要应用，确保本地状态一致
+          // if (updatedBy === currentUser) return; // 自己发的不用处理
           if (typeof applyRoomDataUpdate === 'function') {
             applyRoomDataUpdate(type, data);
           }
@@ -8560,6 +8603,23 @@ body.mobile-mode .player-grid {
         socket.emit('leave_room', { roomId: currentRoomId });
       }
     });
+    
+    // 页面可见性变化监听（解决切后台掉线问题）
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'visible') {
+        // 页面重新可见，检查连接状态
+        console.log('页面重新可见，检查连接状态...');
+        
+        if (socket && !socket.connected) {
+          console.log('Socket已断开，尝试重连...');
+          socket.connect();
+        } else if (socket && socket.connected && currentRoomId) {
+          // 连接正常但在房间里，重新加入房间刷新数据
+          console.log('连接正常，刷新房间数据...');
+          joinRoom(currentRoomId, false);
+        }
+      }
+    });
 
     // 切换手机模式
     function toggleMobileMode() {
@@ -8711,6 +8771,29 @@ body.mobile-mode .player-grid {
       }
     });
 
+    // 页面可见性变化监听 - 切回来时检查连接状态
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        // 页面重新可见时
+        console.log('页面重新可见，检查连接状态...');
+        
+        // 检查Socket连接状态
+        if (socket && !socket.connected) {
+          console.log('Socket已断开，尝试重连...');
+          socket.connect();
+        }
+        
+        // 如果在房间内，重新加载数据确保同步
+        if (currentRoomId && typeof renderStatusGrid === 'function') {
+          setTimeout(() => {
+            if (typeof renderPlayers === 'function') renderPlayers();
+            if (typeof renderPlayerChips === 'function') renderPlayerChips();
+            if (typeof renderStatusGrid === 'function') renderStatusGrid();
+          }, 500);
+        }
+      }
+    });
+
     // ==================== 联机投掷同步 ====================
     
     // ==================== 房间数据同步 ====================
@@ -8796,7 +8879,8 @@ body.mobile-mode .player-grid {
       
       socket.emit('update_room_data', {
         type: type,
-        data: data
+        data: data,
+        updatedBy: currentUser
       });
     }
 
