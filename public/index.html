@@ -5945,7 +5945,7 @@ body.mobile-mode .player-grid {
     const player = players.find(p => p.id === id);
     if (!player) return;
     player.hp = parseInt(value) || 0;
-    syncRoomData('players');
+    syncRoomData('players', players);
     renderStatusGrid();
   }
   
@@ -5953,7 +5953,7 @@ body.mobile-mode .player-grid {
     const player = players.find(p => p.id === id);
     if (!player) return;
     player.maxHp = parseInt(value) || 0;
-    syncRoomData('players');
+    syncRoomData('players', players);
     renderStatusGrid();
   }
   
@@ -5961,7 +5961,7 @@ body.mobile-mode .player-grid {
     const player = players.find(p => p.id === id);
     if (!player) return;
     player.armor = parseInt(value) || 0;
-    syncRoomData('players');
+    syncRoomData('players', players);
     renderStatusGrid();
   }
   
@@ -6056,7 +6056,7 @@ body.mobile-mode .player-grid {
         effect: injury.effect, 
         isHead: type === 'head' 
       });
-      syncRoomData('players');
+      syncRoomData('players', players);
       renderStatusGrid();
     }
     
@@ -6075,7 +6075,7 @@ body.mobile-mode .player-grid {
     if (!player || !player.injuries) return;
     
     player.injuries.splice(injuryIndex, 1);
-    syncRoomData('players');
+    syncRoomData('players', players);
     renderStatusGrid();
   }
   
@@ -7636,7 +7636,7 @@ body.mobile-mode .player-grid {
             
             // 同步到服务器
             if (typeof syncRoomData === 'function') {
-              syncRoomData('players');
+              syncRoomData('players', players);
             }
             
             // 更新玩家状态页面
@@ -7739,7 +7739,7 @@ body.mobile-mode .player-grid {
               // 同步到服务器
               if (typeof syncRoomData === 'function') {
                 try {
-                  syncRoomData('players');
+                  syncRoomData('players', players);
                 } catch(e) {
                   console.error('同步玩家数据失败:', e);
                 }
@@ -8767,29 +8767,6 @@ body.mobile-mode .player-grid {
         if (btn) {
           btn.textContent = '🖥️ 电脑模式';
           btn.classList.add('active');
-        }
-      }
-    });
-
-    // 页面可见性变化监听 - 切回来时检查连接状态
-    document.addEventListener('visibilitychange', function() {
-      if (!document.hidden) {
-        // 页面重新可见时
-        console.log('页面重新可见，检查连接状态...');
-        
-        // 检查Socket连接状态
-        if (socket && !socket.connected) {
-          console.log('Socket已断开，尝试重连...');
-          socket.connect();
-        }
-        
-        // 如果在房间内，重新加载数据确保同步
-        if (currentRoomId && typeof renderStatusGrid === 'function') {
-          setTimeout(() => {
-            if (typeof renderPlayers === 'function') renderPlayers();
-            if (typeof renderPlayerChips === 'function') renderPlayerChips();
-            if (typeof renderStatusGrid === 'function') renderStatusGrid();
-          }, 500);
         }
       }
     });
